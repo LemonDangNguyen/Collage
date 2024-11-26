@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.collageimage"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.collageimage"
@@ -33,6 +33,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -45,4 +48,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation ("com.github.bumptech.glide:glide:4.13.2")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.13.2")
+    implementation ("com.google.android.material:material:1.9.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
+    implementation("com.otaliastudios:zoomlayout:1.9.0")
+    implementation ("com.tbuonomo:dotsindicator:5.0")
+  //  implementation ("com.github.hypersoftdev:PuzzleLayout:1.0.2")
+
 }

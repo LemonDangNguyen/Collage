@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_text_rbg" />
+            android:src="@drawable/ic_collagemaker" />
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -37,5 +37,32 @@
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_setting" />
     </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_and_setting_group">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/title_and_setting_group" />
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dotsIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:dotsColor="@color/dark_grey"
+            app:dotsSize="8dp"
+            app:dotsSpacing="8dp"
+            app:dotsStrokeWidth="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewPager"
+            app:selectedDotColor="@color/colorPrimary" />
+    </ScrollView>
 
 </FrameLayout>

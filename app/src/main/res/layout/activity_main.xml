@@ -22,7 +22,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
-            android:id="@+id/btn_create"
+            android:id="@+id/btn_collage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -32,7 +32,7 @@
             android:paddingBottom="20dp">
 
             <ImageView
-                android:id="@+id/ic_create"
+                android:id="@+id/ic_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_home" />
@@ -52,7 +52,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/btn_mycreation"
+            android:id="@+id/btn_template"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -62,13 +62,13 @@
             android:paddingBottom="20dp">
 
             <ImageView
-                android:id="@+id/ic_mycreation"
+                android:id="@+id/ic_template"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_template" />
 
             <TextView
-                android:id="@+id/tv_mycreation"
+                android:id="@+id/tv_template"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
