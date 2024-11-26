@@ -68,7 +68,7 @@ class MainActivity : BaseActivity() {
     }
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
         FragmentStateAdapter(fragmentActivity) {
-        override fun getItemCount(): Int = 4
+        override fun getItemCount(): Int = 3
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {

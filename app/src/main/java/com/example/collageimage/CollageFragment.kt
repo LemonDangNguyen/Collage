@@ -10,4 +10,16 @@ import com.example.collageimage.databinding.FragmentCollageBinding
 
 class CollageFragment : Fragment() {
    private val binding by lazy { FragmentCollageBinding.inflate(layoutInflater) }
+   override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+
+
+
+   }
+   override fun onCreateView(
+      inflater: LayoutInflater, container: ViewGroup?,
+      savedInstanceState: Bundle?
+   ): View {
+      return binding.root
+   }
 }
