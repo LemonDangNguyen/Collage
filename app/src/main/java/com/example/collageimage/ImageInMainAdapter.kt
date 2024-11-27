@@ -1,11 +1,11 @@
-package com.example.selectpic
-
+package com.example.collageimage;
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.selectpic.R
+import com.example.collageimage.R
+
 
 class ImageInMainAdapter(
     private val images: List<Int>

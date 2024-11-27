@@ -1,4 +1,4 @@
-package com.example.selectpic
+package com.example.collageimage;
 
 import android.content.Context
 import android.net.Uri

@@ -1,5 +1,4 @@
-package com.example.selectpic
-
+package com.example.collageimage;
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.collageimage.R
 
 class SelectedImagesAdapter(
     private val context: Context,

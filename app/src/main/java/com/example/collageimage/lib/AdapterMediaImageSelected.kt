@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.collageimage.ImageModel
 import com.example.collageimage.databinding.ItemSelectedImageBinding
-import com.example.selectpic.ImageModel
-import com.example.selectpic.ddat.setImageFromUri
+import com.example.selectpic.lib.setImageFromUri
 
 class AdapterMediaImageSelected() : ListAdapter<ImageModel, AdapterMediaImageSelected.CustomViewHolder>(DiffCallback()) {
 

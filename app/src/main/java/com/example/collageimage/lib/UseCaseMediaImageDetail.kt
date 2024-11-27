@@ -1,7 +1,8 @@
 package com.example.selectpic.ddat
 
 import android.net.Uri
-import com.example.selectpic.ImageModel
+import com.example.collageimage.ImageModel
+
 
 class UseCaseMediaImageDetail(private val repositoryMediaImages: RepositoryMediaImages) {
 

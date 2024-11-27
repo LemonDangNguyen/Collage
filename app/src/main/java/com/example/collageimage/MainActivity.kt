@@ -2,17 +2,14 @@ package com.example.collageimage
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat.getFont
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.collageimage.ViewControl.actionAnimation
 import com.example.collageimage.databinding.ActivityMainBinding
+import com.example.collageimage.fragment.CollageFragment
+import com.example.collageimage.fragment.TemplateFragment
 
 class MainActivity : BaseActivity() {
 

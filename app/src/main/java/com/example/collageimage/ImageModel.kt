@@ -1,5 +1,4 @@
-package com.example.selectpic
-
+package com.example.collageimage;
 import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable

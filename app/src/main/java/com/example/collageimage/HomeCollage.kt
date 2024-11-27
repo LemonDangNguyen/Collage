@@ -1,4 +1,4 @@
-package com.example.selectpic
+package com.example.collageimage;
 
 import android.app.Dialog
 import android.content.Context
@@ -22,9 +22,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.selectpic.databinding.ActivityHomeCollageBinding
-import com.example.selectpic.databinding.DialogExitBinding
-import com.example.selectpic.ddat.MediaStoreMediaImages
+import com.example.collageimage.BaseActivity
+import com.example.collageimage.MainActivity
+import com.example.collageimage.R
+import com.example.collageimage.databinding.ActivityHomeCollageBinding
+import com.example.collageimage.databinding.DialogExitBinding
 import com.example.selectpic.ddat.PuzzleUtils
 import com.example.selectpic.ddat.RepoPuzzleUtils
 import com.example.selectpic.ddat.RepositoryMediaImages
@@ -32,6 +34,7 @@ import com.example.selectpic.ddat.UseCaseMediaImageDetail
 import com.example.selectpic.ddat.UseCasePuzzleLayouts
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
+import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider

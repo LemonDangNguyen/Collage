@@ -1,4 +1,4 @@
-package com.example.selectpic
+package com.example.collageimage;
 
 data class AlbumModel(
     val name: String,

@@ -1,4 +1,4 @@
-package com.example.selectpic.ddat
+package com.example.selectpic.lib
 
 import android.net.Uri
 import android.widget.ImageView

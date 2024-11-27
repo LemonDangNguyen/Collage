@@ -1,4 +1,4 @@
-package com.example.selectpic
+package com.example.collageimage;
 
 import android.Manifest
 import android.app.Dialog
@@ -17,8 +17,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.selectpic.databinding.ActivitySelectAlbumBinding
-import com.example.selectpic.databinding.DialogExitBinding
+import com.example.collageimage.BaseActivity
+import com.example.collageimage.MainActivity
+import com.example.collageimage.databinding.ActivitySelectAlbumBinding
+import com.example.collageimage.databinding.DialogExitBinding
 
 class SelectAlbum : BaseActivity() {
 
@@ -148,7 +150,7 @@ class SelectAlbum : BaseActivity() {
         binding2.btnExit.setOnClickListener{
             dialog2.dismiss()
 
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, SelectActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()

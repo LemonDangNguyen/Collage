@@ -1,5 +1,4 @@
-package com.example.selectpic
-
+package com.example.collageimage;
 import android.Manifest
 import android.app.Dialog
 import android.content.Intent
@@ -21,13 +20,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.selectpic.databinding.ActivitySelectBinding
-import com.example.selectpic.databinding.DialogExitBinding
-import com.example.selectpic.ddat.MediaStoreMediaImages
+import com.example.collageimage.BaseActivity
+import com.example.collageimage.MainActivity
+import com.example.collageimage.databinding.ActivitySelectBinding
+import com.example.collageimage.databinding.DialogExitBinding
 import com.example.selectpic.ddat.RepositoryMediaImages
 import com.example.selectpic.ddat.UseCaseMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
+import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
 
 class SelectActivity : BaseActivity() {
@@ -48,7 +49,7 @@ class SelectActivity : BaseActivity() {
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { it.value }) {
-                loadImages() // Load images if permissions are granted
+                loadImages()
             } else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
             }
@@ -92,7 +93,6 @@ class SelectActivity : BaseActivity() {
         }
         binding.btnAlbum.setOnClickListener {
             val intent = Intent(this, SelectAlbum::class.java)
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
             startActivity(intent)
             finish()
