@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.collageimage"
-        minSdk = 34
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -31,7 +32,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         viewBinding = true
@@ -51,10 +52,12 @@ dependencies {
 
     implementation ("com.github.bumptech.glide:glide:4.13.2")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.13.2")
+    implementation ("com.github.hypersoftdev:PuzzleLayout:1.0.2")
     implementation ("com.google.android.material:material:1.9.0")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
     implementation("com.otaliastudios:zoomlayout:1.9.0")
     implementation ("com.tbuonomo:dotsindicator:5.0")
-  //  implementation ("com.github.hypersoftdev:PuzzleLayout:1.0.2")
+
+
 
 }

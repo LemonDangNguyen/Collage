@@ -95,4 +95,8 @@
     <string name="rate">Rate</string>
     <string name="share">Share</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="backtohome">Back to home</string>
+    <string name="Dywtbh">Do you want back to home?</string>
+    <string name="something_went_wrong">Something went wrong!</string>
+    <string name="image_not_found">image not found</string>
 </resources>

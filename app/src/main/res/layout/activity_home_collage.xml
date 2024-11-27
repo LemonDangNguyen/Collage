@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeCollage">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="1dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="left"
+            android:text="Cancel"
+            android:textColor="#8D99A1"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Photo Collage"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btn_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="Save"
+            android:textColor="#3B83FC"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <com.hypersoft.pzlayout.SquarePuzzleView
+        android:id="@+id/puzzle_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:radian="30" />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="4dp"
+        android:max="100"
+        android:progress="10"
+        android:progressBackgroundTint="@color/grey"
+        android:progressTint="#009EFD"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pieceButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <HorizontalScrollView
+        android:id="@+id/pieceButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#FFFFFF"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/rcvListPuzzleLayouts">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!--<com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pswap"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/swappiece"
+                android:gravity="center"
+                android:text="@string/pswap"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />-->
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pmirror"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/mirrorpiece"
+                android:gravity="center"
+                android:text="@string/pmirror"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pflip"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/flippiece"
+                android:gravity="center"
+                android:text="@string/pflip"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/protate"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/rotatepiece"
+                android:gravity="center"
+                android:text="@string/protate"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pzoomplus"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/zoom_piece_plus"
+                android:gravity="center"
+                android:text="@string/pzoomplus"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pzoomminus"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/zoom_piece_minus"
+                android:gravity="center"
+                android:text="@string/pzoomplus"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pleft"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/leftpiece"
+                android:gravity="center"
+                android:text="@string/pleft"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pright"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/rightpiece"
+                android:gravity="center"
+                android:text="@string/pright"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pup"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/uppiece"
+                android:gravity="center"
+                android:text="@string/pup"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pdown"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/downpiece"
+                android:gravity="center"
+                android:text="@string/pdown"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/btnCorner"
+                style="@style/SelectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:drawableTop="@drawable/baseline_rounded_corner_24"
+                android:gravity="center"
+                android:text="@string/corner"
+                android:textColor="@color/smoke"
+                android:textSize="10sp" />
+
+            <!-- <com.google.android.material.textview.MaterialTextView
+                 android:id="@+id/pchange"
+                 style="@style/SelectableItemBackground"
+                 android:layout_width="50dp"
+                 android:layout_height="wrap_content"
+                 android:layout_marginStart="10sp"
+                 android:drawableTop="@drawable/changepiece"
+                 android:gravity="center"
+                 android:text="@string/pchange"
+                 android:textColor="@color/smoke"
+                 android:textSize="10sp" />-->
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvListPuzzleLayouts"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingVertical="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:itemCount="40"
+        tools:listitem="@layout/item_puzzle_layouts" />
+</androidx.constraintlayout.widget.ConstraintLayout>
