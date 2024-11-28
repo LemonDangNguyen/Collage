@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.CollageFragment">
-
     <LinearLayout
         android:id="@+id/title_and_setting_group"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <ImageView
             android:id="@+id/img_title"
             android:layout_width="wrap_content"
@@ -37,7 +35,6 @@
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_setting" />
     </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -45,12 +42,10 @@
         app:layout_constraintTop_toBottomOf="@+id/title_and_setting_group"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="1dp">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
@@ -71,8 +66,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/viewPager"
                 app:selectedDotColor="@color/colorPrimary" />
-
-
             <LinearLayout
                 android:id="@+id/btn_photo_collage"
                 android:layout_width="match_parent"
@@ -91,7 +84,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_ptcl_maker" />
-
                 <TextView
                     android:id="@+id/centerTextView"
                     android:layout_width="0dp"
@@ -110,7 +102,6 @@
                     android:layout_marginRight="10dp"
                     android:src="@drawable/ic_arrow" />
             </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/btn_edit_image"
                 android:layout_width="match_parent"
@@ -128,7 +119,6 @@
                     android:layout_height="40dp"
                     android:src="@drawable/ic_edt_image"
                     android:layout_marginEnd="8dp" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -156,22 +146,23 @@
                 android:textStyle="bold"
                 android:layout_marginLeft="20dp"
                 android:textSize="20sp"/>
+
             <GridLayout
                 android:id="@+id/grid_images"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:orientation="horizontal"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:columnCount="2"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -185,11 +176,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="15dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -197,35 +188,35 @@
                         android:id="@+id/image2"
                         android:layout_width="170dp"
                         android:layout_height="278dp"
-                        android:src="@drawable/templatee25"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/templatee25"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image3"
                         android:layout_width="170dp"
-                        android:src="@drawable/templatee29"
                         android:layout_height="278dp"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/templatee29"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="15dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -233,18 +224,17 @@
                         android:id="@+id/image4"
                         android:layout_width="170dp"
                         android:layout_height="278dp"
-                        android:src="@drawable/templatee17"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/templatee17"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
                 </LinearLayout>
 
-
                 <LinearLayout
-                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -252,33 +242,29 @@
                         android:id="@+id/image5"
                         android:layout_width="170dp"
                         android:layout_height="278dp"
-                        android:src="@drawable/templatee16"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/templatee16"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
                 </LinearLayout>
 
-
                 <LinearLayout
-                    android:layout_marginTop="15dp"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="15dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image6"
                         android:layout_width="170dp"
-                        android:src="@drawable/templatee20"
                         android:layout_height="278dp"
                         android:scaleType="centerCrop"
+                        android:src="@drawable/templatee20"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
                 </LinearLayout>
-
             </GridLayout>
-
-
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

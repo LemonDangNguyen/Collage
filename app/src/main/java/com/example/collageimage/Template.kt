@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.example.collageimage.databinding.ActivityTemplateBinding
 
-class Template : AppCompatActivity() {
+class Template : BaseActivity() {
     private val binding by lazy { ActivityTemplateBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

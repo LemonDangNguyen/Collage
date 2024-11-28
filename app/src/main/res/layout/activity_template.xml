@@ -8,7 +8,6 @@
     tools:context=".Template">
 
 
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -29,9 +28,9 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="left"
-            android:textSize="18sp"
             android:text="Cancel"
-            android:textColor="#8D99A1" />
+            android:textColor="#8D99A1"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textView2"
@@ -39,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
             android:text="Template"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -50,21 +49,25 @@
             android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:textSize="18sp"
             android:text="Save"
-            android:textColor="#3B83FC" />
+            android:textColor="#3B83FC"
+            android:textSize="18sp" />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/view_tempalte"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginVertical="@dimen/_16sdp"
         app:layout_constraintBottom_toTopOf="@+id/lnBottomBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <FrameLayout
+            android:id="@+id/view_tempalte"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+
 
     <LinearLayout
         android:id="@+id/lnBottomBar"
@@ -133,6 +136,7 @@
                 android:textColor="#78838B"
                 android:textSize="12sp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/btn_text"
             android:layout_width="0dp"
@@ -147,6 +151,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_text_ic" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
