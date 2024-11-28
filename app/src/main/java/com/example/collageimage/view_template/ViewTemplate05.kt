@@ -23,6 +23,7 @@ class ViewTemplate05: RelativeLayout {
     )
 
     private var w = 0f
+    private var h = 0f
 
     var iv1: ImageView
     lateinit var zl1: ZoomLayout
@@ -32,6 +33,7 @@ class ViewTemplate05: RelativeLayout {
 
     init {
         w = resources.displayMetrics.widthPixels / 100f
+        h = resources.displayMetrics.heightPixels / 100f
 
         ivTemp = ImageView(context).apply {
             id = 1
@@ -53,7 +55,8 @@ class ViewTemplate05: RelativeLayout {
         }
 
         zl1.addView(iv1, LayoutParams(-1, -1))
-
+//        val width = (39.21f * w).toInt()
+  //      val height = (21.64f * w).toInt()
         val width = (69.72f * w).toInt()
         val height = (38.472f * w).toInt()
         addView(zl1, LayoutParams(width, height).apply {

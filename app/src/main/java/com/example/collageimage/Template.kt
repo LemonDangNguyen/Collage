@@ -1,7 +1,9 @@
 package com.example.collageimage
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.collageimage.databinding.ActivityTemplateBinding
 
@@ -15,7 +17,7 @@ class Template : BaseActivity() {
         // Nhận imageId từ Intent
         val imageId = intent.getIntExtra("imageId", 0)
 
-        if (imageId != 0) {  // Kiểm tra imageId hợp lệ
+        if (imageId != 0) {
             val layoutResId = getLayoutForImage(imageId)  // Lấy layout tương ứng
 
             layoutResId?.let {
@@ -34,16 +36,35 @@ class Template : BaseActivity() {
                 }
             }
         }
+
+        // Gọi hàm getScreenAspectRatio để lấy tỷ lệ màn hình và hiển thị trong Toast
+        val screenAspectRatio = getScreenAspectRatio()
+
+        // Hiển thị tỷ lệ màn hình trong Toast
+        Toast.makeText(this, "Tỷ lệ màn hình: $screenAspectRatio", Toast.LENGTH_LONG).show()
     }
 
     // Hàm ánh xạ imageId với layout tương ứng
     private fun getLayoutForImage(imageId: Int): Int? {
         return when (imageId) {
             R.drawable.templatee01 -> R.layout.template_01  // Tương ứng với template_01
-          //  R.drawable.templatee02 -> R.layout.template_02  // Tương ứng với template_02
-        //    R.drawable.templatee03 -> R.layout.template_03  // Tương ứng với template_03
+            // R.drawable.templatee02 -> R.layout.template_02  // Tương ứng với template_02
+            // R.drawable.templatee03 -> R.layout.template_03  // Tương ứng với template_03
             R.drawable.templatee05 -> R.layout.template_05
             else -> null  // Nếu không có layout tương ứng, trả về null
         }
+    }
+
+    // Hàm trả về tỷ lệ màn hình
+    private fun getScreenAspectRatio(): Float {
+        // Lấy thông tin chiều rộng và chiều cao màn hình
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val width = displayMetrics.widthPixels.toFloat()
+        val height = displayMetrics.heightPixels.toFloat()
+
+        // Tính tỷ lệ màn hình
+        return width / height
     }
 }

@@ -35,28 +35,33 @@
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_setting" />
     </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@+id/title_and_setting_group"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_and_setting_group">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 app:layout_constraintTop_toBottomOf="@id/title_and_setting_group" />
+
             <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
                 android:id="@+id/dotsIndicator"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 app:dotsColor="@color/dark_grey"
                 app:dotsSize="8dp"
@@ -66,35 +71,39 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/viewPager"
                 app:selectedDotColor="@color/colorPrimary" />
+
             <LinearLayout
                 android:id="@+id/btn_photo_collage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:orientation="horizontal"
-                android:padding="12dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_photocl_maker"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
                 <ImageView
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="10dp"
                     android:id="@+id/leftImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_ptcl_maker" />
+
                 <TextView
                     android:id="@+id/centerTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/photo_collage"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
                     android:textColor="#000000"
-                    android:gravity="center_vertical" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
                 <ImageView
                     android:id="@+id/rightImageView"
                     android:layout_width="wrap_content"
@@ -102,60 +111,64 @@
                     android:layout_marginRight="10dp"
                     android:src="@drawable/ic_arrow" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/btn_edit_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:orientation="horizontal"
-                android:padding="12dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_edt_image"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
                 <ImageView
-                    android:layout_marginStart="10dp"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_edt_image"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_edt_image" />
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="@string/edit_image"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
                     android:textColor="#000000"
-                    android:gravity="center_vertical" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_arrow"
-                    />
+                    android:src="@drawable/ic_arrow" />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/txtpopular"
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
                 android:padding="10dp"
                 android:text="@string/popular_template"
-                android:textStyle="bold"
-                android:layout_marginLeft="20dp"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <GridLayout
+                android:layout_marginLeft="@dimen/_3sdp"
                 android:id="@+id/grid_images"
                 android:layout_width="wrap_content"
+                android:padding="@dimen/_10sdp"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginBottom="16dp"
-                android:columnCount="2"
-                android:orientation="horizontal">
+                android:columnCount="2">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -163,11 +176,13 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image1"
+                        android:layout_gravity="center"
                         android:layout_width="170dp"
                         android:layout_height="278dp"
                         android:scaleType="centerCrop"
