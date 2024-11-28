@@ -42,6 +42,7 @@ class Template : AppCompatActivity() {
             R.drawable.templatee01 -> R.layout.template_01  // Tương ứng với template_01
           //  R.drawable.templatee02 -> R.layout.template_02  // Tương ứng với template_02
         //    R.drawable.templatee03 -> R.layout.template_03  // Tương ứng với template_03
+            R.drawable.templatee05 -> R.layout.template_05
             else -> null  // Nếu không có layout tương ứng, trả về null
         }
     }
