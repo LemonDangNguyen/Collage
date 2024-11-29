@@ -8,8 +8,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image_view"
-        android:layout_width="170dp"
-        android:layout_height="278dp"
+        android:layout_width="@dimen/_125sdp"
+        android:layout_height="@dimen/_230sdp"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded"/>
 

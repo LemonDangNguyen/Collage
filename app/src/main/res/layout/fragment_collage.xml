@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.CollageFragment">
+
     <LinearLayout
         android:id="@+id/title_and_setting_group"
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/img_title"
             android:layout_width="wrap_content"
@@ -23,10 +25,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_collagemaker" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
         <ImageView
             android:id="@+id/btn_setting"
             android:layout_width="wrap_content"
@@ -35,6 +39,7 @@
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_setting" />
     </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -80,7 +85,7 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_photocl_maker"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="12dp">
 
@@ -120,7 +125,7 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_edt_image"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="12dp">
 
@@ -161,30 +166,29 @@
                 android:textStyle="bold" />
 
             <GridLayout
-                android:layout_marginLeft="@dimen/_3sdp"
                 android:id="@+id/grid_images"
                 android:layout_width="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:columnCount="2">
+                android:columnCount="2"
+                >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="15dp"
-                    android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image1"
+                        android:layout_width="@dimen/_125sdp"
+                        android:layout_height="@dimen/_230sdp"
                         android:layout_gravity="center"
-                        android:layout_width="170dp"
-                        android:layout_height="278dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/templatee27"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
@@ -201,8 +205,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image2"
-                        android:layout_width="170dp"
-                        android:layout_height="278dp"
+                        android:layout_width="@dimen/_125sdp"
+                        android:layout_height="@dimen/_230sdp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/templatee25"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
@@ -219,8 +223,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image3"
-                        android:layout_width="170dp"
-                        android:layout_height="278dp"
+                        android:layout_width="@dimen/_125sdp"
+                        android:layout_height="@dimen/_230sdp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/templatee29"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
@@ -237,8 +241,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image4"
-                        android:layout_width="170dp"
-                        android:layout_height="278dp"
+                        android:layout_width="@dimen/_125sdp"
+                        android:layout_height="@dimen/_230sdp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/templatee17"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
@@ -255,8 +259,8 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image5"
-                        android:layout_width="170dp"
-                        android:layout_height="278dp"
+                        android:layout_width="@dimen/_125sdp"
+                        android:layout_height="@dimen/_230sdp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/templatee16"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
@@ -273,13 +277,16 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/image6"
-                        android:layout_width="170dp"
-                        android:layout_height="278dp"
+                        android:layout_width="@dimen/_125sdp"
+                        android:layout_height="@dimen/_230sdp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/templatee20"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerFamily.Rounded" />
                 </LinearLayout>
             </GridLayout>
         </LinearLayout>
+
+
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
