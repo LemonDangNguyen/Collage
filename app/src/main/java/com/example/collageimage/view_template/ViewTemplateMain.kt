@@ -1,0 +1,98 @@
+package com.example.collageimage.view_template
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import com.example.collageimage.R
+import androidx.core.graphics.PathParser
+
+class ViewTemplateMain(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+    private lateinit var backgroundBitmap: Bitmap
+    var path1: String = "M109 108.5h502v277H109v-277Z"
+    var path2: String = "M109 420h502v277H109V420Z"
+    var path3: String = "M109 727h502v277H109V727Z"
+    private val pathObjects = mutableListOf<Path>()
+    private val scaledPaths = mutableListOf<Path>()
+
+    init {
+        val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.template_05)
+        backgroundBitmap =
+            backgroundDrawable?.toBitmap() ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        initializePaths()
+    }
+
+    private fun initializePaths() {
+        pathObjects.clear()
+        scaledPaths.clear()
+        val path1Obj = PathParser.createPathFromPathData(path1)
+        val path2Obj = PathParser.createPathFromPathData(path2)
+        val path3Obj = PathParser.createPathFromPathData(path3)
+        pathObjects.add(path1Obj)
+        pathObjects.add(path2Obj)
+        pathObjects.add(path3Obj)
+    }
+
+    fun setBackgroundDrawable(imageResId: Int) {
+        val backgroundDrawable = ContextCompat.getDrawable(context, imageResId)
+        backgroundBitmap =
+            backgroundDrawable?.toBitmap() ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        invalidate()
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        val width = width.toFloat()
+        val height = height.toFloat()
+        val rectF = RectF(0f, 0f, width, height)
+        canvas.drawBitmap(backgroundBitmap, null, rectF, Paint())
+        scaledPaths.clear()
+        pathObjects.forEach {
+            val path = Path(it)
+            val matrix = android.graphics.Matrix()
+            val scaleX = width / 720f
+            val scaleY = height / 1280f
+            matrix.setScale(scaleX, scaleY)
+            path.transform(matrix)
+            scaledPaths.add(path)
+            val paint = Paint().apply {
+                color = ContextCompat.getColor(context, R.color.colorPrimary)
+            }
+            canvas.drawPath(path, paint)
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                //kiem tra trong path
+                scaledPaths.forEachIndexed { index, path ->
+                    if (isPointInPath(path, x, y)) {
+                        Toast.makeText(context, "Path ${index + 1} clicked", Toast.LENGTH_SHORT)
+                            .show()
+                        return@forEachIndexed
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    private fun isPointInPath(path: Path, x: Float, y: Float): Boolean {
+        val bounds = RectF()
+        path.computeBounds(bounds, true)
+        return x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom
+    }
+
+}

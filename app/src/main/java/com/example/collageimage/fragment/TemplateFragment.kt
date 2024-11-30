@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.collageimage.R
@@ -15,7 +14,6 @@ import com.example.collageimage.Template
 import com.example.collageimage.TemplateAdapter
 import com.example.collageimage.databinding.FragmentTemplateBinding
 import com.example.collageimage.view_template.SpaceItemDecoration
-
 
 class TemplateFragment : Fragment() {
 
@@ -64,13 +62,17 @@ class TemplateFragment : Fragment() {
         _binding = FragmentTemplateBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Cài đặt RecyclerView
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL)
         binding.rvTemplate.layoutManager = gridLayoutManager
         templateAdapter = TemplateAdapter(imageList)
         binding.rvTemplate.adapter = templateAdapter
+
         val spaceDecoration = SpaceItemDecoration(32)
         binding.rvTemplate.addItemDecoration(spaceDecoration)
 
@@ -84,6 +86,7 @@ class TemplateFragment : Fragment() {
             startActivity(Intent(requireContext(), Setting::class.java))
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
