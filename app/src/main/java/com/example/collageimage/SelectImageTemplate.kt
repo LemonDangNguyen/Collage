@@ -1,35 +1,17 @@
 package com.example.collageimage
 
 import android.Manifest
-import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.collageimage.databinding.ActivitySelectBinding
 import com.example.collageimage.databinding.ActivitySelectImageTemplateBinding
-import com.example.collageimage.databinding.DialogExitBinding
-import com.example.selectpic.ddat.RepositoryMediaImages
-import com.example.selectpic.ddat.UseCaseMediaImageDetail
-import com.example.selectpic.ddat.ViewModelMediaImageDetail
-import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
-import com.example.selectpic.lib.MediaStoreMediaImages
-import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
 
 class SelectImageTemplate : BaseActivity() {
     private val binding by lazy { ActivitySelectImageTemplateBinding.inflate(layoutInflater) }
@@ -39,24 +21,26 @@ class SelectImageTemplate : BaseActivity() {
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
 
+    private var selectedPathIndex: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        selectedPathIndex = intent.getIntExtra("selected_path", -1)
 
         if (hasStoragePermissions()) {
             loadImages()
         } else {
             permissionLauncher.launch(storagePermissions)
         }
+
         setUpListener()
     }
-
     private fun setUpListener() {
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
     }
-
     private fun loadImages() {
         val uri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
@@ -66,7 +50,6 @@ class SelectImageTemplate : BaseActivity() {
             MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
-
         contentResolver.query(uri, projection, null, null, "${MediaStore.Images.Media.DATE_TAKEN} DESC")?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val dateIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
@@ -91,8 +74,13 @@ class SelectImageTemplate : BaseActivity() {
                     )
                 )
             }
-
             imageAdapter = ImageAdapter(this, images) { image, isSelected ->
+                val intent = Intent().apply {
+                    //()
+                    putExtra("selected_image_path", image.filePath)
+                }
+                setResult(RESULT_OK, intent)
+                finish()
             }
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter
@@ -100,12 +88,9 @@ class SelectImageTemplate : BaseActivity() {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }
     }
-
     private fun hasStoragePermissions() = storagePermissions.all {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
-
-
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { it.value }) {
