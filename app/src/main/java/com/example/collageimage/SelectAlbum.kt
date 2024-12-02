@@ -16,9 +16,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.collageimage.BaseActivity
 import com.example.collageimage.MainActivity
+import com.example.collageimage.SelectActivity.Companion.REQUEST_CODE_SELECT_ALBUM
 import com.example.collageimage.databinding.ActivitySelectAlbumBinding
 import com.example.collageimage.databinding.DialogExitBinding
 
@@ -27,7 +29,7 @@ class SelectAlbum : BaseActivity() {
     private val binding by lazy { ActivitySelectAlbumBinding.inflate(layoutInflater) }
     private val albumList = mutableListOf<AlbumModel>()
     private lateinit var albumAdapter: AlbumAdapter
-
+    private lateinit var viewModel: SelectActivityViewModel
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else
@@ -47,7 +49,6 @@ class SelectAlbum : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         setupRecyclerView()
 
         if (hasStoragePermissions()) {
@@ -59,8 +60,6 @@ class SelectAlbum : BaseActivity() {
         binding.btnBack.setOnClickListener {
            onBackPressed()
         }
-
-
     }
 
     private fun setupRecyclerView() {
@@ -68,7 +67,6 @@ class SelectAlbum : BaseActivity() {
             val intent = Intent(this, SelectActivity::class.java)
             intent.putExtra("ALBUM_NAME", album.name)
             startActivity(intent)
-            finish()
         }
         binding.selectedAlbum.apply {
             layoutManager = GridLayoutManager(this@SelectAlbum, 1)
@@ -118,7 +116,7 @@ class SelectAlbum : BaseActivity() {
                 albumList.add(
                     0, // Add at the top
                     AlbumModel(
-                        name = "Recent",
+                        name = "All Images",
                         coverImagePath = recentCoverImagePath ?: "",
                         numberOfImages = recentImagesCount
                     )
@@ -161,5 +159,4 @@ class SelectAlbum : BaseActivity() {
         }
         dialog2.show()
     }
-    //up test
 }

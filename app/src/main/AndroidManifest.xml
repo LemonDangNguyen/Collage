@@ -26,7 +26,7 @@
             android:name=".SelectImageTemplate"
             android:exported="false" />
         <activity
-            android:name=".Template"
+            android:name=".TemplateActivity"
             android:exported="false" />
         <activity
             android:name=".Setting"

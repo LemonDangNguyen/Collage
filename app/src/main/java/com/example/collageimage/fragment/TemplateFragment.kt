@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.collageimage.R
 import com.example.collageimage.Setting
-import com.example.collageimage.Template
+import com.example.collageimage.TemplateActivity
 import com.example.collageimage.TemplateAdapter
 import com.example.collageimage.databinding.FragmentTemplateBinding
 import com.example.collageimage.view_template.SpaceItemDecoration
@@ -77,7 +77,7 @@ class TemplateFragment : Fragment() {
         binding.rvTemplate.addItemDecoration(spaceDecoration)
 
         templateAdapter.setOnItemClickListener { imageId ->
-            val intent = Intent(requireContext(), Template::class.java)
+            val intent = Intent(requireContext(), TemplateActivity::class.java)
             intent.putExtra("imageId", imageId)
             startActivity(intent)
         }

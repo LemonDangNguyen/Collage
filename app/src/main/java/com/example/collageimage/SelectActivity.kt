@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -31,11 +32,13 @@ import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
 
+@Suppress("DEPRECATION")
 class SelectActivity : BaseActivity() {
     private val binding by lazy { ActivitySelectBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private var selectedImages = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
+    private lateinit var viewModel: SelectActivityViewModel
     private lateinit var selectedImagesAdapter: SelectedImagesAdapter
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
@@ -55,9 +58,27 @@ class SelectActivity : BaseActivity() {
             }
         }
     private var albumName: String? = null
+    val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedImagesFromIntent = result.data?.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
+            if (selectedImagesFromIntent != null) {
+                selectedImages = selectedImagesFromIntent
+                updateSelectedAdapters()  // Cập nhật lại adapter với ảnh đã chọn
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+
+        val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
+        Log.d("SelectActivity", "Selected Images from Intent: ${selectedImagesFromIntent?.size}")
+        if (selectedImagesFromIntent != null) {
+            selectedImages = selectedImagesFromIntent
+            updateSelectedAdapters() // Cập nhật lại adapter để hiển thị ảnh đã chọn
+        }
 
         albumName = intent.getStringExtra("ALBUM_NAME")
         setupRecyclerViews()
@@ -70,6 +91,8 @@ class SelectActivity : BaseActivity() {
         setUpListener()
         initObservers()
     }
+
+
     private fun setUpListener(){
         binding.clearImgList.setOnClickListener {
             selectedImages.clear()
@@ -92,23 +115,23 @@ class SelectActivity : BaseActivity() {
             onBackPressed()
         }
         binding.btnAlbum.setOnClickListener {
+            Log.d("SelectActivity", "Selected Images before moving: ${selectedImages.size}")
             val intent = Intent(this, SelectAlbum::class.java)
             intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_SELECT_ALBUM)
+
             finish()
         }
+
     }
     private fun initObservers() {
         viewModelMediaImageDetail.imagesLiveData.observe(this) {
             adapterEnhanceGalleryDetail.submitList(it)
         }
-
-
         viewModelMediaImageDetail.clickedImagesLiveData.observe(this) { clickedImagess ->
             selectedImages = clickedImagess as MutableList<ImageModel>
         }
     }
-
     private fun setupRecyclerViews() {
         imageAdapter = ImageAdapter(this, images) { image, isSelected ->
             if (isSelected) {
@@ -133,6 +156,7 @@ class SelectActivity : BaseActivity() {
             selectedImages.remove(imageToRemove)
             selectedImagesAdapter.notifyDataSetChanged()
             imageAdapter.updateSelection(selectedImages)
+            selectedImagesAdapter.updateData(selectedImages)
             updateSelectedCount()
         }
         binding.selectedImagesRecyclerView.apply {
@@ -149,7 +173,7 @@ class SelectActivity : BaseActivity() {
             MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
-        val (selection, selectionArgs) = if (albumName == "Recent" || albumName == null) {
+        val (selection, selectionArgs) = if (albumName == "All Images" || albumName == null) {
             null to null
         } else {
             "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?" to arrayOf(albumName)
@@ -186,10 +210,15 @@ class SelectActivity : BaseActivity() {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
     private fun updateSelectedAdapters() {
-        selectedImagesAdapter.notifyDataSetChanged()
+        Log.d("SelectActivity", "Updating adapters with selected images: ${selectedImages.size}")
+        selectedImagesAdapter.notifyDataSetChanged()  // Cập nhật SelectedImagesAdapter
         imageAdapter.updateSelection(selectedImages)
-        updateSelectedCount()
+        selectedImagesAdapter.updateData(selectedImages)// Cập nhật ImageAdapter
+        updateSelectedCount()  // Cập nhật số lượng ảnh đã chọn
     }
+
+
+
     private fun updateSelectedCount() {
         binding.textViewCountItem.text = selectedImages.size.toString()
     }
@@ -205,7 +234,6 @@ class SelectActivity : BaseActivity() {
          dialog2.setCancelable(false)
          binding2.btnExit.setOnClickListener{
              dialog2.dismiss()
-
              val intent = Intent(this, MainActivity::class.java)
              intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
              startActivity(intent)
@@ -216,5 +244,17 @@ class SelectActivity : BaseActivity() {
              dialog2.dismiss()
          }
          dialog2.show()
+    }
+    companion object {
+        const val REQUEST_CODE_SELECT_ALBUM = 1
+    }
+    private fun onItemSelected(image: ImageModel, isSelected: Boolean) {
+        val currentList = viewModel.selectedImages.value ?: emptyList()
+        val newList = if (isSelected) {
+            currentList + image
+        } else {
+            currentList - image
+        }
+        viewModel.selectedImages.postValue(newList)
     }
 }

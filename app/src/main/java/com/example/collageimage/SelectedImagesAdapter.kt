@@ -16,7 +16,7 @@ import com.example.collageimage.R
 
 class SelectedImagesAdapter(
     private val context: Context,
-    private val selectedImages: MutableList<ImageModel>,
+    private var selectedImages: MutableList<ImageModel>,  // Thay đổi từ val thành var để có thể cập nhật lại danh sách
     private val onRemoveImage: (ImageModel) -> Unit
 ) : RecyclerView.Adapter<SelectedImagesAdapter.SelectedImageViewHolder>() {
 
@@ -33,12 +33,23 @@ class SelectedImagesAdapter(
 
     override fun onBindViewHolder(holder: SelectedImageViewHolder, position: Int) {
         val image = selectedImages[position]
-        Glide.with(context).load(image.filePath).into(holder.imageView)
+
+        // Sử dụng Glide để tải ảnh
+        Glide.with(context)
+            .load(image.filePath)  // Sử dụng đường dẫn file của ảnh
+            .into(holder.imageView)
+
         holder.deleteButton.setOnClickListener {
+            // Gọi hàm onRemoveImage khi nhấn nút xóa
             onRemoveImage(image)
         }
     }
 
     override fun getItemCount(): Int = selectedImages.size
-}
 
+    // Cung cấp phương thức để cập nhật lại dữ liệu cho adapter
+    fun updateData(newSelectedImages: List<ImageModel>) {
+        selectedImages = newSelectedImages.toMutableList()
+        notifyDataSetChanged()  // Gọi notifyDataSetChanged để cập nhật giao diện
+    }
+}

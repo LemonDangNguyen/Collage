@@ -12,7 +12,7 @@ import com.example.collageimage.databinding.ActivityTemplateBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.view_template.ViewTemplateMain
 
-class Template : BaseActivity() {
+class TemplateActivity : BaseActivity() {
     private val binding by lazy { ActivityTemplateBinding.inflate(layoutInflater) }
     private lateinit var viewTemplateMain: ViewTemplateMain
     private var selectedPathIndex: Int = -1
@@ -33,7 +33,6 @@ class Template : BaseActivity() {
             val viewGroup = binding.viewTempalte as ViewGroup
             viewGroup.removeAllViews()
             viewTemplateMain = ViewTemplateMain(this)
-
             val drawableResId = getDrawableResId(imageId)
             viewTemplateMain.setBackgroundDrawable(drawableResId)
 
@@ -51,7 +50,6 @@ class Template : BaseActivity() {
                 }
             }
         }
-
         // Mở SelectImageTemplate khi người dùng click vào một path
         viewTemplateMain.setOnPathClickListener { pathIndex ->
             selectedPathIndex = pathIndex // save index của path đã chọn
@@ -59,11 +57,6 @@ class Template : BaseActivity() {
             intent.putExtra("selected_path", pathIndex)
             selectImageLauncher.launch(intent)
         }
-
-
-
-
-
     }
 
     private fun getDrawableResId(imageId: Int): Int {
