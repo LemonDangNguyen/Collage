@@ -58,7 +58,7 @@ class SelectActivity : BaseActivity() {
         setContentView(binding.root)
         selectedImages = mutableListOf()
 
-       
+
         selectedImagesAdapter = SelectedImagesAdapter(this, selectedImages) { image ->
             selectedImages.remove(image) // Xóa ảnh khi bấm nút xóa
             selectedImagesAdapter.notifyDataSetChanged() // Cập nhật lại RecyclerView

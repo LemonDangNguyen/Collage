@@ -63,15 +63,35 @@ class CollageFragment : Fragment() {
         binding.dotsIndicator.setViewPager2(binding.viewPager)
     }
 
+    private var isForwardScroll = true // Biến theo dõi hướng cuộn (true: tiến, false: lùi)
+
     private fun autoScrollViewPager() {
         lifecycleScope.launch {
             while (true) {
-                delay(3000)
-                val nextItem = (binding.viewPager.currentItem + 1) % imageList.size
-                smoothScrollToItem(nextItem)
+                delay(3000) // Delay trước khi cuộn đến ảnh tiếp theo
+
+                val currentItem = binding.viewPager.currentItem
+                val nextItem = if (isForwardScroll) {
+                    if (currentItem == imageList.size - 1) {
+                        isForwardScroll = false // Đổi hướng cuộn khi đến cuối
+                        currentItem - 1
+                    } else {
+                        currentItem + 1
+                    }
+                } else {
+                    if (currentItem == 0) {
+                        isForwardScroll = true // Đổi hướng cuộn khi đến đầu
+                        currentItem + 1
+                    } else {
+                        currentItem - 1
+                    }
+                }
+
+                smoothScrollToItem(nextItem) // Cuộn mượt đến ảnh tiếp theo
             }
         }
     }
+
 
     private fun smoothScrollToItem(item: Int) {
         val recyclerView =
