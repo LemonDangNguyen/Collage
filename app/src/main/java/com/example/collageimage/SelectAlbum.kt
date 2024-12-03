@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -14,22 +13,17 @@ import android.provider.MediaStore
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.collageimage.BaseActivity
-import com.example.collageimage.MainActivity
-import com.example.collageimage.SelectActivity.Companion.REQUEST_CODE_SELECT_ALBUM
 import com.example.collageimage.databinding.ActivitySelectAlbumBinding
 import com.example.collageimage.databinding.DialogExitBinding
+
 
 class SelectAlbum : BaseActivity() {
 
     private val binding by lazy { ActivitySelectAlbumBinding.inflate(layoutInflater) }
     private val albumList = mutableListOf<AlbumModel>()
     private lateinit var albumAdapter: AlbumAdapter
-    private lateinit var viewModel: SelectActivityViewModel
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else
@@ -37,7 +31,7 @@ class SelectAlbum : BaseActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
-
+    private val selectedImages = mutableListOf<ImageModel>()
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { it.value }) {
@@ -46,9 +40,16 @@ class SelectAlbum : BaseActivity() {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
+        if (selectedImagesFromIntent != null) {
+            selectedImages.addAll(selectedImagesFromIntent)
+        }
+
         setupRecyclerView()
 
         if (hasStoragePermissions()) {
@@ -58,14 +59,16 @@ class SelectAlbum : BaseActivity() {
         }
 
         binding.btnBack.setOnClickListener {
-           onBackPressed()
+            onBackPressed()
         }
     }
+
 
     private fun setupRecyclerView() {
         albumAdapter = AlbumAdapter(this, albumList) { album ->
             val intent = Intent(this, SelectActivity::class.java)
             intent.putExtra("ALBUM_NAME", album.name)
+            intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
             startActivity(intent)
         }
         binding.selectedAlbum.apply {
@@ -134,7 +137,6 @@ class SelectAlbum : BaseActivity() {
         storagePermissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
-
     override fun onBackPressed(){
 
         val binding2 = DialogExitBinding.inflate(layoutInflater)
@@ -159,4 +161,5 @@ class SelectAlbum : BaseActivity() {
         }
         dialog2.show()
     }
+
 }
