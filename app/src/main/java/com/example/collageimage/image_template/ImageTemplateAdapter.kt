@@ -7,7 +7,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collageimage.R
 
-class ImageTemplateAdapter(private val imageList: List<Int>) : RecyclerView.Adapter<ImageTemplateAdapter.ImageViewHolder>() {
+class ImageTemplateAdapter(private val imageList: List<ImagetemplateModel>) : RecyclerView.Adapter<ImageTemplateAdapter.ImageViewHolder>() {
 
     private var onItemClickListener: ((Int) -> Unit)? = null
 
@@ -25,9 +25,10 @@ class ImageTemplateAdapter(private val imageList: List<Int>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        holder.imageView.setImageResource(imageList[position])
+        val item = imageList[position]
+        holder.imageView.setImageResource(item.imageResId)
         holder.itemView.setOnClickListener {
-            onItemClickListener?.invoke(imageList[position])
+            onItemClickListener?.invoke(item.id)
         }
     }
 
