@@ -21,7 +21,6 @@ class AlbumAdapter(
         val albumNameTextView: TextView = view.findViewById(R.id.album_name)
         val numberOfImagesTextView: TextView = view.findViewById(R.id.number_images)
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)
         return AlbumViewHolder(view)

@@ -1,12 +1,13 @@
-package com.example.collageimage
+package com.example.collageimage.image_template
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.collageimage.R
 
-class TemplateAdapter(private val imageList: List<Int>) : RecyclerView.Adapter<TemplateAdapter.ImageViewHolder>() {
+class ImageTemplateAdapter(private val imageList: List<Int>) : RecyclerView.Adapter<ImageTemplateAdapter.ImageViewHolder>() {
 
     private var onItemClickListener: ((Int) -> Unit)? = null
 
@@ -26,7 +27,7 @@ class TemplateAdapter(private val imageList: List<Int>) : RecyclerView.Adapter<T
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         holder.imageView.setImageResource(imageList[position])
         holder.itemView.setOnClickListener {
-            onItemClickListener?.invoke(imageList[position])  // Gửi ID ảnh khi nhấn vào
+            onItemClickListener?.invoke(imageList[position])
         }
     }
 

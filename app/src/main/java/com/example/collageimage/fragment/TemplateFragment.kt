@@ -11,15 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.collageimage.R
 import com.example.collageimage.Setting
 import com.example.collageimage.TemplateActivity
-import com.example.collageimage.TemplateAdapter
+import com.example.collageimage.image_template.ImageTemplateAdapter
 import com.example.collageimage.databinding.FragmentTemplateBinding
 import com.example.collageimage.view_template.SpaceItemDecoration
 
 class TemplateFragment : Fragment() {
-
     private var _binding: FragmentTemplateBinding? = null
     private val binding get() = _binding!!
-
     private val imageList = listOf(
         R.drawable.templatee01,
         R.drawable.templatee02,
@@ -52,9 +50,7 @@ class TemplateFragment : Fragment() {
         R.drawable.templatee29,
         R.drawable.templatee30
     )
-
-    private lateinit var templateAdapter: TemplateAdapter
-
+    private lateinit var imageTemplateAdapter: ImageTemplateAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,31 +58,24 @@ class TemplateFragment : Fragment() {
         _binding = FragmentTemplateBinding.inflate(inflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Cài đặt RecyclerView
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL)
         binding.rvTemplate.layoutManager = gridLayoutManager
-        templateAdapter = TemplateAdapter(imageList)
-        binding.rvTemplate.adapter = templateAdapter
-
+        imageTemplateAdapter = ImageTemplateAdapter(imageList)
+        binding.rvTemplate.adapter = imageTemplateAdapter
         val spaceDecoration = SpaceItemDecoration(32)
         binding.rvTemplate.addItemDecoration(spaceDecoration)
-
-        templateAdapter.setOnItemClickListener { imageId ->
+        imageTemplateAdapter.setOnItemClickListener { imageId ->
             val intent = Intent(requireContext(), TemplateActivity::class.java)
             intent.putExtra("imageId", imageId)
             startActivity(intent)
         }
-
         binding.btnSetting.setOnClickListener {
             startActivity(Intent(requireContext(), Setting::class.java))
         }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

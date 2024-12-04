@@ -76,7 +76,6 @@ class SelectImageTemplate : BaseActivity() {
             }
             imageAdapter = ImageAdapter(this, images) { image, isSelected ->
                 val intent = Intent().apply {
-                    //()
                     putExtra("selected_image_path", image.filePath)
                 }
                 setResult(RESULT_OK, intent)
