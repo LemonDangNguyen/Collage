@@ -62,7 +62,7 @@ class SelectActivity : BaseActivity() {
             val selectedImagesFromIntent = result.data?.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
             if (selectedImagesFromIntent != null) {
                 selectedImages = selectedImagesFromIntent
-                updateSelectedAdapters()  // Cập nhật lại adapter với ảnh đã chọn
+                updateSelectedAdapters()
             }
         }
     }
@@ -76,9 +76,8 @@ class SelectActivity : BaseActivity() {
         Log.d("SelectActivity", "Selected Images from Intent: ${selectedImagesFromIntent?.size}")
         if (selectedImagesFromIntent != null) {
             selectedImages = selectedImagesFromIntent
-            // Đảm bảo rằng selectedImagesAdapter đã được khởi tạo trước khi gọi update
             if (::selectedImagesAdapter.isInitialized) {
-                updateSelectedAdapters() // Cập nhật lại adapter để hiển thị ảnh đã chọn
+                updateSelectedAdapters()
             }
         }
 
@@ -111,7 +110,6 @@ class SelectActivity : BaseActivity() {
             }else{
                 Toast.makeText(this, "Please select at least 3 images", Toast.LENGTH_SHORT).show()
             }
-
         }
         binding.btnBack.setOnClickListener {
             onBackPressed()
@@ -121,10 +119,8 @@ class SelectActivity : BaseActivity() {
             val intent = Intent(this, SelectAlbum::class.java)
             intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
             startActivityForResult(intent, REQUEST_CODE_SELECT_ALBUM)
-
             finish()
         }
-
     }
     private fun initObservers() {
         viewModelMediaImageDetail.imagesLiveData.observe(this) {
@@ -213,19 +209,15 @@ class SelectActivity : BaseActivity() {
     }
     private fun updateSelectedAdapters() {
         Log.d("SelectActivity", "Updating adapters with selected images: ${selectedImages.size}")
-        selectedImagesAdapter.notifyDataSetChanged()  // Cập nhật SelectedImagesAdapter
+        selectedImagesAdapter.notifyDataSetChanged()
         imageAdapter.updateSelection(selectedImages)
-        selectedImagesAdapter.updateData(selectedImages)// Cập nhật ImageAdapter
-        updateSelectedCount()  // Cập nhật số lượng ảnh đã chọn
+        selectedImagesAdapter.updateData(selectedImages)
+        updateSelectedCount()
     }
-
-
-
     private fun updateSelectedCount() {
         binding.textViewCountItem.text = selectedImages.size.toString()
     }
      override fun onBackPressed(){
-
          val binding2 = DialogExitBinding.inflate(layoutInflater)
          val dialog2 = Dialog(this)
          dialog2.setContentView(binding2.root)

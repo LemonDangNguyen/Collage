@@ -227,17 +227,17 @@
                 android:textColor="@color/smoke"
                 android:textSize="10sp" />
 
-            <!-- <com.google.android.material.textview.MaterialTextView
-                 android:id="@+id/pchange"
-                 style="@style/SelectableItemBackground"
-                 android:layout_width="50dp"
-                 android:layout_height="wrap_content"
-                 android:layout_marginStart="10sp"
-                 android:drawableTop="@drawable/changepiece"
-                 android:gravity="center"
-                 android:text="@string/pchange"
-                 android:textColor="@color/smoke"
-                 android:textSize="10sp" />-->
+<!--         <com.google.android.material.textview.MaterialTextView-->
+<!--                 android:id="@+id/pchange"-->
+<!--                 style="@style/SelectableItemBackground"-->
+<!--                 android:layout_width="50dp"-->
+<!--                 android:layout_height="wrap_content"-->
+<!--                 android:layout_marginStart="10sp"-->
+<!--                 android:drawableTop="@drawable/changepiece"-->
+<!--                 android:gravity="center"-->
+<!--                 android:text="@string/pchange"-->
+<!--                 android:textColor="@color/smoke"-->
+<!--                 android:textSize="10sp" />-->
 
         </LinearLayout>
 
@@ -255,9 +255,96 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ctlBottom"
         tools:itemCount="40"
         tools:listitem="@layout/item_puzzle_layouts" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ctlBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:tag="binding_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/layoutParentTool"
+            layout="@layout/layout_parent_func"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!--        <include-->
+        <!--            android:id="@+id/layoutLayout"-->
+        <!--            layout="@layout/layout_tool"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="invisible"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+
+        <include
+            android:id="@+id/layoutBg"
+            layout="@layout/layout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!--        <include-->
+        <!--            android:id="@+id/layoutFrame"-->
+        <!--            layout="@layout/layout_frame"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="invisible"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+
+        <!--        <include-->
+        <!--            android:id="@+id/layoutAddText"-->
+        <!--            layout="@layout/layout_add_text"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="invisible"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+
+        <!--        <include-->
+        <!--            android:id="@+id/bar_stickers"-->
+        <!--            layout="@layout/layout_stickers"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+
+        <!--        <include-->
+        <!--            android:id="@+id/bar_drawing"-->
+        <!--            layout="@layout/layout_drawing"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+
+        <!--        <include-->
+        <!--            android:id="@+id/layoutEditImage"-->
+        <!--            layout="@layout/layout_edit_item_collage"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+
+        <!--        <include-->
+        <!--            android:id="@+id/bar_add_image"-->
+        <!--            layout="@layout/layout_add_image_source"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+
+        <!--        <include-->
+        <!--            android:id="@+id/bar_filter_and_adjust"-->
+        <!--            layout="@layout/layout_filter_and_adjust"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintBottom_toBottomOf="0" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

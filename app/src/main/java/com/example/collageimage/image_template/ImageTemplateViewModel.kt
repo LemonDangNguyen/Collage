@@ -6,17 +6,11 @@ import androidx.lifecycle.ViewModel
 import com.example.collageimage.R
 
 class ImageTemplateViewModel : ViewModel() {
-
-    // LiveData chứa danh sách hình ảnh
     private val _imageList = MutableLiveData<List<ImagetemplateModel>>()
     val imageList: LiveData<List<ImagetemplateModel>> get() = _imageList
-
-    // Khởi tạo và load hình ảnh
     init {
         loadImages()
     }
-
-    // Phương thức load hình ảnh vào danh sách
     private fun loadImages() {
         val imageResIds = listOf(
             R.drawable.templatee01, R.drawable.templatee02, R.drawable.templatee03,
@@ -30,13 +24,9 @@ class ImageTemplateViewModel : ViewModel() {
             R.drawable.templatee25, R.drawable.templatee26, R.drawable.templatee27,
             R.drawable.templatee28, R.drawable.templatee29, R.drawable.templatee30
         )
-
-        // Tạo danh sách ImagetemplateModel với ID tăng dần
         val imageListWithIds = imageResIds.mapIndexed { index, resId ->
             ImagetemplateModel(id = index + 1, imageResId = resId)
         }
-
-        // Cập nhật LiveData với danh sách hình ảnh
         _imageList.value = imageListWithIds
     }
 }

@@ -146,7 +146,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         for (i in 0 until count) {
             val target: CustomTarget<Bitmap> = object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap?>?) {
-                    //giam kich thuoc anh xuong theo sl anh
                     pieces.add(bitmap)
                     if (pieces.size == count) {
                         val remainingPieces = if (mList.size < list.areaCount) List(list.areaCount) { pieces[it % count] } else pieces
@@ -227,5 +226,3 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         dialog2.show()
     }
 }
-
-//uppppp

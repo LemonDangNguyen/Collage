@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_bottom_bar_collage"
+    android:elevation="@dimen/_13sdp"
+    android:tag="layout/layout_filter_edit_0">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_redo_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:src="@drawable/ic_redo_filter"
+        app:layout_constraintStart_toStartOf="0"
+        app:layout_constraintTop_toTopOf="0" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:src="@drawable/ic_save_func"
+        app:layout_constraintEnd_toEndOf="0"
+        app:layout_constraintTop_toTopOf="0" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_filter_mode"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:src="@drawable/ic_filter_mode"
+        app:layout_constraintStart_toStartOf="@+id/btn_redo_filter"
+        app:layout_constraintTop_toBottomOf="@+id/btn_redo_filter" />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_filter_intensity"
+        style="@style/CustomSeekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_weight="1"
+        android:max="100"
+        android:min="0"
+        android:progress="50"
+        app:layout_constraintEnd_toEndOf="@+id/btn_done"
+        app:layout_constraintStart_toEndOf="@+id/img_filter_mode"
+        app:layout_constraintTop_toTopOf="@+id/img_filter_mode" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_filter_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_regular"
+        android:text="50"
+        android:textColor="@color/color_unselect"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintBottom_toBottomOf="@+id/sb_filter_intensity"
+        app:layout_constraintEnd_toEndOf="@+id/btn_done"
+        app:layout_constraintTop_toTopOf="@+id/sb_filter_intensity" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_filters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:orientation="horizontal"
+        android:tag="binding_1"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="0"
+        app:layout_constraintStart_toStartOf="0"
+        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />
+</androidx.constraintlayout.widget.ConstraintLayout>

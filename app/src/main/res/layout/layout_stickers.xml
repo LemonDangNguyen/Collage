@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_bottom_bar_collage"
+    android:elevation="14dp"
+    android:tag="layout/layout_stickers_0">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_dismiss_sticker_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="0"
+        app:layout_constraintTop_toTopOf="0" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_done_sticker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:src="@drawable/ic_save_func"
+        app:layout_constraintEnd_toEndOf="0"
+        app:layout_constraintTop_toTopOf="0" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_sticker_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginLeft="@dimen/_12sdp"
+        android:layout_marginRight="@dimen/_12sdp"
+        android:orientation="horizontal"
+        android:tag="binding_1"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_dismiss_sticker_picker"
+        app:layout_constraintEnd_toStartOf="@+id/btn_done_sticker"
+        app:layout_constraintStart_toEndOf="@+id/btn_dismiss_sticker_picker"
+        app:layout_constraintTop_toTopOf="@+id/btn_dismiss_sticker_picker" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_stickers"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_160sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginLeft="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginRight="@dimen/_12sdp"
+        android:orientation="vertical"
+        android:tag="binding_2"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintEnd_toEndOf="0"
+        app:layout_constraintStart_toStartOf="0"
+        app:layout_constraintTop_toBottomOf="@+id/rcv_sticker_category"
+        app:spanCount="5" />
+
+<!--    <androidx.appcompat.widget.AppCompatTextView-->
+<!--        android:id="@+id/tv_sticker_error"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/network_error"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/rcv_stickers"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/rcv_stickers"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/rcv_stickers"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/rcv_stickers" />-->
+
+<!--    <ProgressBar-->
+<!--        android:id="@+id/prb_sticker_loading"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:indeterminateTint="@color/color_image_selected"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/rcv_stickers"-->
+<!--        app:layout_constraintEnd_toEndOf="0"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/rcv_stickers"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/rcv_stickers" />-->
+</androidx.constraintlayout.widget.ConstraintLayout>

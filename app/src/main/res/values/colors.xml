@@ -7,4 +7,8 @@
     <color name="grey">#C3C2C1</color>
     <color name="purple_200">#C5E3FF</color>
     <color name="colorPrimary">#3B83FC</color>
+    <color name="bg_border_tab">#FFDEF3FF</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorAccent">#3B83FC</color>
+
 </resources>

@@ -17,4 +17,11 @@
         <item name="colorControlHighlight">@color/white</item>
     </style>
     <style name="Theme.CollageImage" parent="Base.Theme.CollageImage" />
+
+
+    <style name="CustomSeekbar">
+        <item name="android:thumb">@drawable/seekbar_thumb</item> <!-- Thiết lập hình ảnh con trỏ -->
+        <item name="android:progressDrawable">@drawable/seekbar_progress</item> <!-- Thiết lập tiến trình thanh trượt -->
+        <item name="android:backgroundTint">@color/colorAccent</item> <!-- Thiết lập màu nền -->
+    </style>
 </resources>

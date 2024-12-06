@@ -68,4 +68,7 @@ dependencies {
     implementation ("androidx.camera:camera-video:1.2.2")
     implementation ("androidx.camera:camera-view:1.2.2")
     implementation ("androidx.camera:camera-extensions:1.2.2")
+
+
+    implementation ("com.makeramen:roundedimageview:2.3.0")
 }

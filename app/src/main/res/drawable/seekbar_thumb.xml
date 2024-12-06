@@ -1,0 +1,9 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/colorPrimary" /> <!-- Màu nền cho con trỏ -->
+            <size android:width="30dp" android:height="30dp" /> <!-- Kích thước con trỏ -->
+            <corners android:radius="15dp" /> <!-- Bo góc -->
+        </shape>
+    </item>
+</layer-list>
