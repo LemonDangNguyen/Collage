@@ -105,3 +105,4 @@ class CollageFragment : Fragment() {
         recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
     }
 }
+// test update
