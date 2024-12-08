@@ -21,9 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_16sdp"
-        android:src="@drawable/ic_redo_filter"
-        app:layout_constraintStart_toStartOf="0"
-        app:layout_constraintTop_toTopOf="0" />
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_done"
@@ -32,8 +32,8 @@
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:src="@drawable/ic_save_func"
-        app:layout_constraintEnd_toEndOf="0"
-        app:layout_constraintTop_toTopOf="0" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tab_filter"
@@ -42,15 +42,13 @@
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginLeft="@dimen/_12sdp"
         android:layout_marginRight="@dimen/_12sdp"
-        android:background="@drawable/indicator_filter_and_adjust"
-        android:fontFamily="@font/font_bold"
         android:paddingVertical="@dimen/_2sdp"
         android:paddingTop="@dimen/_2sdp"
         android:paddingBottom="@dimen/_2sdp"
         android:text="@string/filter"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textColor="@color/color_image_selected"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_redo_filter"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -64,7 +62,6 @@
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginLeft="@dimen/_12sdp"
         android:layout_marginRight="@dimen/_12sdp"
-        android:fontFamily="@font/font_bold"
         android:paddingVertical="@dimen/_2sdp"
         android:paddingTop="@dimen/_2sdp"
         android:paddingBottom="@dimen/_2sdp"
@@ -92,23 +89,23 @@
         android:layout_width="@dimen/_15sdp"
         android:layout_height="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_24sdp"
-        android:src="@drawable/ic_filter_mode"
+        android:src="@drawable/ic_redo_filter"
         app:layout_constraintStart_toStartOf="@+id/btn_redo_filter"
         app:layout_constraintTop_toBottomOf="@+id/btn_redo_filter" />
 
-    <com.gam.photo.collage.photoeditor.maker.ui.component.customview.DegreeSeekBar
-        android:id="@+id/sb_adjustment_intensity"
-        style="@style/CustomSeekbar"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_3sdp"
-        android:layout_marginEnd="@dimen/_6sdp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/img_current_adjust_mode"
-        app:layout_constraintEnd_toEndOf="@+id/btn_done"
-        app:layout_constraintStart_toEndOf="@+id/img_current_adjust_mode"
-        app:layout_constraintTop_toTopOf="@+id/img_current_adjust_mode" />
+<!--    <com.example.DegreeSeekBar-->
+<!--        android:id="@+id/sb_adjustment_intensity"-->
+<!--        style="@style/CustomSeekbar"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="@dimen/_30sdp"-->
+<!--        android:layout_marginStart="@dimen/_8sdp"-->
+<!--        android:layout_marginTop="@dimen/_3sdp"-->
+<!--        android:layout_marginEnd="@dimen/_6sdp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/img_current_adjust_mode"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/btn_done"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/img_current_adjust_mode"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/img_current_adjust_mode" />-->
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/sb_filter_intensity"
@@ -128,9 +125,8 @@
         android:id="@+id/tv_filter_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font_regular"
         android:text="50"
-        android:textColor="@color/color_unselect"
+        android:textColor="@color/smoke"
         android:textSize="@dimen/_8ssp"
         app:layout_constraintBottom_toBottomOf="@+id/sb_filter_intensity"
         app:layout_constraintEnd_toEndOf="@+id/btn_done"
@@ -145,9 +141,9 @@
         android:tag="binding_1"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="0"
-        app:layout_constraintStart_toStartOf="0"
-        app:layout_constraintTop_toBottomOf="@+id/sb_adjustment_intensity" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_filters"
@@ -159,7 +155,7 @@
         android:orientation="horizontal"
         android:tag="binding_2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="0"
-        app:layout_constraintStart_toStartOf="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -63,12 +63,12 @@ class CollageFragment : Fragment() {
         binding.dotsIndicator.setViewPager2(binding.viewPager)
     }
 
-    private var isForwardScroll = true // Biến theo dõi hướng cuộn (true: tiến, false: lùi)
+    private var isForwardScroll = true
 
     private fun autoScrollViewPager() {
         lifecycleScope.launch {
             while (true) {
-                delay(3000) // Delay trước khi cuộn đến ảnh tiếp theo
+                delay(3000)
 
                 val currentItem = binding.viewPager.currentItem
                 val nextItem = if (isForwardScroll) {

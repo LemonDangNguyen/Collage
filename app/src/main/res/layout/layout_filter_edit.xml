@@ -22,8 +22,8 @@
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_16sdp"
         android:src="@drawable/ic_redo_filter"
-        app:layout_constraintStart_toStartOf="0"
-        app:layout_constraintTop_toTopOf="0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_done"
@@ -32,8 +32,8 @@
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:src="@drawable/ic_save_func"
-        app:layout_constraintEnd_toEndOf="0"
-        app:layout_constraintTop_toTopOf="0" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_filter_mode"
@@ -62,9 +62,8 @@
         android:id="@+id/tv_filter_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/font_regular"
         android:text="50"
-        android:textColor="@color/color_unselect"
+        android:textColor="@color/smoke"
         android:textSize="@dimen/_8ssp"
         app:layout_constraintBottom_toBottomOf="@+id/sb_filter_intensity"
         app:layout_constraintEnd_toEndOf="@+id/btn_done"
@@ -80,7 +79,7 @@
         android:orientation="horizontal"
         android:tag="binding_1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="0"
-        app:layout_constraintStart_toStartOf="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />
 </androidx.constraintlayout.widget.ConstraintLayout>
