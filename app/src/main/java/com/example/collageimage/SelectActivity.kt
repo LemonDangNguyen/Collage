@@ -57,23 +57,12 @@ class SelectActivity : BaseActivity() {
             }
         }
     private var albumName: String? = null
-    val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val selectedImagesFromIntent = result.data?.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
-            if (selectedImagesFromIntent != null) {
-                selectedImages = selectedImagesFromIntent
-                updateSelectedAdapters()
-            }
-        }
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-
         val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
-        Log.d("SelectActivity", "Selected Images from Intent: ${selectedImagesFromIntent?.size}")
         if (selectedImagesFromIntent != null) {
             selectedImages = selectedImagesFromIntent
             if (::selectedImagesAdapter.isInitialized) {
@@ -115,7 +104,6 @@ class SelectActivity : BaseActivity() {
             onBackPressed()
         }
         binding.btnAlbum.setOnClickListener {
-            Log.d("SelectActivity", "Selected Images before moving: ${selectedImages.size}")
             val intent = Intent(this, SelectAlbum::class.java)
             intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
             startActivityForResult(intent, REQUEST_CODE_SELECT_ALBUM)
@@ -182,6 +170,7 @@ class SelectActivity : BaseActivity() {
             val nameIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
             val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             val albumIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+
             images.clear()
             while (cursor.moveToNext()) {
                 images.add(
@@ -195,15 +184,21 @@ class SelectActivity : BaseActivity() {
                         uri = Uri.withAppendedPath(
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                             cursor.getLong(idIndex).toString()
-                        )
+                        ),
+                        isCameraItem = false // Đảm bảo các item ảnh bình thường có giá trị isCameraItem = false
                     )
                 )
             }
+
+            // Sau khi load ảnh xong, thêm item camera vào đầu danh sách
+            imageAdapter.addCameraItem()
+
             imageAdapter.notifyDataSetChanged()
         } ?: run {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun hasStoragePermissions() = storagePermissions.all {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }

@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.49872774" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_redo_filter"

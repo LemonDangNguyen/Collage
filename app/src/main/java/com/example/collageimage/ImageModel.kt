@@ -1,4 +1,5 @@
-package com.example.collageimage;
+package com.example.collageimage
+
 import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
@@ -10,7 +11,8 @@ data class ImageModel(
     val filePath: String,
     val album: String,
     val selected: Boolean = false,
-    val uri: Uri
+    val uri: Uri,
+    val isCameraItem: Boolean = false // Thêm thuộc tính này để phân biệt item camera
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -20,7 +22,8 @@ data class ImageModel(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readByte() != 0.toByte(), // For the 'selected' boolean
-        parcel.readParcelable(Uri::class.java.classLoader) ?: Uri.EMPTY // Handle 'uri'
+        parcel.readParcelable(Uri::class.java.classLoader) ?: Uri.EMPTY, // Handle 'uri'
+        parcel.readByte() != 0.toByte() // For the 'isCameraItem' boolean
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -31,6 +34,7 @@ data class ImageModel(
         parcel.writeString(album)
         parcel.writeByte(if (selected) 1 else 0) // Write 'selected' as a byte
         parcel.writeParcelable(uri, flags) // Write 'uri'
+        parcel.writeByte(if (isCameraItem) 1 else 0) // Write 'isCameraItem' as a byte
     }
 
     override fun describeContents(): Int {
