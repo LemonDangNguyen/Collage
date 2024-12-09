@@ -58,7 +58,6 @@ class SelectActivity : BaseActivity() {
         }
     private var albumName: String? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -81,7 +80,6 @@ class SelectActivity : BaseActivity() {
         setUpListener()
         initObservers()
     }
-
 
     private fun setUpListener(){
         binding.clearImgList.setOnClickListener {
@@ -155,6 +153,7 @@ class SelectActivity : BaseActivity() {
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DATE_TAKEN,
+            MediaStore.Images.Media.DATE_MODIFIED,
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
@@ -164,19 +163,22 @@ class SelectActivity : BaseActivity() {
         } else {
             "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?" to arrayOf(albumName)
         }
-        contentResolver.query(uri, projection, selection, selectionArgs, "${MediaStore.Images.Media.DATE_TAKEN} DESC")?.use { cursor ->
+        contentResolver.query(uri, projection, selection, selectionArgs, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            val dateIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+            val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+            val dateModifiedIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED)
             val nameIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
             val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             val albumIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
 
             images.clear()
             while (cursor.moveToNext()) {
+                val date = cursor.getLong(dateModifiedIndex) ?: cursor.getLong(dateTakenIndex)
+
                 images.add(
                     ImageModel(
                         id = cursor.getLong(idIndex),
-                        dateTaken = cursor.getLong(dateIndex),
+                        dateTaken = date,
                         fileName = cursor.getString(nameIndex),
                         filePath = cursor.getString(pathIndex),
                         album = cursor.getString(albumIndex),
@@ -185,14 +187,11 @@ class SelectActivity : BaseActivity() {
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                             cursor.getLong(idIndex).toString()
                         ),
-                        isCameraItem = false // Đảm bảo các item ảnh bình thường có giá trị isCameraItem = false
+                        isCameraItem = false
                     )
                 )
             }
-
-            // Sau khi load ảnh xong, thêm item camera vào đầu danh sách
             imageAdapter.addCameraItem()
-
             imageAdapter.notifyDataSetChanged()
         } ?: run {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()

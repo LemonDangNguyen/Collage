@@ -1,20 +1,100 @@
 package com.example.collageimage
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.view.View
+import android.widget.Toast
+import com.example.collageimage.databinding.ActivityCameraBinding
+import com.otaliastudios.cameraview.CameraListener
+import com.otaliastudios.cameraview.CameraView
+import com.otaliastudios.cameraview.PictureResult
+import com.otaliastudios.cameraview.controls.Flash
+import java.io.File
 
 class ActivityCamera : BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_camera)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+    private val binding by lazy { ActivityCameraBinding.inflate(layoutInflater) }
+    private lateinit var cameraView: CameraView
+    private val photoList = mutableListOf<String>()
+    private val maxPhotos = 9
+
+    // Định nghĩa cameraListener chỉ một lần
+    private val cameraListener = object : CameraListener() {
+        override fun onPictureTaken(result: PictureResult) {
+            super.onPictureTaken(result)
+
+            val photoFile = File(getExternalFilesDir(null), "photo_${photoList.size + 1}.jpg")
+            result.toFile(photoFile) { file ->
+                file?.let {
+
+                    photoList.add(it.absolutePath)
+                    updateThumbnail(it.absolutePath)
+                    binding.tvTotalImage.text = "${photoList.size}"
+                    binding.tvTotalImage.visibility = View.VISIBLE
+                    binding.ivDone.visibility = View.VISIBLE
+                }
+            }
         }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        cameraView = binding.cameraView
+        cameraView.setLifecycleOwner(this)
+        cameraView.addCameraListener(cameraListener)
+
+        binding.ivClose.setOnClickListener { finish() }
+
+        binding.ivFlash.setOnClickListener { toggleFlash() }
+
+        binding.ivCapture.setOnClickListener { takePicture() }
+
+        binding.ivDone.setOnClickListener {
+            if (photoList.isNotEmpty()) {
+                Toast.makeText(this, "Đã có ${photoList.size} ảnh", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        cameraView.open()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        cameraView.close()
+    }
+
+    // Hàm chụp ảnh
+    private fun takePicture() {
+        if (photoList.size >= maxPhotos) {
+            Toast.makeText(this, "Đã đạt giới hạn $maxPhotos ảnh", Toast.LENGTH_SHORT).show()
+            return
+        }
+        cameraView.takePictureSnapshot()
+    }
+
+    private fun updateThumbnail(photoPath: String) {
+        binding.ivThumb.setImageURI(android.net.Uri.parse("file://$photoPath"))
+    }
+
+    private fun toggleFlash() {
+        when (cameraView.flash) {
+            Flash.OFF -> {
+                cameraView.flash = Flash.TORCH
+                binding.ivFlash.setImageResource(R.drawable.ic_flash) // Đổi sang icon flash bật
+            }
+            Flash.TORCH -> {
+                cameraView.flash = Flash.OFF
+                binding.ivFlash.setImageResource(R.drawable.ic_no_flash) // Đổi sang icon flash tắt
+            }
+            else -> {
+                cameraView.flash = Flash.OFF
+                binding.ivFlash.setImageResource(R.drawable.ic_no_flash)
+            }
+        }
+    }
+
 }

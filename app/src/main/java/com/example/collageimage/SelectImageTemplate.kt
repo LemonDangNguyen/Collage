@@ -36,33 +36,43 @@ class SelectImageTemplate : BaseActivity() {
 
         setUpListener()
     }
+
     private fun setUpListener() {
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
     }
+
     private fun loadImages() {
         val uri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DATE_TAKEN,
+            MediaStore.Images.Media.DATE_MODIFIED, // Thêm DATE_MODIFIED vào projection
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
-        contentResolver.query(uri, projection, null, null, "${MediaStore.Images.Media.DATE_TAKEN} DESC")?.use { cursor ->
+
+        // Thay đổi sắp xếp theo DATE_MODIFIED DESC
+        contentResolver.query(uri, projection, null, null, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            val dateIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+            val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+            val dateModifiedIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED) // Truy xuất DATE_MODIFIED
             val nameIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
             val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             val albumIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+
             images.clear()
 
             while (cursor.moveToNext()) {
+                // Dùng DATE_MODIFIED nếu có, nếu không thì dùng DATE_TAKEN
+                val date = cursor.getLong(dateModifiedIndex) ?: cursor.getLong(dateTakenIndex)
+
                 images.add(
                     ImageModel(
                         id = cursor.getLong(idIndex),
-                        dateTaken = cursor.getLong(dateIndex),
+                        dateTaken = date, // Sử dụng DATE_MODIFIED nếu có, nếu không thì DATE_TAKEN
                         fileName = cursor.getString(nameIndex),
                         filePath = cursor.getString(pathIndex),
                         album = cursor.getString(albumIndex),
@@ -74,6 +84,7 @@ class SelectImageTemplate : BaseActivity() {
                     )
                 )
             }
+
             imageAdapter = ImageAdapter(this, images) { image, isSelected ->
                 val intent = Intent().apply {
                     putExtra("selected_image_path", image.filePath)
@@ -81,15 +92,18 @@ class SelectImageTemplate : BaseActivity() {
                 setResult(RESULT_OK, intent)
                 finish()
             }
+
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter
         } ?: run {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun hasStoragePermissions() = storagePermissions.all {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
+
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { it.value }) {

@@ -6,8 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ActivityCamera">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlToolBar"
+        android:layout_marginTop="@dimen/_22sdp"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/black"
@@ -52,11 +54,13 @@
         app:cameraGestureTap="autoFocus"
         app:cameraGrid="off"
         app:cameraMode="picture"
-        app:cameraPlaySounds="true"
+        app:cameraPlaySounds="false"
         app:cameraPreview="texture"
         app:cameraUseDeviceOrientation="false"
         app:layout_constraintBottom_toTopOf="@+id/ctlBottom"
-        app:layout_constraintTop_toBottomOf="@+id/ctlToolBar" />
+        app:layout_constraintTop_toBottomOf="@+id/ctlToolBar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="52dp" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlBottom"
         android:layout_width="match_parent"
@@ -88,7 +92,7 @@
             android:padding="@dimen/_2sdp"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/_8ssp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="@+id/ivThumb"
             app:layout_constraintTop_toTopOf="@+id/ivThumb" />
