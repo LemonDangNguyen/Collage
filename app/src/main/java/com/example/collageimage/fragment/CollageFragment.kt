@@ -77,21 +77,21 @@ class CollageFragment : Fragment() {
                 val currentItem = binding.viewPager.currentItem
                 val nextItem = if (isForwardScroll) {
                     if (currentItem == imageList.size - 1) {
-                        isForwardScroll = false // Đổi hướng cuộn khi đến cuối
+                        isForwardScroll = false
                         currentItem - 1
                     } else {
                         currentItem + 1
                     }
                 } else {
                     if (currentItem == 0) {
-                        isForwardScroll = true // Đổi hướng cuộn khi đến đầu
+                        isForwardScroll = true
                         currentItem + 1
                     } else {
                         currentItem - 1
                     }
                 }
 
-                smoothScrollToItem(nextItem) // Cuộn mượt đến ảnh tiếp theo
+                smoothScrollToItem(nextItem)
             }
         }
     }
@@ -109,4 +109,3 @@ class CollageFragment : Fragment() {
         recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
     }
 }
-// test update// test update// test update// test update// test update// test update// test update// test update// test update

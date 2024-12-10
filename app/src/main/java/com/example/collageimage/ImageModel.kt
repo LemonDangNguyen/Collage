@@ -12,7 +12,7 @@ data class ImageModel(
     val album: String,
     val selected: Boolean = false,
     val uri: Uri,
-    val isCameraItem: Boolean = false // Thêm thuộc tính này để phân biệt item camera
+    val isCameraItem: Boolean = false
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(

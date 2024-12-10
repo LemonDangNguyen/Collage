@@ -20,9 +20,7 @@ class AdapterMediaImageSelected() : ListAdapter<ImageModel, AdapterMediaImageSel
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
         val currentItem = getItem(position)
         bindViews(holder, currentItem)
-
         holder.binding.root.setOnClickListener {
-
         }
     }
 

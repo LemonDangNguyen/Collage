@@ -61,6 +61,8 @@ class SelectActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+
         val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
         if (selectedImagesFromIntent != null) {
             selectedImages = selectedImagesFromIntent

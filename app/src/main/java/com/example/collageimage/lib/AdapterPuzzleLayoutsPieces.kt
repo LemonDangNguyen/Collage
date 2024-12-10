@@ -42,8 +42,6 @@ class AdapterPuzzleLayoutsPieces(private val itemClick: (puzzleLayout: PuzzleLay
         }
 
     }
-// tra sữalujuc vị
-
     override fun getItemCount(): Int {
         return puzzleLayouts.size
     }
@@ -55,6 +53,5 @@ class AdapterPuzzleLayoutsPieces(private val itemClick: (puzzleLayout: PuzzleLay
 
         holder.binding.puzzle.setPuzzleLayout(currentItem)
     }
-
     inner class CustomViewHolder(val binding: ItemPuzzleLayoutsPieceBinding) : RecyclerView.ViewHolder(binding.root)
 }
