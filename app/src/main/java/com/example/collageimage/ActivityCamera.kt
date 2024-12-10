@@ -17,7 +17,6 @@ class ActivityCamera : BaseActivity() {
     private val photoList = mutableListOf<String>()
     private val maxPhotos = 9
 
-    // Định nghĩa cameraListener chỉ một lần
     private val cameraListener = object : CameraListener() {
         override fun onPictureTaken(result: PictureResult) {
             super.onPictureTaken(result)
@@ -52,6 +51,7 @@ class ActivityCamera : BaseActivity() {
 
         binding.ivDone.setOnClickListener {
             if (photoList.isNotEmpty()) {
+
                 Toast.makeText(this, "Đã có ${photoList.size} ảnh", Toast.LENGTH_SHORT).show()
             }
         }
@@ -84,11 +84,11 @@ class ActivityCamera : BaseActivity() {
         when (cameraView.flash) {
             Flash.OFF -> {
                 cameraView.flash = Flash.TORCH
-                binding.ivFlash.setImageResource(R.drawable.ic_flash) // Đổi sang icon flash bật
+                binding.ivFlash.setImageResource(R.drawable.ic_flash)
             }
             Flash.TORCH -> {
                 cameraView.flash = Flash.OFF
-                binding.ivFlash.setImageResource(R.drawable.ic_no_flash) // Đổi sang icon flash tắt
+                binding.ivFlash.setImageResource(R.drawable.ic_no_flash)
             }
             else -> {
                 cameraView.flash = Flash.OFF

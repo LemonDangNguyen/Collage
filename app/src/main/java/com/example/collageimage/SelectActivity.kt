@@ -124,7 +124,7 @@ class SelectActivity : BaseActivity() {
                         selectedImages.add(image)
                         updateSelectedAdapters()
                     } else {
-                        Toast.makeText(this, "You can select up to 9 images only", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Maximum is 9 images only", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
@@ -202,7 +202,6 @@ class SelectActivity : BaseActivity() {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
     private fun updateSelectedAdapters() {
-        Log.d("SelectActivity", "Updating adapters with selected images: ${selectedImages.size}")
         selectedImagesAdapter.notifyDataSetChanged()
         imageAdapter.updateSelection(selectedImages)
         selectedImagesAdapter.updateData(selectedImages)
