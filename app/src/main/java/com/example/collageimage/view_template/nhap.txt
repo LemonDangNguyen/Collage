@@ -1,0 +1,179 @@
+<!--    <HorizontalScrollView-->
+<!--        android:id="@+id/pieceButtons"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:background="#FFFFFF"-->
+<!--        android:scrollbars="none"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/rcvListPuzzleLayouts">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/bottomNav"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent">-->
+
+<!--            &lt;!&ndash;<com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pswap"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:drawableTop="@drawable/swappiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pswap"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />&ndash;&gt;-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pmirror"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:drawableTop="@drawable/mirrorpiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pmirror"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pflip"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/flippiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pflip"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/protate"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/rotatepiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/protate"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pzoomplus"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/zoom_piece_plus"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pzoomplus"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pzoomminus"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/zoom_piece_minus"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pzoomplus"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pleft"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/leftpiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pleft"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pright"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/rightpiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pright"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pup"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/uppiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pup"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pdown"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/downpiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pdown"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/btnCorner"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10sp"-->
+<!--                android:drawableTop="@drawable/baseline_rounded_corner_24"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/corner"-->
+<!--                android:textColor="@color/smoke"-->
+<!--                android:textSize="10sp" />-->
+
+<!--            &lt;!&ndash;         <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:id="@+id/pchange"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 style="@style/SelectableItemBackground"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:layout_width="50dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:layout_marginStart="10sp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:drawableTop="@drawable/changepiece"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:gravity="center"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:text="@string/pchange"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:textColor="@color/smoke"&ndash;&gt;-->
+<!--            &lt;!&ndash;                 android:textSize="10sp" />&ndash;&gt;-->
+
+<!--        </LinearLayout>-->
+
+<!--    </HorizontalScrollView>-->
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rcvListPuzzleLayouts"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="80dp"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingVertical="12dp"-->
+<!--        android:paddingStart="12dp"-->
+<!--        android:paddingEnd="8dp"-->
+<!--        android:scrollbarStyle="outsideOverlay"-->
+<!--        android:scrollbars="vertical"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/ctlBottom"-->
+<!--        tools:itemCount="40"-->
+<!--        tools:listitem="@layout/item_puzzle_layouts" />-->

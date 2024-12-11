@@ -5,7 +5,7 @@
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/border_bottom_bar_collage"
+    android:background="@color/white"
     android:scrollbars="none"
     android:tag="layout/layout_parent_func_0">
 

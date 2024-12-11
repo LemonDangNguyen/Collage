@@ -48,4 +48,5 @@
     <string name="cancel">Cancel</string>
     <string name="edit">Edit Image</string>
     <string name="save">Save</string>
+    <string name="no_photos">No Photo</string>
 </resources>

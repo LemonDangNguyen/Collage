@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/border_bottom_bar_collage"
     android:elevation="12dp"
     android:orientation="vertical"
@@ -20,6 +21,7 @@
             android:layout_marginStart="@dimen/_5sdp"
             android:padding="@dimen/_7sdp"
             android:src="@drawable/ic_close"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,8 +51,24 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_100sdp">
 
+        <!--    <androidx.recyclerview.widget.RecyclerView-->
+        <!--        android:id="@+id/rcvListPuzzleLayouts"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="80dp"-->
+        <!--        android:clipToPadding="false"-->
+        <!--        android:orientation="horizontal"-->
+        <!--        android:paddingVertical="12dp"-->
+        <!--        android:paddingStart="12dp"-->
+        <!--        android:paddingEnd="8dp"-->
+        <!--        android:scrollbarStyle="outsideOverlay"-->
+        <!--        android:scrollbars="vertical"-->
+        <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+        <!--        app:layout_constraintBottom_toTopOf="@+id/ctlBottom"-->
+        <!--        tools:itemCount="40"-->
+        <!--        tools:listitem="@layout/item_puzzle_layouts" />-->
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvLayout"
+            android:id="@+id/rcvListPuzzleLayouts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -60,6 +78,7 @@
             android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="@dimen/_10sdp"
             android:visibility="visible"
+            tools:listitem="@layout/item_puzzle_layouts"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <androidx.recyclerview.widget.RecyclerView
