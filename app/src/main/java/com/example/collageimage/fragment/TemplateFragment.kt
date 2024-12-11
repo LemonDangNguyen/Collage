@@ -1,4 +1,5 @@
 package com.example.collageimage.fragment
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.collageimage.R
 import com.example.collageimage.Setting
 import com.example.collageimage.TemplateActivity
@@ -31,36 +31,40 @@ class TemplateFragment : Fragment() {
         _binding = FragmentTemplateBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageTemplateViewModel = ViewModelProvider(this).get(ImageTemplateViewModel::class.java)
+
+        // Quan sát dữ liệu từ ViewModel
         imageTemplateViewModel.imageList.observe(viewLifecycleOwner, Observer { imageList ->
-            // Khởi tạo adapter với dữ liệu đã nhận
+            // Khởi tạo adapter với dữ liệu nhận được
             imageTemplateAdapter = ImageTemplateAdapter(imageList)
-            imageTemplateAdapter.setOnItemClickListener { setupListeners() }
-            setupRecyclerView(imageList)
-        })
-    }
-    private fun setupRecyclerView(imageList: List<ImagetemplateModel>) {
-        val gridLayoutManager = GridLayoutManager(requireContext(), 2)
-        gridLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.rvTemplate.layoutManager = gridLayoutManager
-        binding.rvTemplate.adapter = imageTemplateAdapter
-        val spaceDecoration = SpaceItemDecoration(32)
-        binding.rvTemplate.addItemDecoration(spaceDecoration)
-    }
-    private fun setupListeners() {
-        if (::imageTemplateAdapter.isInitialized) {
+
+
             imageTemplateAdapter.setOnItemClickListener { imageId ->
                 val intent = Intent(requireContext(), TemplateActivity::class.java)
                 intent.putExtra("imageId", imageId)
                 startActivity(intent)
             }
-        }
-        binding.btnSetting.setOnClickListener {
-            startActivity(Intent(requireContext(), Setting::class.java))
-        }
+
+
+            // Thiết lập RecyclerView
+            setupRecyclerView(imageList)
+        })
     }
+
+    private fun setupRecyclerView(imageList: List<ImagetemplateModel>) {
+        val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+        gridLayoutManager.orientation = GridLayoutManager.VERTICAL
+        binding.rvTemplate.layoutManager = gridLayoutManager
+        binding.rvTemplate.adapter = imageTemplateAdapter
+
+        // Thêm khoảng cách giữa các item trong RecyclerView
+        val spaceDecoration = SpaceItemDecoration(32)
+        binding.rvTemplate.addItemDecoration(spaceDecoration)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
