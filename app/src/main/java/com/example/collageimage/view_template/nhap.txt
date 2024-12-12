@@ -1,179 +1,141 @@
-<!--    <HorizontalScrollView-->
-<!--        android:id="@+id/pieceButtons"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        android:background="#FFFFFF"-->
-<!--        android:scrollbars="none"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/rcvListPuzzleLayouts">-->
+package com.example.collageimage.view_template
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/bottomNav"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent">-->
+import android.graphics.Bitmap
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.collageimage.R
 
-<!--            &lt;!&ndash;<com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pswap"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:drawableTop="@drawable/swappiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pswap"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />&ndash;&gt;-->
+class TemplateViewModel : ViewModel() {
+    private val _templates = MutableLiveData<List<TemplateModel>>()
+    val templates: LiveData<List<TemplateModel>> get() = _templates
 
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pmirror"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:drawableTop="@drawable/mirrorpiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pmirror"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
+    private val _selectedBitmap = MutableLiveData<Bitmap?>()
+    val selectedBitmap: LiveData<Bitmap?> get() = _selectedBitmap
+    private val _templateModel = MutableLiveData<TemplateModel>()
+    val templateModel: LiveData<TemplateModel> get() = _templateModel
 
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pflip"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/flippiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pflip"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
+    fun loadTemplates() {
 
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/protate"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/rotatepiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/protate"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
+        val templatesList = listOf(
+           
+            TemplateModel(
+                id = 5,
+                backgroundImageResId = R.drawable.template_05,
+                stringPaths = listOf(
+                    "M109 108.5h502v277H109v-277Z",
+                    "M109 420h502v277H109V420Z",
+                    "M109 727h502v277H109V727Z"
+                )
+            ),
+            TemplateModel(
+                id = 6,
+                backgroundImageResId = R.drawable.template_06,
+                stringPaths = listOf(
+                    "M434.36 256.1L389 531.93l219.61 36.12 50.7-308.2L477.92 230l-43.57 26.1Z",
+                    "M118.83 223.68l0.98 7.07 96.45-13.67-0.6-4.36L310.32 202l24.96 224.85L68.96 457 44 232.15l74.83-8.47Z",
+                    "M490.09 572H160v227.7h291.04l39.05-36.42V572Z"
+                )
+            ),
+            TemplateModel(
+                id = 7,
+                backgroundImageResId = R.drawable.template_07,
+                stringPaths = listOf(
+                    "M314.18 138.1H112.32v267.1h201.86V138.1Z",
+                    "M315 516H113v267h202V516Z",
+                    "M315 892H113v267h202V892Z",
+                    "M623 893H420v267h203V893Z",
+                    "M622 519H420v267h202V519Z",
+                    "M623 138H420v267h203V138Z"
+                )
+            ),
+            TemplateModel(
+                id = 8,
+                backgroundImageResId = R.drawable.template_08,
+                stringPaths = listOf(
+                    "M75.26 354.07v247.36h359.88V354.07H75.26Z",
+                    "M244.98 669.88H67v259.3h177.98v-259.3Z",
+                    "M657.62 342H523.15v195.9h134.47V342Z",
+                    "M508.85 513.2v39.78H651.7v143.5H385.06v-68.75h77.78V513.2h46Z",
+                    "M312.07 753.43V930.1h257.02V753.44H312.07Z"
+                )
+            ),
+            
+            TemplateModel(
+                id = 11,
+                backgroundImageResId = R.drawable.template_11,
+                stringPaths = listOf(
+                    "M70 142c0-33.14 26.86-60 60-60h461c33.14 0 60 26.86 60 60v995c0 33.14-26.86 60-60 60h-461c-33.14 0-60-26.86-60-60z"
+                )
+            ),
+            TemplateModel(
+                id = 13,
+                backgroundImageResId = R.drawable.template_13,
+                stringPaths = listOf(
+                    "M73 505H273V832H73z",
+                    "M336 272H643V613H336z"
+                )
+            ),  TemplateModel(
+                id = 14,
+                backgroundImageResId = R.drawable.template_14,
+                stringPaths = listOf(
+                    "M362.39 443.71v-96.54h28.54L390.95 191H65.03L65 443.71h297.39Z",
+                    "M297.21 611.88V502.32H96.56v235.03h181.58V611.88h19.07Z",
+                    "M363.29 819.14h-85.15v-25.46L65.3 793.4l0.03 241.9 297.99 0.39-0.03-216.56Z",
+                    "M458.78 808.08V622.94H289.21v185.14h169.57Z",
+                    "M574.35 455.38h67.03V226.13H457.3v121.04h117.05v108.21Z",
+                    "M513.71 659.25h-43.86v-47.37h-96.4V358.23h189.83v233.2h-49.57v67.83Z",
+                    "M524.78 792.05V602.49h130.14v189.56H524.78Z",
+                    "M458.78 808.08V622.94H289.21v185.14h169.57Z",
+                    "M374.37 864.14l-0.02 182.22-44.62 0.06v42.45H632V864.15H374.37Z",
+                    "M363.29 819.14h-85.15v-25.46L65.3 793.4l0.03 241.9 297.99 0.39-0.03-216.56Z"
+                )
+            ),
+            TemplateModel(
+                id = 15,
+                backgroundImageResId = R.drawable.template_15,
+                stringPaths = listOf(
+                    "M471.98 371.56H83v462.46h388.98V371.56Z",
+                    "M244.76 877.46H83.45v209.74h161.31V877.46Z",
+                    "M663.3 876.87H502v209.74h161.3V876.87Z",
+                    "M663.56 624.15H502.25v209.74h161.3V624.15Z",
+                    "M663.51 371H502.2v209.74h161.31V371Z"
+                )
+            ),
+          
+            TemplateModel(
+                id = 24,
+                backgroundImageResId = R.drawable.template_25,
+                stringPaths = listOf(
+                    "M65 519.43l292.33-33.69 24.55 213.3-74.78 8.62 13.69 118.92-217.56 25.06L65 519.43Z",
+                    "M618.88 691.54l-292.32 33.69 38.23 332.22 292.33-33.69-38.24-332.22Z",
+                    "M65 519.43l292.33-33.69 24.55 213.3-74.78 8.62 13.69 118.92-217.56 25.06L65 519.43Z"
+                )
+            ),
+            TemplateModel(
+                id = 25,
+                backgroundImageResId = R.drawable.template_25,
+                stringPaths = listOf(
+                    "M302.88 113.31L65.91 143.12l29.92 237.5L332.8 350.8l-29.92-237.5Z",
+                    "M652.34 174H408v244.15h244.34V174Z",
+                    "M339.69 489.73L105.73 448 64 681.96l233.96 41.73 41.73-233.96Z",
+                    "M635.7 548H382v253.7h253.7V548Z",
+                    "M301.63 819L56 849.82l30.82 245.63 245.63-30.82L301.63 819Z",
+                    "M666.73 892.86L414.87 877 399 1129.1l251.85 15.86 15.88-252.1Z"
+                )
+            ),
+        )
+        _templates.value = templatesList
+    }
 
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pzoomplus"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/zoom_piece_plus"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pzoomplus"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pzoomminus"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/zoom_piece_minus"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pzoomplus"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pleft"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/leftpiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pleft"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pright"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/rightpiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pright"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pup"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/uppiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pup"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/pdown"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/downpiece"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/pdown"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
-
-<!--            <com.google.android.material.textview.MaterialTextView-->
-<!--                android:id="@+id/btnCorner"-->
-<!--                style="@style/SelectableItemBackground"-->
-<!--                android:layout_width="50dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10sp"-->
-<!--                android:drawableTop="@drawable/baseline_rounded_corner_24"-->
-<!--                android:gravity="center"-->
-<!--                android:text="@string/corner"-->
-<!--                android:textColor="@color/smoke"-->
-<!--                android:textSize="10sp" />-->
-
-<!--            &lt;!&ndash;         <com.google.android.material.textview.MaterialTextView&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:id="@+id/pchange"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 style="@style/SelectableItemBackground"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:layout_width="50dp"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:layout_height="wrap_content"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:layout_marginStart="10sp"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:drawableTop="@drawable/changepiece"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:gravity="center"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:text="@string/pchange"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:textColor="@color/smoke"&ndash;&gt;-->
-<!--            &lt;!&ndash;                 android:textSize="10sp" />&ndash;&gt;-->
-
-<!--        </LinearLayout>-->
-
-<!--    </HorizontalScrollView>-->
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/rcvListPuzzleLayouts"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="80dp"-->
-<!--        android:clipToPadding="false"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:paddingVertical="12dp"-->
-<!--        android:paddingStart="12dp"-->
-<!--        android:paddingEnd="8dp"-->
-<!--        android:scrollbarStyle="outsideOverlay"-->
-<!--        android:scrollbars="vertical"-->
-<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/ctlBottom"-->
-<!--        tools:itemCount="40"-->
-<!--        tools:listitem="@layout/item_puzzle_layouts" />-->
+    fun setSelectedImage(bitmap: Bitmap) {
+        _selectedBitmap.value = bitmap
+    }
+    fun getTemplateById(id: Int): TemplateModel? {
+        return _templates.value?.find { it.id == id }
+    }
+    fun updateTemplate(id: Int, backgroundImageResId: Int, paths: List<String>) {
+        val newTemplate = TemplateModel(id, backgroundImageResId, paths)
+        _templateModel.value = newTemplate
+    }
+}

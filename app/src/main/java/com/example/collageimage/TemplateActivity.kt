@@ -4,31 +4,43 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.collageimage.databinding.ActivityTemplateBinding
 import com.example.collageimage.view_template.TemplateModel
 import com.example.collageimage.view_template.TemplateViewModel
-import com.example.collageimage.view_template.ViewTemplateMain
+import com.example.collageimage.view_template.ViewTemplateAdapter
 
 class TemplateActivity : BaseActivity() {
     private val binding by lazy { ActivityTemplateBinding.inflate(layoutInflater) }
-    private lateinit var viewTemplateMain: ViewTemplateMain
+    private lateinit var viewTemplateAdapter: ViewTemplateAdapter
     private val templateViewModel: TemplateViewModel by viewModels()
     private var selectedPathIndex: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        // Load template data from ViewModel
+        templateViewModel.loadTemplates()
+
+        // Observer for template list
         templateViewModel.templates.observe(this, Observer { templates ->
             if (templates.isNotEmpty()) {
-                val template = templates[0]
-                setupTemplate(template)
+                val imageId = intent.getIntExtra("imageId", -1)
+                val template = templateViewModel.getTemplateById(imageId)
+
+                template?.let {
+                    setupTemplate(it)
+                } ?: run {
+                    Toast.makeText(this, "Template not found", Toast.LENGTH_SHORT).show()
+                }
             }
         })
 
-        templateViewModel.loadTemplates()
+        // Back button listener
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
@@ -41,14 +53,16 @@ class TemplateActivity : BaseActivity() {
             val viewGroup = binding.viewTempalte as ViewGroup
             viewGroup.removeAllViews()
 
-            viewTemplateMain = ViewTemplateMain(this)
-            viewTemplateMain.setBackgroundDrawable(template.backgroundImageResId)
+            viewTemplateAdapter = ViewTemplateAdapter(this)
+            viewTemplateAdapter.setBackgroundDrawable(template.backgroundImageResId)
             template.stringPaths.forEachIndexed { index, path ->
-                viewTemplateMain.setPath(index, path)
+                viewTemplateAdapter.setPath(index, path)
             }
 
-            viewGroup.addView(viewTemplateMain)
-            viewTemplateMain.setOnPathClickListener { pathIndex ->
+            viewGroup.addView(viewTemplateAdapter)
+
+            // Set click listener for paths
+            viewTemplateAdapter.setOnPathClickListener { pathIndex ->
                 selectedPathIndex = pathIndex
                 val intent = Intent(this, SelectImageTemplate::class.java)
                 intent.putExtra("selected_path", pathIndex)
@@ -63,7 +77,7 @@ class TemplateActivity : BaseActivity() {
             selectedImagePath?.let {
                 val selectedBitmap = BitmapFactory.decodeFile(it)
                 templateViewModel.setSelectedImage(selectedBitmap)
-                viewTemplateMain.setSelectedImage(selectedBitmap, selectedPathIndex)
+                viewTemplateAdapter.setSelectedImage(selectedBitmap, selectedPathIndex)
             }
         }
     }
@@ -75,7 +89,7 @@ class TemplateActivity : BaseActivity() {
             selectedImagePath?.let {
                 val selectedBitmap = BitmapFactory.decodeFile(it)
                 templateViewModel.setSelectedImage(selectedBitmap)
-                viewTemplateMain.setSelectedImage(selectedBitmap, selectedPathIndex)
+                viewTemplateAdapter.setSelectedImage(selectedBitmap, selectedPathIndex)
             }
         }
     }

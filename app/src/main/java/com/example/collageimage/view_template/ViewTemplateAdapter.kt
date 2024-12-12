@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.PathParser
 import com.example.collageimage.R
 
-class ViewTemplateMain(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
     private lateinit var backgroundBitmap: Bitmap
     private val pathObjects = mutableListOf<Path>()
     private val scaledPaths = mutableListOf<Path>()
@@ -28,8 +28,8 @@ class ViewTemplateMain(context: Context, attrs: AttributeSet? = null) : View(con
     }
 
     fun setBackgroundDrawable(imageResId: Int) {
-        backgroundBitmap = BitmapFactory.decodeResource(context.resources, imageResId)  // Khởi tạo backgroundBitmap
-        invalidate()  // Sau khi khởi tạo, vẽ lại view
+        backgroundBitmap = BitmapFactory.decodeResource(context.resources, imageResId)
+        invalidate()
     }
 
 
@@ -43,18 +43,11 @@ class ViewTemplateMain(context: Context, attrs: AttributeSet? = null) : View(con
         invalidate()
     }
 
-    // Thêm phương thức setOnPathClickListener
     fun setOnPathClickListener(listener: (Int) -> Unit) {
         onPathClickListener = listener
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        val width = width.toFloat()
-        val height = height.toFloat()
-        val rectF = RectF(0f, 0f, width, height)
-        canvas.drawBitmap(backgroundBitmap, null, rectF, Paint())
-
         scaledPaths.clear()
         pathObjects.forEachIndexed { index, path ->
             val scaledPath = Path(path)
@@ -76,6 +69,12 @@ class ViewTemplateMain(context: Context, attrs: AttributeSet? = null) : View(con
                 canvas.drawBitmap(bitmap, null, bounds, null)
             }
         }
+        super.onDraw(canvas)
+        val width = width.toFloat()
+        val height = height.toFloat()
+        val rectF = RectF(0f, 0f, width, height)
+        canvas.drawBitmap(backgroundBitmap, null, rectF, Paint())
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

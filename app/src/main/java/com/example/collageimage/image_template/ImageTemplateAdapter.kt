@@ -7,14 +7,14 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collageimage.R
 
-class ImageTemplateAdapter(private val imageList: List<ImagetemplateModel>) : RecyclerView.Adapter<ImageTemplateAdapter.ImageViewHolder>() {
+class ImageTemplateAdapter : RecyclerView.Adapter<ImageTemplateAdapter.ImageViewHolder>() {
+    private var imageList: List<ImagetemplateModel> = listOf()
+    var onItemClickListener: ((Int) -> Unit)? = null
 
-    private var onItemClickListener: ((Int) -> Unit)? = null
-
-    fun setOnItemClickListener(listener: (Int) -> Unit) {
-        onItemClickListener = listener
+    fun setImageList(newImageList: List<ImagetemplateModel>) {
+        imageList = newImageList
+        notifyDataSetChanged()
     }
-
     inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.image_view)
     }
