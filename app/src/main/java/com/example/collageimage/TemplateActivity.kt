@@ -23,24 +23,15 @@ class TemplateActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        // Load template data from ViewModel
-        templateViewModel.loadTemplates()
-
-        // Observer for template list
-        templateViewModel.templates.observe(this, Observer { templates ->
-            if (templates.isNotEmpty()) {
-                val imageId = intent.getIntExtra("imageId", -1)
-                val template = templateViewModel.getTemplateById(imageId)
-
-                template?.let {
-                    setupTemplate(it)
-                } ?: run {
-                    Toast.makeText(this, "Template not found", Toast.LENGTH_SHORT).show()
-                }
+        val imageId = intent.getIntExtra("imageId", -1)
+        if (imageId != -1) {
+            templateViewModel.loadTemplates()
+            val template = templateViewModel.getTemplateById(imageId)
+            template?.let {
+                setupTemplate(it)
             }
-        })
+        }
 
-        // Back button listener
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
@@ -48,7 +39,6 @@ class TemplateActivity : BaseActivity() {
 
     private fun setupTemplate(template: TemplateModel) {
         val layout = layoutInflater.inflate(R.layout.template_main, null)
-
         if (binding.viewTempalte is ViewGroup) {
             val viewGroup = binding.viewTempalte as ViewGroup
             viewGroup.removeAllViews()
@@ -58,10 +48,7 @@ class TemplateActivity : BaseActivity() {
             template.stringPaths.forEachIndexed { index, path ->
                 viewTemplateAdapter.setPath(index, path)
             }
-
             viewGroup.addView(viewTemplateAdapter)
-
-            // Set click listener for paths
             viewTemplateAdapter.setOnPathClickListener { pathIndex ->
                 selectedPathIndex = pathIndex
                 val intent = Intent(this, SelectImageTemplate::class.java)

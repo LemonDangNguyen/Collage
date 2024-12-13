@@ -21,12 +21,6 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     private val selectedBitmaps = mutableListOf<Bitmap?>()
     private var onPathClickListener: ((Int) -> Unit)? = null
 
-    init {
-        selectedBitmaps.add(null)
-        selectedBitmaps.add(null)
-        selectedBitmaps.add(null)
-    }
-
     fun setBackgroundDrawable(imageResId: Int) {
         backgroundBitmap = BitmapFactory.decodeResource(context.resources, imageResId)
         invalidate()
@@ -36,6 +30,10 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     fun setPath(index: Int, pathData: String) {
         val pathObj = PathParser.createPathFromPathData(pathData)
         pathObjects.add(pathObj)
+
+        if (index >= selectedBitmaps.size) {
+            selectedBitmaps.add(null)
+        }
     }
 
     fun setSelectedImage(bitmap: Bitmap, pathIndex: Int) {
@@ -59,23 +57,28 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
             scaledPaths.add(scaledPath)
 
             val paint = Paint().apply {
-                color = ContextCompat.getColor(context, R.color.colorPrimary)
+                color = ContextCompat.getColor(context, R.color.fill_color)
             }
             canvas.drawPath(scaledPath, paint)
 
             selectedBitmaps[index]?.let { bitmap ->
                 val bounds = RectF()
                 scaledPath.computeBounds(bounds, true)
+                canvas.save()
+                canvas.clipPath(scaledPath)
                 canvas.drawBitmap(bitmap, null, bounds, null)
+                canvas.restore()
             }
         }
+
         super.onDraw(canvas)
+
         val width = width.toFloat()
         val height = height.toFloat()
         val rectF = RectF(0f, 0f, width, height)
         canvas.drawBitmap(backgroundBitmap, null, rectF, Paint())
-
     }
+
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
@@ -93,7 +96,6 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
         }
         return true
     }
-
     private fun isPointInPath(path: Path, x: Float, y: Float): Boolean {
         val bounds = RectF()
         path.computeBounds(bounds, true)
