@@ -70,16 +70,17 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvListPuzzleLayouts"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_height="80dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/_10sdp"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingRight="@dimen/_10sdp"
-            android:visibility="visible"
-            tools:listitem="@layout/item_puzzle_layouts"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:paddingVertical="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="40"
+            tools:listitem="@layout/item_puzzle_layouts" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRatio"

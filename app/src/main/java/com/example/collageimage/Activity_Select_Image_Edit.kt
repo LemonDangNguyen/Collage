@@ -58,7 +58,6 @@ class Activity_Select_Image_Edit : BaseActivity() {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
 
-        // Thay đổi sắp xếp theo DATE_MODIFIED DESC
         contentResolver.query(uri, projection, null, null, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
@@ -70,7 +69,6 @@ class Activity_Select_Image_Edit : BaseActivity() {
             images.clear()
 
             while (cursor.moveToNext()) {
-                // Dùng DATE_MODIFIED nếu có, nếu không thì dùng DATE_TAKEN
                 val date = cursor.getLong(dateModifiedIndex) ?: cursor.getLong(dateTakenIndex)
 
                 images.add(

@@ -142,7 +142,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         })
     }
     private fun initRecyclerView() {
-      //  binding.rcvListPuzzleLayouts.adapter = adapterPuzzleLayoutsPieces
+        binding.layoutLayout.rcvListPuzzleLayouts.adapter = adapterPuzzleLayoutsPieces
     }
     private val itemClick: ((PuzzleLayout, theme: Int) -> Unit) = { _, theme ->
         viewModelPuzzleLayouts.getPuzzleLayout(1, mList.size, theme)
