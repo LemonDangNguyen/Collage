@@ -27,9 +27,11 @@ class AdapterPuzzleLayoutsPieces(private val itemClick: (puzzleLayout: PuzzleLay
         val currentItem = puzzleLayouts[position]
         bindViews(holder, currentItem)
 
+        // viền của layout
         holder.binding.puzzle.apply {
             setLineColor(Color.BLACK)
             setPiecePadding(4.0F)
+
         }
         holder.binding.root.setOnClickListener {
             var theme = 0
@@ -49,6 +51,8 @@ class AdapterPuzzleLayoutsPieces(private val itemClick: (puzzleLayout: PuzzleLay
     private fun bindViews(holder: CustomViewHolder, currentItem: PuzzleLayout) {
         holder.binding.puzzle.needDrawLine = true
         holder.binding.puzzle.needDrawOuterLine = true
+
+        // acp cái layout cho phép chinh flase, không cho là true
         holder.binding.puzzle.isTouchEnable = false
 
         holder.binding.puzzle.setPuzzleLayout(currentItem)

@@ -164,4 +164,31 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ctlChildTool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:tag="binding_1"
+        app:layout_constraintBottom_toBottomOf="@+id/lnBottomBar"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <include
+            android:id="@+id/layoutAddText"
+            layout="@layout/layout_add_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <include
+            android:id="@+id/bar_stickers"
+            layout="@layout/layout_stickers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

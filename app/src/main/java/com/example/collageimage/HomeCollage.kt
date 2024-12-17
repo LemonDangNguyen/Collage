@@ -8,27 +8,18 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.collageimage.BaseActivity
-import com.example.collageimage.MainActivity
 import com.example.collageimage.R
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
 import com.example.collageimage.databinding.DialogExitBinding
-import com.example.collageimage.databinding.LayoutParentFuncBinding
-import com.example.collageimage.databinding.LayoutToolBinding
 import com.example.selectpic.ddat.PuzzleUtils
 import com.example.selectpic.ddat.RepoPuzzleUtils
 import com.example.selectpic.ddat.RepositoryMediaImages
@@ -53,7 +44,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -102,6 +92,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
     private fun layoutToolFunc(){
         binding.layoutLayout.ivClose.setOnClickListener {
+            binding.layoutLayout.root.visibility = View.GONE
+
+        }
+        binding.layoutLayout.ivDone.setOnClickListener {
             binding.layoutLayout.root.visibility = View.GONE
         }
     }

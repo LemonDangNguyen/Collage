@@ -15,19 +15,15 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
     private val mSrc = FloatArray(4)
     private val mDst = FloatArray(4)
     private var mCount = 0
-
     private var previousDistance = 0f
     private var scaleFactor = 1f
-
     fun onTouchEvent(event: MotionEvent) {
         if (event.pointerCount > 2) {
             return
         }
-
         val action = event.actionMasked
         val index = event.actionIndex
         var idx = index * 2
-
         when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 mSrc[idx] = event.getX(index)
@@ -35,7 +31,6 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
                 mCount++
                 ptpIdx = 0
             }
-
             MotionEvent.ACTION_MOVE -> {
                 var i = 0
                 while (i < mCount) {
@@ -48,8 +43,6 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
                 mMatrix.postConcat(mTempMatrix)
                 mListener.onChange(mMatrix)
                 System.arraycopy(mDst, 0, mSrc, 0, mDst.size)
-
-                // Xử lý zoom khi có 2 ngón tay
                 if (event.pointerCount == 2) {
                     val distance = calculateDistance(event)
                     if (previousDistance > 0) {
@@ -67,8 +60,6 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
             }
         }
     }
-
-    // Tính khoảng cách giữa 2 điểm chạm
     private fun calculateDistance(event: MotionEvent): Float {
         val x1 = event.getX(0)
         val y1 = event.getY(0)
@@ -76,8 +67,6 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
         val y2 = event.getY(1)
         return Math.sqrt(((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)).toDouble()).toFloat()
     }
-
-    // Cập nhật matrix khi thực hiện zoom
     private fun scaleImage(scale: Float) {
         scaleFactor *= scale
         val values = FloatArray(9)
@@ -86,5 +75,3 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
         mListener.onChange(mMatrix)
     }
 }
-
-/// tréasasdads
