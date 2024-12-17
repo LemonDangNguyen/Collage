@@ -1,5 +1,6 @@
 package com.example.collageimage;
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -36,18 +37,37 @@ import com.hypersoft.pzlayout.utils.PuzzlePiece
 import com.hypersoft.pzlayout.view.PuzzleView
 
 class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener {
+
     private val binding by lazy { ActivityHomeCollageBinding.inflate(layoutInflater) }
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
-    private val useCaseMediaImageDetail by lazy { UseCaseMediaImageDetail(RepositoryMediaImages(mediaStoreMediaImages)) }
-    private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> { ViewModelMediaImageDetailProvider(useCaseMediaImageDetail) }
-    private val viewModelPuzzleLayouts by viewModels<ViewModelPuzzleLayouts> { ViewModelPuzzleLayoutsProvider(UseCasePuzzleLayouts(RepoPuzzleUtils(PuzzleUtils()))) }
+    private val useCaseMediaImageDetail by lazy {
+        UseCaseMediaImageDetail(
+            RepositoryMediaImages(
+                mediaStoreMediaImages
+            )
+        )
+    }
+    private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> {
+        ViewModelMediaImageDetailProvider(
+            useCaseMediaImageDetail
+        )
+    }
+    private val viewModelPuzzleLayouts by viewModels<ViewModelPuzzleLayouts> {
+        ViewModelPuzzleLayoutsProvider(
+            UseCasePuzzleLayouts(RepoPuzzleUtils(PuzzleUtils()))
+        )
+    }
+
+    private var curPuzzleLayout: PuzzleLayout? = null
 
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        val selectedImages: ArrayList<ImageModel>? = intent.getParcelableArrayListExtra("SELECTED_IMAGES")
+        val selectedImages: ArrayList<ImageModel>? =
+            intent.getParcelableArrayListExtra("SELECTED_IMAGES")
         selectedImages?.let {
             mList = it
             fetchLayouts(it)
@@ -59,10 +79,8 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         initListener()
         btntParentBottom()
         layoutToolFunc()
-
-
-
     }
+
     private fun btntParentBottom() {
         binding.layoutParentTool.llChangeLayout.setOnClickListener {
             binding.layoutLayout.root.visibility = View.VISIBLE
@@ -82,7 +100,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         binding.layoutParentTool.llChangeSticker.setOnClickListener {
             binding.barStickers.root.visibility = View.VISIBLE
         }
-        binding.layoutParentTool.changeDraw .setOnClickListener {
+        binding.layoutParentTool.changeDraw.setOnClickListener {
             binding.barDrawing.root.visibility = View.VISIBLE
         }
         binding.layoutParentTool.addImage.setOnClickListener {
@@ -90,32 +108,38 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         }
     }
 
-    private fun layoutToolFunc(){
-        binding.layoutLayout.ivClose.setOnClickListener {
-            binding.layoutLayout.root.visibility = View.GONE
-
-        }
+    private fun layoutToolFunc() {
         binding.layoutLayout.ivDone.setOnClickListener {
+            adapterPuzzleLayoutsPieces.confirmSelection()
+            binding.layoutLayout.root.visibility = View.GONE
+        }
+        binding.layoutLayout.ivClose.setOnClickListener {
+            adapterPuzzleLayoutsPieces.discardSelection()
             binding.layoutLayout.root.visibility = View.GONE
         }
     }
-    private fun layoutBgFunc(){
+
+    private fun layoutBgFunc() {
         binding.layoutBg.ivClose.setOnClickListener {
             binding.layoutBg.root.visibility = View.GONE
         }
     }
-    private fun layoutFrameFunc(){
+
+    private fun layoutFrameFunc() {
 //        binding.layoutFrame.ivClose.setOnClickListener {
 //            binding.layoutFrame.root.visibility = View.GONE
 //        }
     }
-    private fun layoutAddTextFunc(){
+
+    private fun layoutAddTextFunc() {
 
     }
-    private fun layoutFilterFunc(){
+
+    private fun layoutFilterFunc() {
 
     }
-    private fun layoutStickerFunc(){
+
+    private fun layoutStickerFunc() {
         binding.barStickers.btnDismissStickerPicker.setOnClickListener {
             binding.barStickers.root.visibility = View.GONE
         }
@@ -129,15 +153,19 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
                     binding.puzzleView.setPieceRadian(progress.toFloat())
                 }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
+
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
     }
+
     private fun initRecyclerView() {
         binding.layoutLayout.rcvListPuzzleLayouts.adapter = adapterPuzzleLayoutsPieces
     }
+
     private val itemClick: ((PuzzleLayout, theme: Int) -> Unit) = { _, theme ->
         viewModelPuzzleLayouts.getPuzzleLayout(1, mList.size, theme)
     }
@@ -160,6 +188,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         }
     }
 
+    @SuppressLint("Recycle")
     private fun initView(list: PuzzleLayout) = binding.puzzleView.apply {
         val context: Context = this.context
         val ta = context.obtainStyledAttributes(
@@ -176,13 +205,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         setOnPieceSelectedListener(this@HomeCollage)
         post { loadPhotoFromRes(list) }
     }
+
     private fun setupListeners() = binding.apply {
 //        listOf(pmirror to ::mirror, pflip to ::flip, protate to ::rotate,
 //            pzoomplus to ::zoomPlus, pzoomminus to ::zoomMinus,
 //            pleft to ::left, pright to ::right, pup to ::up, pdown to ::down).forEach { (view, action) ->
 //            view.setOnClickListener { action() }
 //        }
-      //  btnCorner.setOnClickListener { corner() }
+        //  btnCorner.setOnClickListener { corner() }
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
@@ -197,14 +227,16 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap?>?) {
                     pieces.add(bitmap)
                     if (pieces.size == count) {
-                        val remainingPieces = if (mList.size < list.areaCount) List(list.areaCount) { pieces[it % count] } else pieces
+                        val remainingPieces =
+                            if (mList.size < list.areaCount) List(list.areaCount) { pieces[it % count] } else pieces
                         binding.puzzleView.addPieces(remainingPieces)
                     }
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
                 override fun onLoadFailed(errorDrawable: Drawable?) {
-                    Toast.makeText(this@HomeCollage, "Failed to load image", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HomeCollage, "Failed to load image", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
             Glide.with(this).asBitmap().load(mList[i].uri).into(target)
@@ -223,7 +255,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         }
     }
 
-    private fun mirror() = handlePuzzleAction {binding.puzzleView.mirrorPiece() }
+    private fun mirror() = handlePuzzleAction { binding.puzzleView.mirrorPiece() }
     private fun flip() = handlePuzzleAction { binding.puzzleView.flipPiece() }
     private fun rotate() = handlePuzzleAction { binding.puzzleView.rotatePiece() }
     private fun zoomPlus() = handlePuzzleAction { binding.puzzleView.zoomInPiece() }
@@ -250,7 +282,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     override fun onPieceClick() {}
     override fun onSwapGetPositions(pos1: Int, pos2: Int) {}
     override fun onPieceSelected(piece: PuzzlePiece?, position: Int) {}
-    override fun onBackPressed(){
+    override fun onBackPressed() {
 
         val binding2 = DialogExitBinding.inflate(layoutInflater)
         val dialog2 = Dialog(this)
@@ -260,7 +292,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog2.setCanceledOnTouchOutside(false)
         dialog2.setCancelable(false)
-        binding2.btnExit.setOnClickListener{
+        binding2.btnExit.setOnClickListener {
             dialog2.dismiss()
 
             val intent = Intent(this, MainActivity::class.java)
@@ -269,7 +301,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             finish()
             super.onBackPressed()
         }
-        binding2.btnStay.setOnClickListener{
+        binding2.btnStay.setOnClickListener {
             dialog2.dismiss()
         }
         dialog2.show()
