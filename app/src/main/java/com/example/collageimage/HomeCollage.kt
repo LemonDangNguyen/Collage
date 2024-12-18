@@ -66,6 +66,8 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        binding.puzzleView.setSelectedLineColor(Color.RED)
+        binding.puzzleView.setLineSize(6)
         val selectedImages: ArrayList<ImageModel>? =
             intent.getParcelableArrayListExtra("SELECTED_IMAGES")
         selectedImages?.let {
@@ -106,6 +108,8 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         binding.layoutParentTool.addImage.setOnClickListener {
             binding.barAddImage.root.visibility = View.VISIBLE
         }
+
+
     }
 
     private fun layoutToolFunc() {

@@ -49,14 +49,15 @@ class ViewModelPuzzleLayouts(private val useCasePuzzleLayouts: UseCasePuzzleLayo
         }
     }
 
-    fun getPuzzleLayout(type: Int, borderSize: Int, theme: Int) = viewModelScope.launch(Dispatchers.IO) {
-        useCasePuzzleLayouts.getPuzzleLayout(type, borderSize, theme).let { list ->
-            if (list.width() > 5) {
-                delay(500)
+    fun getPuzzleLayout(type: Int, borderSize: Int, theme: Int) =
+        viewModelScope.launch(Dispatchers.IO) {
+            useCasePuzzleLayouts.getPuzzleLayout(type, borderSize, theme).let { list ->
+                if (list.width() > 5) {
+                    delay(500)
+                }
+                _puzzleLayoutLiveData.postValue(list)
             }
-            _puzzleLayoutLiveData.postValue(list)
         }
-    }
 
     fun layoutClick(puzzleLayout: PuzzleLayout) = viewModelScope.launch(Dispatchers.IO) {
         if (useCasePuzzleLayouts.isSlantLayout(puzzleLayout)) {

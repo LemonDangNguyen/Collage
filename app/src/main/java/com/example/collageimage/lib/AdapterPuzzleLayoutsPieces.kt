@@ -8,10 +8,12 @@ import com.example.collageimage.databinding.ItemPuzzleLayoutsPieceBinding
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.layouts.slant.NumberSlantLayout
 import com.hypersoft.pzlayout.layouts.straight.NumberStraightLayout
+import com.hypersoft.pzlayout.view.PuzzleView
 
 class AdapterPuzzleLayoutsPieces(
     private val itemClick: (puzzleLayout: PuzzleLayout, theme: Int) -> Unit
 ) : RecyclerView.Adapter<AdapterPuzzleLayoutsPieces.CustomViewHolder>() {
+
 
     private var puzzleLayouts: List<PuzzleLayout> = emptyList()
     private var selectedPosition: Int = RecyclerView.NO_POSITION
@@ -24,6 +26,7 @@ class AdapterPuzzleLayoutsPieces(
     override fun getItemCount(): Int = puzzleLayouts.size
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
+
         val binding = ItemPuzzleLayoutsPieceBinding.inflate(layoutInflater, parent, false)
         return CustomViewHolder(binding)
     }
@@ -31,10 +34,13 @@ class AdapterPuzzleLayoutsPieces(
         val currentItem = puzzleLayouts[position]
         bindViews(holder, currentItem)
 
+
         holder.binding.puzzle.apply {
+            setSelectedLineColor(Color.RED)
             when (position) {
                 selectedPosition -> setLineColor(Color.parseColor("#3B83FC"))
                 else -> setLineColor(Color.DKGRAY)
+
             }
             setPiecePadding(4.0F)
         }
