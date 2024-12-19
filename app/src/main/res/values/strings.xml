@@ -49,4 +49,5 @@
     <string name="edit">Edit Image</string>
     <string name="save">Save</string>
     <string name="no_photos">No Photo</string>
+    <string name="ratio_image">Ratio Image</string>
 </resources>

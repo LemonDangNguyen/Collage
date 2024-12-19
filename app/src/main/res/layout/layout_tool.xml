@@ -49,23 +49,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_100sdp">
-
-        <!--    <androidx.recyclerview.widget.RecyclerView-->
-        <!--        android:id="@+id/rcvListPuzzleLayouts"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="80dp"-->
-        <!--        android:clipToPadding="false"-->
-        <!--        android:orientation="horizontal"-->
-        <!--        android:paddingVertical="12dp"-->
-        <!--        android:paddingStart="12dp"-->
-        <!--        android:paddingEnd="8dp"-->
-        <!--        android:scrollbarStyle="outsideOverlay"-->
-        <!--        android:scrollbars="vertical"-->
-        <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-        <!--        app:layout_constraintBottom_toTopOf="@+id/ctlBottom"-->
-        <!--        tools:itemCount="40"-->
-        <!--        tools:listitem="@layout/item_puzzle_layouts" />-->
+        android:layout_height="@dimen/_90sdp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvListPuzzleLayouts"
@@ -76,6 +60,7 @@
             android:paddingVertical="12dp"
             android:paddingStart="12dp"
             android:paddingEnd="8dp"
+            android:visibility="visible"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -85,7 +70,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRatio"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_centerVertical="true"
             android:paddingStart="@dimen/_5sdp"
             android:visibility="gone"

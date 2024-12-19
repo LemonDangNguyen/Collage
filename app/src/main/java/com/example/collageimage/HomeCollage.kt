@@ -11,16 +11,22 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.collageimage.R
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
 import com.example.collageimage.databinding.DialogExitBinding
+import com.example.collageimage.ratio.AspectRatioViewModel
+import com.example.collageimage.ratio.adapter.RatioAdapter
 import com.example.selectpic.ddat.PuzzleUtils
 import com.example.selectpic.ddat.RepoPuzzleUtils
 import com.example.selectpic.ddat.RepositoryMediaImages
@@ -32,6 +38,7 @@ import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider
+import com.hypersoft.pzlayout.SquarePuzzleView
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.utils.PuzzlePiece
 import com.hypersoft.pzlayout.view.PuzzleView
@@ -62,7 +69,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
-
+    private val viewModelRatio: AspectRatioViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -81,11 +88,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         initListener()
         btntParentBottom()
         layoutToolFunc()
+
     }
 
     private fun btntParentBottom() {
         binding.layoutParentTool.llChangeLayout.setOnClickListener {
             binding.layoutLayout.root.visibility = View.VISIBLE
+            binding.layoutParentTool.root.visibility = View.GONE
+            binding.linearLayout.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeBG.setOnClickListener {
             binding.layoutBg.root.visibility = View.VISIBLE
@@ -113,14 +123,38 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private fun layoutToolFunc() {
+
         binding.layoutLayout.ivDone.setOnClickListener {
             adapterPuzzleLayoutsPieces.confirmSelection()
             binding.layoutLayout.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
         }
         binding.layoutLayout.ivClose.setOnClickListener {
             adapterPuzzleLayoutsPieces.discardSelection()
             binding.layoutLayout.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
         }
+        binding.layoutLayout.layout.setOnClickListener {
+            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.VISIBLE
+            binding.layoutLayout.rvRatio.visibility = View.GONE
+            binding.layoutLayout.layoutBorder.visibility = View.GONE
+
+        }
+        binding.layoutLayout.ratio.setOnClickListener {
+            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
+            binding.layoutLayout.rvRatio.visibility = View.VISIBLE
+            binding.layoutLayout.layoutBorder.visibility = View.GONE
+            setRatio()
+        }
+        binding.layoutLayout.llBorder.setOnClickListener {
+            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
+            binding.layoutLayout.rvRatio.visibility = View.GONE
+            binding.layoutLayout.layoutBorder.visibility = View.VISIBLE
+
+        }
+
     }
 
     private fun layoutBgFunc() {
@@ -309,5 +343,44 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             dialog2.dismiss()
         }
         dialog2.show()
+    }
+
+
+    private fun setRatio(){
+        val ratios = listOf(
+            Triple("1:1", R.drawable.ic_ratio_1_1, 1f),
+            Triple("4:5", R.drawable.ic_ratio_4_5, 4f / 5f),
+            Triple("4:5", R.drawable.ic_ratio_5_4, 5f / 4f),
+            Triple("3:4", R.drawable.ic_ratio_3_4, 3f / 4f),
+            Triple("9:16", R.drawable.ic_ratio_9_16, 9f / 16f)
+        )
+        val adapter = RatioAdapter(ratios){
+            ratio ->
+            viewModelRatio.setAspectRatio(ratio)
+        }
+        binding.layoutLayout.rvRatio.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        binding.layoutLayout.rvRatio.adapter = adapter
+        viewModelRatio.aspectRatio.observe(this)
+        {
+            ratio ->
+            binding.ivBackground.setAspectRatio(ratio)
+            updatePuzzleViewAspectRatio(binding.puzzleView, ratio)
+        }
+        viewModelRatio.backgroundColor.observe(this){color ->
+            binding.ivBackground.setBackgroundColor(color)
+        }
+
+    }
+    private fun updatePuzzleViewAspectRatio(puzzleView: PuzzleView, ratio: Float) {
+        val layoutParams = puzzleView.layoutParams
+        val parentWidth = puzzleView.width
+
+        // Tính toán chiều cao dựa trên tỷ lệ
+        val height = (parentWidth / ratio).toInt()
+
+        // Cập nhật layout params để thay đổi kích thước của PuzzleView
+        layoutParams.height = height
+        puzzleView.layoutParams = layoutParams
+
     }
 }
