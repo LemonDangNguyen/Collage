@@ -151,11 +151,13 @@
 
                 <androidx.appcompat.widget.AppCompatSeekBar
                     android:id="@+id/sbBorder"
-                    style="@style/CustomSeekbar"
+                    android:max="100"
+                    android:progress="10"
+                    android:progressBackgroundTint="@color/grey"
+                    android:progressTint="@color/white"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:max="100"
                     android:min="0" />
 
                 <TextView

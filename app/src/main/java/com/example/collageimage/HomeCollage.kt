@@ -66,6 +66,11 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private var curPuzzleLayout: PuzzleLayout? = null
+    private var currentMode: Mode = Mode.CORNER
+
+    enum class Mode {
+        CORNER, PADDING
+    }
 
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
@@ -123,7 +128,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private fun layoutToolFunc() {
-
         binding.layoutLayout.ivDone.setOnClickListener {
             adapterPuzzleLayoutsPieces.confirmSelection()
             binding.layoutLayout.root.visibility = View.GONE
@@ -152,8 +156,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
             binding.layoutLayout.rvRatio.visibility = View.GONE
             binding.layoutLayout.layoutBorder.visibility = View.VISIBLE
-
+            binding.layoutLayout.layoutCorner.setOnClickListener {
+                corner()
+            }
+            binding.layoutLayout.layoutAll.setOnClickListener {
+                padding()
+            }
         }
+
 
     }
 
@@ -185,18 +195,19 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
 
     private fun initListener() = binding.apply {
-        seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        layoutLayout.sbBorder.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    binding.puzzleView.setPieceRadian(progress.toFloat())
+                    when (currentMode) {
+                        Mode.CORNER -> binding.puzzleView.setPieceRadian(progress.toFloat())
+                        Mode.PADDING -> binding.puzzleView.setPiecePadding(progress.toFloat())
+                    }
                 }
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
     }
 
@@ -229,10 +240,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     @SuppressLint("Recycle")
     private fun initView(list: PuzzleLayout) = binding.puzzleView.apply {
         val context: Context = this.context
-        val ta = context.obtainStyledAttributes(
-            null,
-            com.hypersoft.pzlayout.R.styleable.PuzzleView
-        )
+//        val ta = context.obtainStyledAttributes(
+//            null,
+//            com.hypersoft.pzlayout.R.styleable.PuzzleView
+//        )
         setPuzzleLayout(list)
         isTouchEnable = true
         selectedLineColor = ContextCompat.getColor(context, R.color.black)
@@ -303,10 +314,18 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     private fun up() = handlePuzzleAction { binding.puzzleView.moveUp() }
     private fun down() = handlePuzzleAction { binding.puzzleView.moveDown() }
 
-    private fun corner() = binding.apply {
-        seekbar.visibility = View.VISIBLE
-        seekbar.max = 100
-        seekbar.progress = puzzleView.getPieceRadian().toInt()
+    private fun corner() = binding.layoutLayout.apply {
+        currentMode = Mode.CORNER
+        sbBorder.visibility = View.VISIBLE
+        sbBorder.max = 100
+        sbBorder.progress = binding.puzzleView.getPieceRadian().toInt()
+    }
+
+    private fun padding() = binding.layoutLayout.apply {
+        currentMode = Mode.PADDING
+        sbBorder.visibility = View.VISIBLE
+        sbBorder.max = 100
+        sbBorder.progress = binding.puzzleView.getPiecePadding().toInt()
     }
 
     private fun handlePuzzleAction(action: () -> Unit) {
@@ -346,7 +365,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
 
-    private fun setRatio(){
+    private fun setRatio() {
         val ratios = listOf(
             Triple("1:1", R.drawable.ic_ratio_1_1, 1f),
             Triple("4:5", R.drawable.ic_ratio_4_5, 4f / 5f),
@@ -354,31 +373,27 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             Triple("3:4", R.drawable.ic_ratio_3_4, 3f / 4f),
             Triple("9:16", R.drawable.ic_ratio_9_16, 9f / 16f)
         )
-        val adapter = RatioAdapter(ratios){
-            ratio ->
+        val adapter = RatioAdapter(ratios) { ratio ->
             viewModelRatio.setAspectRatio(ratio)
         }
-        binding.layoutLayout.rvRatio.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        binding.layoutLayout.rvRatio.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         binding.layoutLayout.rvRatio.adapter = adapter
         viewModelRatio.aspectRatio.observe(this)
-        {
-            ratio ->
+        { ratio ->
             binding.ivBackground.setAspectRatio(ratio)
             updatePuzzleViewAspectRatio(binding.puzzleView, ratio)
         }
-        viewModelRatio.backgroundColor.observe(this){color ->
+        viewModelRatio.backgroundColor.observe(this) { color ->
             binding.ivBackground.setBackgroundColor(color)
         }
 
     }
+
     private fun updatePuzzleViewAspectRatio(puzzleView: PuzzleView, ratio: Float) {
         val layoutParams = puzzleView.layoutParams
         val parentWidth = puzzleView.width
-
-        // Tính toán chiều cao dựa trên tỷ lệ
         val height = (parentWidth / ratio).toInt()
-
-        // Cập nhật layout params để thay đổi kích thước của PuzzleView
         layoutParams.height = height
         puzzleView.layoutParams = layoutParams
 
