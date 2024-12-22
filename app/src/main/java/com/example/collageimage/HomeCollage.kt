@@ -64,10 +64,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             UseCasePuzzleLayouts(RepoPuzzleUtils(PuzzleUtils()))
         )
     }
-
-    private var curPuzzleLayout: PuzzleLayout? = null
     private var currentMode: Mode = Mode.CORNER
-
     enum class Mode {
         CORNER, PADDING
     }
