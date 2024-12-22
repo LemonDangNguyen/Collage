@@ -65,6 +65,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         )
     }
     private var currentMode: Mode = Mode.CORNER
+
     enum class Mode {
         CORNER, PADDING
     }
@@ -90,6 +91,8 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         initListener()
         btntParentBottom()
         layoutToolFunc()
+        layoutBgFunc()
+        layoutFrameFunc()
 
     }
 
@@ -171,9 +174,9 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private fun layoutFrameFunc() {
-//        binding.layoutFrame.ivClose.setOnClickListener {
-//            binding.layoutFrame.root.visibility = View.GONE
-//        }
+        binding.layoutFrame.ivRefresh.setOnClickListener {
+            binding.layoutFrame.root.visibility = View.GONE
+        }
     }
 
     private fun layoutAddTextFunc() {
