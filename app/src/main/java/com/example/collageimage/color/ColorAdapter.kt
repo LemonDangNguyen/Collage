@@ -7,9 +7,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collageimage.databinding.ItemColorBinding
 
-class ColorAdapter(private val colors: List<ColorItem>) : RecyclerView.Adapter<ColorAdapter.ColorViewHolder>() {
+class ColorAdapter(private val colors: List<ColorItem>, private val listener: OnColorClickListener) : RecyclerView.Adapter<ColorAdapter.ColorViewHolder>() {
 
     inner class ColorViewHolder(val binding: ItemColorBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    listener.onColorClick(colors[position])
+                }
+            }
+        }
+
         fun bind(color: ColorItem) {
             binding.colorView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color.colorHex))
         }

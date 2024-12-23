@@ -14,7 +14,7 @@ class AspectRatioViewModel : ViewModel() {
 
     fun setAspectRatio(ratio: Float) {
         _aspectRatio.value = ratio
-        updateBackgroundColor(ratio)
+      //  updateBackgroundColor(ratio)
     }
 
     private fun updateBackgroundColor(ratio: Float) {

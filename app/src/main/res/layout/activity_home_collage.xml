@@ -73,9 +73,10 @@
             app:layout_constraintStart_toStartOf="@+id/puzzleView"
             app:layout_constraintTop_toTopOf="@+id/puzzleView"/>
 
-        <com.hypersoft.pzlayout.view.PuzzleView
+        <com.example.collageimage.customview.CustomPuzzleView
             android:id="@+id/puzzle_view"
             android:layout_gravity="center"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:radian="30" />

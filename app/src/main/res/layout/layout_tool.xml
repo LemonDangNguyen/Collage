@@ -120,7 +120,6 @@
                     android:id="@+id/tvValueBorderSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="000"
                     android:textColor="@color/smoke"
                     android:textSize="@dimen/_9ssp"
                     android:textStyle="bold" />
@@ -203,7 +202,6 @@
                     android:id="@+id/tvRecentpd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="50"
                     android:textColor="@color/smoke"
                     android:textSize="@dimen/_9ssp" />
             </LinearLayout>
@@ -242,7 +240,6 @@
                     android:id="@+id/tvRecent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="50"
                     android:textColor="@color/smoke"
                     android:textSize="@dimen/_9ssp" />
             </LinearLayout>
