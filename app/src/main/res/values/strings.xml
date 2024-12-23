@@ -22,7 +22,7 @@
     <string name="photo_collage">Photo Collage</string>
     <string name="edit_image">Edit Image</string>
     <string name="popular_template">Popular Templates</string>
-    <string name="corner">Corner</string>
+    <string name="corner">Corner\t</string>
     <string name="color">Color</string>
     <string name="blur">BLUR</string>
     <string name="gradient">gradient</string>

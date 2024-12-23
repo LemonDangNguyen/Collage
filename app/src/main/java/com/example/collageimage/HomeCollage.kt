@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -17,12 +18,15 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.collageimage.R
+import com.example.collageimage.color.ColorAdapter
+import com.example.collageimage.color.ColorItem
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.ratio.AspectRatioViewModel
@@ -42,6 +46,8 @@ import com.hypersoft.pzlayout.SquarePuzzleView
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.utils.PuzzlePiece
 import com.hypersoft.pzlayout.view.PuzzleView
+import yuku.ambilwarna.AmbilWarnaDialog
+import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 
 class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener {
 
@@ -64,12 +70,8 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             UseCasePuzzleLayouts(RepoPuzzleUtils(PuzzleUtils()))
         )
     }
-    private var currentMode: Mode = Mode.CORNER
-
-    enum class Mode {
-        CORNER, PADDING
-    }
-
+    private lateinit var colorAdapter: ColorAdapter
+    private var currentColor: Int = 0xFFFFFFFF.toInt()
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
     private val viewModelRatio: AspectRatioViewModel by viewModels()
@@ -93,8 +95,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         layoutToolFunc()
         layoutBgFunc()
         layoutFrameFunc()
+        colorrecyboderlayout()
 
     }
+
 
     private fun btntParentBottom() {
         binding.layoutParentTool.llChangeLayout.setOnClickListener {
@@ -141,31 +145,43 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.linearLayout.visibility = View.VISIBLE
         }
         binding.layoutLayout.layout.setOnClickListener {
+            binding.layoutLayout.layoutBorderColor.visibility = View.GONE
             binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.VISIBLE
             binding.layoutLayout.rvRatio.visibility = View.GONE
             binding.layoutLayout.layoutBorder.visibility = View.GONE
 
         }
         binding.layoutLayout.ratio.setOnClickListener {
+            binding.layoutLayout.layoutBorderColor.visibility = View.GONE
             binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
             binding.layoutLayout.rvRatio.visibility = View.VISIBLE
             binding.layoutLayout.layoutBorder.visibility = View.GONE
             setRatio()
         }
         binding.layoutLayout.llBorder.setOnClickListener {
+            binding.layoutLayout.layoutBorderColor.visibility = View.GONE
+            binding.layoutLayout.ivClose.visibility = View.GONE
+            binding.layoutLayout.ivRefresh.visibility = View.VISIBLE
             binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
             binding.layoutLayout.rvRatio.visibility = View.GONE
             binding.layoutLayout.layoutBorder.visibility = View.VISIBLE
-            binding.layoutLayout.layoutCorner.setOnClickListener {
-                corner()
-            }
-            binding.layoutLayout.layoutAll.setOnClickListener {
-                padding()
+            corner()
+            padding()
+        }
+        binding.layoutLayout.llBorderColor.setOnClickListener {
+            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
+            binding.layoutLayout.rvRatio.visibility = View.GONE
+            binding.layoutLayout.layoutBorder.visibility = View.GONE
+            binding.layoutLayout.layoutBorderColor.visibility = View.VISIBLE
+
+            binding.layoutLayout.selectbodercolor.setOnClickListener {
+                openColorPickerDialog()
             }
         }
 
 
     }
+
 
     private fun layoutBgFunc() {
         binding.layoutBg.ivClose.setOnClickListener {
@@ -193,15 +209,74 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         }
     }
 
+    private fun openColorPickerDialog() {
+        val colorPicker =
+            AmbilWarnaDialog(this, currentColor, object : AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    currentColor = color
+                    binding.puzzleView.setLineColor(color)
+                 //   binding.puzzleView.needDrawOuterLine = true
+                    binding.puzzleView.setNeedDrawOuterLine(true)
+
+                    Toast.makeText(this@HomeCollage, "Màu đã chọn: $color", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                    Toast.makeText(this@HomeCollage, "Hủy chọn màu", Toast.LENGTH_SHORT).show()
+                }
+            })
+        colorPicker.show()
+    }
+
+    private fun colorrecyboderlayout() {
+        val colors = listOf(
+            ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
+            ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
+            ColorItem("#00C7AF"), ColorItem("#FF2768"),
+            ColorItem("#AD28FF"), ColorItem("#FF8615"), ColorItem("#2EA7FF"), ColorItem("#007A5D"),
+            ColorItem("#BA85FE"), ColorItem("#933EFF"), ColorItem("#350077"), ColorItem("#E8F403"),
+            ColorItem("#F403D4")
+        )
+        colorAdapter = ColorAdapter(colors)
+        binding.layoutLayout.rvColor.apply {
+            layoutManager =
+                LinearLayoutManager(this@HomeCollage, LinearLayoutManager.HORIZONTAL, false)
+            adapter = colorAdapter
+        }
+    }
 
     private fun initListener() = binding.apply {
         layoutLayout.sbBorder.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    when (currentMode) {
-                        Mode.CORNER -> binding.puzzleView.setPieceRadian(progress.toFloat())
-                        Mode.PADDING -> binding.puzzleView.setPiecePadding(progress.toFloat())
-                    }
+                    binding.puzzleView.setPiecePadding(progress.toFloat())
+                    binding.layoutLayout.tvRecentpd.text = progress.toString()
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        layoutLayout.sbCorner.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    binding.puzzleView.setPieceRadian(progress.toFloat())
+                    binding.layoutLayout.tvRecent.text = progress.toString()
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        layoutLayout.sbBorderSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                   // binding.puzzleView.setPieceRadian(progress.toFloat())
+                    binding.layoutLayout.tvValueBorderSize.text = progress.toString()
                 }
             }
 
@@ -315,14 +390,12 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     private fun down() = handlePuzzleAction { binding.puzzleView.moveDown() }
 
     private fun corner() = binding.layoutLayout.apply {
-        currentMode = Mode.CORNER
-        sbBorder.visibility = View.VISIBLE
-        sbBorder.max = 100
-        sbBorder.progress = binding.puzzleView.getPieceRadian().toInt()
+        sbCorner.visibility = View.VISIBLE
+        sbCorner.max = 100
+        sbCorner.progress = binding.puzzleView.getPieceRadian().toInt()
     }
 
     private fun padding() = binding.layoutLayout.apply {
-        currentMode = Mode.PADDING
         sbBorder.visibility = View.VISIBLE
         sbBorder.max = 100
         sbBorder.progress = binding.puzzleView.getPiecePadding().toInt()

@@ -50,29 +50,31 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation ("com.github.bumptech.glide:glide:4.13.2")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.13.2")
-    implementation ("com.github.hypersoftdev:PuzzleLayout:1.0.2")
-    implementation ("com.google.android.material:material:1.9.0")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
+    implementation("com.github.bumptech.glide:glide:4.13.2")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.13.2")
+    implementation("com.github.hypersoftdev:PuzzleLayout:1.0.2")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
     implementation("com.otaliastudios:zoomlayout:1.9.0")
-    implementation ("com.tbuonomo:dotsindicator:5.0")
+    implementation("com.tbuonomo:dotsindicator:5.0")
 
     implementation("com.intuit.sdp:sdp-android:1.1.1")
     implementation("com.intuit.ssp:ssp-android:1.1.1")
 
     // CameraX dependencies
-    implementation ("androidx.camera:camera-core:1.2.2")
-    implementation ("androidx.camera:camera-camera2:1.2.2")
-    implementation ("androidx.camera:camera-lifecycle:1.2.2")
-    implementation ("androidx.camera:camera-video:1.2.2")
-    implementation ("androidx.camera:camera-view:1.2.2")
-    implementation ("androidx.camera:camera-extensions:1.2.2")
+    implementation("androidx.camera:camera-core:1.2.2")
+    implementation("androidx.camera:camera-camera2:1.2.2")
+    implementation("androidx.camera:camera-lifecycle:1.2.2")
+    implementation("androidx.camera:camera-video:1.2.2")
+    implementation("androidx.camera:camera-view:1.2.2")
+    implementation("androidx.camera:camera-extensions:1.2.2")
 
-    implementation ("com.otaliastudios:cameraview:2.7.1")
+    implementation("com.otaliastudios:cameraview:2.7.1")
 
-    implementation ("com.makeramen:roundedimageview:2.3.0")
+    implementation("com.makeramen:roundedimageview:2.3.0")
 
 
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    implementation("com.github.yukuku:ambilwarna:2.0.1")
 }
