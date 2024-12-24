@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import com.hypersoft.pzlayout.view.PuzzleView
 
@@ -17,15 +18,27 @@ class CustomPuzzleView @JvmOverloads constructor(
         strokeWidth = 4f
     }
 
+    // Biến để lưu trữ ảnh nền dưới dạng Drawable
+    private var backgroundDrawable: Drawable? = null
+
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
+        // Vẽ ảnh nền trước khi vẽ các mảnh ghép
+        backgroundDrawable?.setBounds(0, 0, width, height)
+        backgroundDrawable?.draw(canvas)
 
+        super.onDraw(canvas)  // Gọi phương thức onDraw của lớp cha để vẽ các mảnh ghép
 
-       getPuzzlePieces().forEach { piece ->
+        getPuzzlePieces().forEach { piece ->
             piece?.area?.let { area ->
                 canvas.drawPath(area.areaPath, borderPaint)
             }
         }
+    }
+
+    // Phương thức để thiết lập ảnh nền từ một resource ID
+    fun setBackgroundImage(resourceId: Int) {
+        backgroundDrawable = context?.resources?.getDrawable(resourceId, context.theme)
+        invalidate()
     }
 
     fun setBorderColor(color: Int) {

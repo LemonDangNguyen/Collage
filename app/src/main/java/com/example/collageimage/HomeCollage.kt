@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,24 +11,28 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.collageimage.R
+import com.example.collageimage.CustomBg.CustomImage
+import com.example.collageimage.CustomBg.CustomImageAdapter
+import com.example.collageimage.Gradient.GradientAdapter
+import com.example.collageimage.Gradient.GradientItem
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
 import com.example.collageimage.databinding.DialogExitBinding
+import com.example.collageimage.frame.FrameAdapter
+import com.example.collageimage.frame.FrameItem
 import com.example.collageimage.ratio.AspectRatioViewModel
 import com.example.collageimage.ratio.adapter.RatioAdapter
 import com.example.selectpic.ddat.PuzzleUtils
@@ -43,12 +46,10 @@ import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider
-import com.hypersoft.pzlayout.SquarePuzzleView
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.utils.PuzzlePiece
 import com.hypersoft.pzlayout.view.PuzzleView
 import yuku.ambilwarna.AmbilWarnaDialog
-import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 
 class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
     OnColorClickListener {
@@ -72,7 +73,53 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             UseCasePuzzleLayouts(RepoPuzzleUtils(PuzzleUtils()))
         )
     }
+
+    enum class ColorMode {
+        BORDER, BACKGROUND
+    }
+
+    private var currentColorMode: ColorMode = ColorMode.BORDER
+    val colors = listOf(
+        ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
+        ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
+        ColorItem("#00C7AF"), ColorItem("#FF2768"), ColorItem("#AD28FF"),
+        ColorItem("#FF8615"), ColorItem("#2EA7FF"), ColorItem("#007A5D"),
+        ColorItem("#BA85FE"), ColorItem("#933EFF"), ColorItem("#350077"),
+        ColorItem("#E8F403"), ColorItem("#F403D4")
+    )
     private lateinit var colorAdapter: ColorAdapter
+    private lateinit var frameAdapter: FrameAdapter
+    val images = listOf(
+        CustomImage(R.drawable.ic_custom_bg_01),
+        CustomImage(R.drawable.ic_custom_bg_02),
+        CustomImage(R.drawable.ic_custom_bg_03),
+        CustomImage(R.drawable.ic_custom_bg_04),
+        CustomImage(R.drawable.ic_custom_bg_05),
+        CustomImage(R.drawable.ic_custom_bg_06),
+        CustomImage(R.drawable.ic_custom_bg_07),
+        CustomImage(R.drawable.ic_custom_bg_08),
+        CustomImage(R.drawable.ic_custom_bg_09),
+        CustomImage(R.drawable.ic_custom_bg_10)
+    )
+    val gradients = listOf(
+        GradientItem(R.drawable.ic_gradient_01),
+        GradientItem(R.drawable.ic_gradient_02),
+        GradientItem(R.drawable.ic_gradient_03),
+        GradientItem(R.drawable.ic_gradient_04),
+        GradientItem(R.drawable.ic_gradient_05),
+        GradientItem(R.drawable.ic_gradient_06),
+        GradientItem(R.drawable.ic_gradient_07),
+        GradientItem(R.drawable.ic_gradient_08),
+        GradientItem(R.drawable.ic_gradient_09),
+        GradientItem(R.drawable.ic_gradient_10),
+        GradientItem(R.drawable.ic_gradient_11),
+        GradientItem(R.drawable.ic_gradient_12),
+        GradientItem(R.drawable.ic_gradient_13),
+        GradientItem(R.drawable.ic_gradient_14),
+        GradientItem(R.drawable.ic_gradient_15),
+
+        )
+
     private var currentColor: Int = 0xFFFFFFFF.toInt()
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
@@ -97,7 +144,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         layoutToolFunc()
         layoutBgFunc()
         layoutFrameFunc()
-        colorrecyboderlayout()
+        colorrecylayout()
 
     }
 
@@ -115,6 +162,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeFrame.setOnClickListener {
+            setupRecyclerView()
             binding.layoutFrame.root.visibility = View.VISIBLE
             binding.linearLayout.visibility = View.GONE
             binding.layoutLayout.root.visibility = View.GONE
@@ -190,6 +238,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             padding()
         }
         binding.layoutLayout.llBorderColor.setOnClickListener {
+            currentColorMode = ColorMode.BORDER
             binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
             binding.layoutLayout.rvRatio.visibility = View.GONE
             binding.layoutLayout.layoutBorder.visibility = View.GONE
@@ -218,19 +267,57 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         binding.layoutBg.seleccolor.setOnClickListener {
             openColorPickerDialog2()
         }
+        currentColorMode = ColorMode.BACKGROUND
         binding.layoutBg.tvColor.setOnClickListener {
+            binding.layoutBg.rvGradient.visibility = View.GONE
+            binding.layoutBg.rvcolorcustom.visibility = View.GONE
+            currentColorMode = ColorMode.BACKGROUND
             binding.layoutBg.seleccolor.setOnClickListener {
                 openColorPickerDialog2()
             }
-            binding.layoutBg.rvColorln.visibility  =View.VISIBLE
+            binding.layoutBg.rvColorln.visibility = View.VISIBLE
+        }
 
-
+        binding.layoutBg.tvCustom.setOnClickListener {
+            binding.layoutBg.rvGradient.visibility = View.GONE
+            binding.layoutBg.rvColorln.visibility = View.GONE
+            binding.layoutBg.rvcolorcustom.visibility = View.VISIBLE
+            binding.layoutBg.rvCustom.adapter = CustomImageAdapter(images) { image ->
+                binding.puzzleView.setBackgroundImage(image.resourceId)
+            }
+        }
+        binding.layoutBg.tvGradient.setOnClickListener {
+            binding.layoutBg.rvColorln.visibility = View.GONE
+            binding.layoutBg.rvcolorcustom.visibility = View.GONE
+            binding.layoutBg.rvGradient.visibility = View.VISIBLE
+            binding.layoutBg.rvGradient.adapter = GradientAdapter(gradients) { gradient ->
+                binding.puzzleView.setBackgroundImage(gradient.resourceId)
+            }
         }
     }
 
     private fun layoutFrameFunc() {
         binding.layoutFrame.ivRefresh.setOnClickListener {
+            binding.framebg.background = null
             binding.layoutFrame.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+        }
+
+       binding.layoutFrame.ivDone.setOnClickListener {
+           binding.layoutFrame.root.visibility = View.GONE
+           binding.layoutParentTool.root.visibility = View.VISIBLE
+           binding.linearLayout.visibility = View.VISIBLE
+       }
+    }
+    private fun setupRecyclerView() {
+        val frames = (1..20).map { FrameItem("frames/frame_$it.webp") }
+        frameAdapter = FrameAdapter(frames) { drawable ->
+            val frameLayout = findViewById<FrameLayout>(R.id.framebg)
+            frameLayout.background = drawable
+        }
+        binding.layoutFrame.rvFrame.apply {
+            layoutManager = GridLayoutManager(this@HomeCollage, 5)
+            adapter = frameAdapter
         }
     }
 
@@ -255,6 +342,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
                     currentColor = color
                     binding.puzzleView.setBorderColor(color)
                 }
+
                 override fun onCancel(dialog: AmbilWarnaDialog?) {
                 }
             })
@@ -268,32 +356,42 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
                     currentColor = color
                     binding.puzzleView.setBackgroundColor(color)
                 }
+
                 override fun onCancel(dialog: AmbilWarnaDialog?) {
                 }
             })
         colorPicker.show()
     }
 
-    private fun colorrecyboderlayout() {
-        val colors = listOf(
-            ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
-            ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
-            ColorItem("#00C7AF"), ColorItem("#FF2768"), ColorItem("#AD28FF"),
-            ColorItem("#FF8615"), ColorItem("#2EA7FF"), ColorItem("#007A5D"),
-            ColorItem("#BA85FE"), ColorItem("#933EFF"), ColorItem("#350077"),
-            ColorItem("#E8F403"), ColorItem("#F403D4")
-        )
+    private fun colorrecylayout() {
+
         colorAdapter = ColorAdapter(colors, this)
         binding.layoutLayout.rvColor.apply {
-            layoutManager = LinearLayoutManager(this@HomeCollage, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(this@HomeCollage, LinearLayoutManager.HORIZONTAL, false)
+            adapter = colorAdapter
+        }
+        colorAdapter = ColorAdapter(colors, this)
+        binding.layoutBg.rvColor.apply {
+            layoutManager =
+                LinearLayoutManager(this@HomeCollage, LinearLayoutManager.HORIZONTAL, false)
             adapter = colorAdapter
         }
     }
 
     override fun onColorClick(color: ColorItem) {
         val colorInt = Color.parseColor(color.colorHex)
-        binding.puzzleView.setBorderColor(colorInt)
+        when (currentColorMode) {
+            ColorMode.BORDER -> {
+                binding.puzzleView.setBorderColor(colorInt)
+            }
+
+            ColorMode.BACKGROUND -> {
+                binding.puzzleView.setBackgroundColor(colorInt)
+            }
+        }
     }
+
     private fun initListener() = binding.apply {
         layoutLayout.sbBorder.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -505,6 +603,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         { ratio ->
             binding.ivBackground.setAspectRatio(ratio)
             updatePuzzleViewAspectRatio(binding.puzzleView, ratio)
+            updatebgFrame(binding.framebg, ratio)
         }
         viewModelRatio.backgroundColor.observe(this) { color ->
             binding.ivBackground.setBackgroundColor(color)
@@ -518,6 +617,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         val height = (parentWidth / ratio).toInt()
         layoutParams.height = height
         puzzleView.layoutParams = layoutParams
+
+    }
+    private fun updatebgFrame(frameLayout: FrameLayout, ratio: Float) {
+        val layoutParams = frameLayout.layoutParams
+        val parentWidth = frameLayout.width
+        val height = (parentWidth / ratio).toInt()
+        layoutParams.height = height
+        frameLayout.layoutParams = layoutParams
 
     }
 }

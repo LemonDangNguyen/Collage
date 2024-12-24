@@ -22,12 +22,12 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
             android:gravity="left"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="#8D99A1"
             android:textSize="18sp" />
 
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Photo Collage"
+            android:text="@string/photo_collage"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -45,10 +45,10 @@
             android:id="@+id/btn_album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="#3B83FC"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -78,8 +78,12 @@
             android:layout_gravity="center"
             android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:radian="30" />
+            android:layout_height="match_parent"/>
+        <FrameLayout
+            android:id="@+id/framebg"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </FrameLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlBottom"
