@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.49872774" />
+        app:layout_constraintGuide_begin="206dp" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_redo_filter"
@@ -109,7 +109,6 @@
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/sb_filter_intensity"
-        style="@style/CustomSeekbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_8sdp"

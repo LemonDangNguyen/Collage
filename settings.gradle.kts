@@ -9,7 +9,6 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-       // maven { url "https://jitpack.io" }
     }
 }
 dependencyResolutionManagement {
@@ -21,6 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CollageImage"
+rootProject.name = "Collage Image"
 include(":app")
- 

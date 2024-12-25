@@ -46,7 +46,6 @@
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/sb_filter_intensity"
-        style="@style/CustomSeekbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_8sdp"

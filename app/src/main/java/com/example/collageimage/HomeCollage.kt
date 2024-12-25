@@ -87,6 +87,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         ColorItem("#BA85FE"), ColorItem("#933EFF"), ColorItem("#350077"),
         ColorItem("#E8F403"), ColorItem("#F403D4")
     )
+
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var frameAdapter: FrameAdapter
     val images = listOf(
@@ -124,11 +125,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
     private val viewModelRatio: AspectRatioViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.puzzleView.setSelectedLineColor(Color.RED)
-        binding.puzzleView.setLineSize(6)
         val selectedImages: ArrayList<ImageModel>? =
             intent.getParcelableArrayListExtra("SELECTED_IMAGES")
         selectedImages?.let {
@@ -145,6 +145,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         layoutBgFunc()
         layoutFrameFunc()
         colorrecylayout()
+        layoutFilterandAdjustFunc()
 
     }
 
@@ -325,8 +326,12 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
     }
 
-    private fun layoutFilterFunc() {
-
+    private fun layoutFilterandAdjustFunc() {
+        binding.barFilterAndAdjust.btnDone.setOnClickListener {
+            binding.barFilterAndAdjust.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
+        }
     }
 
     private fun layoutStickerFunc() {
@@ -364,7 +369,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private fun colorrecylayout() {
-
         colorAdapter = ColorAdapter(colors, this)
         binding.layoutLayout.rvColor.apply {
             layoutManager =
