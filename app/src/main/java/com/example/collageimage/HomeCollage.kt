@@ -43,6 +43,7 @@ import com.example.selectpic.ddat.UseCasePuzzleLayouts
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
+import com.example.testadjust.ImageAdjustmentViewModel
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider
@@ -88,6 +89,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         ColorItem("#E8F403"), ColorItem("#F403D4")
     )
 
+    val viewModel: ImageAdjustmentViewModel by viewModels()
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var frameAdapter: FrameAdapter
     val images = listOf(

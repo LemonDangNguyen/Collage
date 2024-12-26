@@ -50,4 +50,13 @@
     <string name="save">Save</string>
     <string name="no_photos">No Photo</string>
     <string name="ratio_image">Ratio Image</string>
+    <string name="brightness">Brightness</string>
+    <string name="contrast">Contrast</string>
+    <string name="hightlight">Hightlight</string>
+    <string name="shadow">Shadow</string>
+    <string name="warmth">Warmth</string>
+    <string name="vignette">Vignette</string>
+    <string name="hue">Hue</string>
+    <string name="tint">Tint</string>
+    <string name="fade">Fade</string>
 </resources>
