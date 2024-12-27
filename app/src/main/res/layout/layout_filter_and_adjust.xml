@@ -108,7 +108,7 @@
     <!--        app:layout_constraintTop_toTopOf="@+id/img_current_adjust_mode" />-->
 
     <androidx.appcompat.widget.AppCompatSeekBar
-        android:id="@+id/sb_filter_intensity"
+        android:id="@+id/sb_adjust"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_8sdp"
@@ -127,9 +127,9 @@
         android:text="50"
         android:textColor="@color/smoke"
         android:textSize="@dimen/_8ssp"
-        app:layout_constraintBottom_toBottomOf="@+id/sb_filter_intensity"
+        app:layout_constraintBottom_toBottomOf="@+id/sb_adjust"
         app:layout_constraintEnd_toEndOf="@+id/btn_done"
-        app:layout_constraintTop_toTopOf="@+id/sb_filter_intensity" />
+        app:layout_constraintTop_toTopOf="@+id/sb_adjust" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -140,7 +140,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity">
+        app:layout_constraintTop_toBottomOf="@+id/sb_adjust">
 
         <include
             android:id="@+id/layoutAdjustfunc"

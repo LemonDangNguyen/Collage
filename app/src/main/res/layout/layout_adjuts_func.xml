@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_4sdp"
-                android:text="@string/contrast"
+                android:text="@string/staturation"
                 android:textColor="@color/smoke"
                 android:textSize="@dimen/_9ssp" />
         </LinearLayout>

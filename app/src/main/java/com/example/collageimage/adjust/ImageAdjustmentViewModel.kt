@@ -1,9 +1,10 @@
-package com.example.testadjust
+package com.example.collageimage.adjust
 
 import android.graphics.ColorMatrixColorFilter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.collageimage.adjust.ImageAdjustments
 
 class ImageAdjustmentViewModel : ViewModel() {
     private val imageAdjustments = ImageAdjustments()
@@ -12,34 +13,49 @@ class ImageAdjustmentViewModel : ViewModel() {
     val brightness = MutableLiveData(0f)
     val contrast = MutableLiveData(0f)
     val saturation = MutableLiveData(1f)
-    val clarity = MutableLiveData(0f)
     val shadows = MutableLiveData(0f)
     val highlights = MutableLiveData(0f)
-    val exposure = MutableLiveData(0f)
-    val gamma = MutableLiveData(1f)
-    val blacks = MutableLiveData(0f)
-    val whites = MutableLiveData(0f)
     val sharpness = MutableLiveData(0f)
-    val temperature = MutableLiveData(0f)
+    val warmth = MutableLiveData(0f)
+    val vignette = MutableLiveData(0f)
+    val hue = MutableLiveData(0f)
+    val grain = MutableLiveData(0f)
+    val tint = MutableLiveData(0f)
+    val fade = MutableLiveData(0f)
 
     private val _colorFilter = MutableLiveData<ColorMatrixColorFilter>()
     val colorFilter: LiveData<ColorMatrixColorFilter> get() = _colorFilter
 
-    // Cập nhật và áp dụng bộ lọc
     fun updateFilter() {
+        val currentBrightness = brightness.value ?: 0f
+        val currentContrast = contrast.value ?: 0f
+        val currentSaturation = saturation.value ?: 1f
+        val currentShadows = shadows.value ?: 0f
+        val currentHighlights = highlights.value ?: 0f
+        val currentSharpness = sharpness.value ?: 0f
+        val currentWarmth = warmth.value ?: 0f
+        val currentVignette = vignette.value ?: 0f
+        val currentHue = hue.value ?: 0f
+        val currentGrain = grain.value ?: 0f
+        val currentTint = tint.value ?: 0f
+        val currentFade = fade.value ?: 0f
+
+        // Tính toán lại bộ lọc màu
         _colorFilter.value = imageAdjustments.applyAdjustments(
-            brightness.value ?: 0f,
-            contrast.value ?: 0f,
-            saturation.value ?: 1f,
-            clarity.value ?: 0f,
-            shadows.value ?: 0f,
-            highlights.value ?: 0f,
-            exposure.value ?: 0f,
-            gamma.value ?: 1f,
-            blacks.value ?: 0f,
-            whites.value ?: 0f,
-            sharpness.value ?: 0f,
-            temperature.value ?: 0f
+            brightness = currentBrightness,
+            contrast = currentContrast,
+            saturation = currentSaturation,
+            shadows = currentShadows,
+            highlights = currentHighlights,
+            sharpness = currentSharpness,
+//            warmth = currentWarmth,
+//            vignette = currentVignette,
+//            hue = currentHue,
+//            grain = currentGrain,
+//            tint = currentTint,
+//            fade = currentFade
         )
+
+
     }
 }

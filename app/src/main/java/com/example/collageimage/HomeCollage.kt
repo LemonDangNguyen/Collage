@@ -16,6 +16,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ import com.example.collageimage.CustomBg.CustomImage
 import com.example.collageimage.CustomBg.CustomImageAdapter
 import com.example.collageimage.Gradient.GradientAdapter
 import com.example.collageimage.Gradient.GradientItem
+import com.example.collageimage.adjust.ImageAdjustmentViewModel
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.OnColorClickListener
@@ -43,7 +45,6 @@ import com.example.selectpic.ddat.UseCasePuzzleLayouts
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
-import com.example.testadjust.ImageAdjustmentViewModel
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider
@@ -80,6 +81,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private var currentColorMode: ColorMode = ColorMode.BORDER
+
+    enum class AdjustMode {
+        BRIGHTNESS, CONTRAST, SATURATION, HIGHTLIGHT, SHADOW, WARMTH, VIGNETTE, HUE, TINT, FADE
+    }
+
+    private var currentAdjustMode: AdjustMode = AdjustMode.BRIGHTNESS
+
+
     val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
@@ -148,7 +157,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         layoutFrameFunc()
         colorrecylayout()
         layoutFilterandAdjustFunc()
-
+        initListener2()
     }
 
 
@@ -306,12 +315,13 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.layoutParentTool.root.visibility = View.VISIBLE
         }
 
-       binding.layoutFrame.ivDone.setOnClickListener {
-           binding.layoutFrame.root.visibility = View.GONE
-           binding.layoutParentTool.root.visibility = View.VISIBLE
-           binding.linearLayout.visibility = View.VISIBLE
-       }
+        binding.layoutFrame.ivDone.setOnClickListener {
+            binding.layoutFrame.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
+        }
     }
+
     private fun setupRecyclerView() {
         val frames = (1..20).map { FrameItem("frames/frame_$it.webp") }
         frameAdapter = FrameAdapter(frames) { drawable ->
@@ -334,6 +344,47 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.layoutParentTool.root.visibility = View.VISIBLE
             binding.linearLayout.visibility = View.VISIBLE
         }
+        binding.barFilterAndAdjust.layoutAdjustfunc.icBrightness.setOnClickListener {
+            Toast.makeText(this, "Brightness", Toast.LENGTH_SHORT).show()
+            currentAdjustMode = AdjustMode.BRIGHTNESS
+            binding.barFilterAndAdjust.sbAdjust.max = 100
+            binding.barFilterAndAdjust.sbAdjust.progress = 50
+            initListener2()
+        }
+
+    }
+
+    private fun initListener2() = binding.apply {
+        binding.barFilterAndAdjust.sbAdjust.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    binding.barFilterAndAdjust.tvFilterPercent.text = progress.toString()
+                    when (currentAdjustMode) {
+                        AdjustMode.BRIGHTNESS -> {
+                            val brightnessValue = (progress - 50) / 50f
+                            viewModel.brightness.value = brightnessValue
+                            viewModel.updateFilter()
+                        }
+
+                        AdjustMode.CONTRAST -> TODO()
+                        AdjustMode.SATURATION -> TODO()
+                        AdjustMode.HIGHTLIGHT -> TODO()
+                        AdjustMode.SHADOW -> TODO()
+                        AdjustMode.WARMTH -> TODO()
+                        AdjustMode.VIGNETTE -> TODO()
+                        AdjustMode.HUE -> TODO()
+                        AdjustMode.TINT -> TODO()
+                        AdjustMode.FADE -> TODO()
+                    }
+
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 
     private fun layoutStickerFunc() {
@@ -489,7 +540,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 //            pleft to ::left, pright to ::right, pup to ::up, pdown to ::down).forEach { (view, action) ->
 //            view.setOnClickListener { action() }
 //        }
-        //  btnCorner.setOnClickListener { corner() }
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
@@ -625,6 +675,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         puzzleView.layoutParams = layoutParams
 
     }
+
     private fun updatebgFrame(frameLayout: FrameLayout, ratio: Float) {
         val layoutParams = frameLayout.layoutParams
         val parentWidth = frameLayout.width

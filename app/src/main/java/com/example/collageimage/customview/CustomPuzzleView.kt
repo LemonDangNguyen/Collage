@@ -3,7 +3,9 @@ package com.example.collageimage.customview
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ColorFilter
 import android.graphics.Paint
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import com.hypersoft.pzlayout.view.PuzzleView
@@ -18,16 +20,20 @@ class CustomPuzzleView @JvmOverloads constructor(
         strokeWidth = 4f
     }
 
-    // Biến để lưu trữ ảnh nền dưới dạng Drawable
     private var backgroundDrawable: Drawable? = null
+    private var colorFilter: ColorFilter? = null // Thêm colorFilter
 
     override fun onDraw(canvas: Canvas) {
+        // Áp dụng colorFilter nếu có cho backgroundDrawable
+        backgroundDrawable?.colorFilter = colorFilter
+
         // Vẽ ảnh nền trước khi vẽ các mảnh ghép
         backgroundDrawable?.setBounds(0, 0, width, height)
         backgroundDrawable?.draw(canvas)
 
-        super.onDraw(canvas)  // Gọi phương thức onDraw của lớp cha để vẽ các mảnh ghép
+        super.onDraw(canvas)
 
+        // Vẽ viền cho từng mảnh ghép
         getPuzzlePieces().forEach { piece ->
             piece?.area?.let { area ->
                 canvas.drawPath(area.areaPath, borderPaint)
@@ -35,7 +41,6 @@ class CustomPuzzleView @JvmOverloads constructor(
         }
     }
 
-    // Phương thức để thiết lập ảnh nền từ một resource ID
     fun setBackgroundImage(resourceId: Int) {
         backgroundDrawable = context?.resources?.getDrawable(resourceId, context.theme)
         invalidate()
@@ -49,5 +54,11 @@ class CustomPuzzleView @JvmOverloads constructor(
     fun setBorderWidth(width: Float) {
         borderPaint.strokeWidth = width
         invalidate()
+    }
+
+    // Thêm phương thức setColorFilter
+    fun setColorFilter(filter: ColorFilter?) {
+        this.colorFilter = filter
+        invalidate() // Vẽ lại để áp dụng bộ lọc
     }
 }

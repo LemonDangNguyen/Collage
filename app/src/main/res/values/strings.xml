@@ -59,4 +59,5 @@
     <string name="hue">Hue</string>
     <string name="tint">Tint</string>
     <string name="fade">Fade</string>
+    <string name="staturation">Saturation</string>
 </resources>
