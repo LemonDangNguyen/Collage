@@ -93,19 +93,19 @@
         app:layout_constraintStart_toStartOf="@+id/btn_redo_filter"
         app:layout_constraintTop_toBottomOf="@+id/btn_redo_filter" />
 
-<!--    <com.example.DegreeSeekBar-->
-<!--        android:id="@+id/sb_adjustment_intensity"-->
-<!--        style="@style/CustomSeekbar"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="@dimen/_30sdp"-->
-<!--        android:layout_marginStart="@dimen/_8sdp"-->
-<!--        android:layout_marginTop="@dimen/_3sdp"-->
-<!--        android:layout_marginEnd="@dimen/_6sdp"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/img_current_adjust_mode"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/btn_done"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/img_current_adjust_mode"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/img_current_adjust_mode" />-->
+    <!--    <com.example.DegreeSeekBar-->
+    <!--        android:id="@+id/sb_adjustment_intensity"-->
+    <!--        style="@style/CustomSeekbar"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="@dimen/_30sdp"-->
+    <!--        android:layout_marginStart="@dimen/_8sdp"-->
+    <!--        android:layout_marginTop="@dimen/_3sdp"-->
+    <!--        android:layout_marginEnd="@dimen/_6sdp"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/img_current_adjust_mode"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/btn_done"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/img_current_adjust_mode"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/img_current_adjust_mode" />-->
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/sb_filter_intensity"
@@ -131,30 +131,52 @@
         app:layout_constraintEnd_toEndOf="@+id/btn_done"
         app:layout_constraintTop_toTopOf="@+id/sb_filter_intensity" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:orientation="horizontal"
-        android:tag="binding_1"
-        android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_filters"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginBottom="@dimen/_8sdp"
         android:orientation="horizontal"
-        android:tag="binding_2"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />
+        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity">
+
+        <include
+            android:id="@+id/layoutAdjustfunc"
+            layout="@layout/layout_adjuts_func"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/rcv_mode"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="@dimen/_12sdp"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:tag="binding_1"-->
+    <!--        android:visibility="gone"-->
+    <!--        layout="@layout/layout_add_image_source"-->
+    <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />-->
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/rcv_filters"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="@dimen/_12sdp"-->
+    <!--        android:layout_marginTop="@dimen/_12sdp"-->
+    <!--        android:layout_marginBottom="@dimen/_8sdp"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:tag="binding_2"-->
+    <!--        layout="@layout/layout_add_image_source"-->
+    <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/sb_filter_intensity" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

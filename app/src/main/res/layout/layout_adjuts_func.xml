@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:scrollbars="none"
+    android:tag="layout/layout_adjust_func_0">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ic_brightness"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_brightness" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/brightness"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contrast"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_contrast" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/contrast"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/staturation"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_staturation" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/contrast"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hightlight"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_hightlight" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/hightlight"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shadow"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shadow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/shadow"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/warmth"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_warmth" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/warmth"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vignette"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_vignette" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/vignette"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hue"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_hue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/hue"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tint"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_tint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/tint"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fade"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_fade" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/fade"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+    </LinearLayout>
+</HorizontalScrollView>
