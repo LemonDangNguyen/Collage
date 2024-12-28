@@ -55,7 +55,7 @@ dependencies {
     // Image loading and editing
     implementation("com.github.bumptech.glide:glide:4.13.2")
     annotationProcessor("com.github.bumptech.glide:compiler:4.13.2")
-    implementation("com.github.hypersoftdev:PuzzleLayout:1.0.2")
+    implementation(libs.puzzlelayout)
 
     // Material design
     implementation("com.google.android.material:material:1.9.0")

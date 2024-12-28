@@ -60,4 +60,5 @@
     <string name="tint">Tint</string>
     <string name="fade">Fade</string>
     <string name="staturation">Saturation</string>
+    <string name="label_brush">Brush</string>
 </resources>

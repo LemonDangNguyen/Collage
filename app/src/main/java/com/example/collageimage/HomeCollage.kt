@@ -27,9 +27,15 @@ import com.example.collageimage.CustomBg.CustomImage
 import com.example.collageimage.CustomBg.CustomImageAdapter
 import com.example.collageimage.Gradient.GradientAdapter
 import com.example.collageimage.Gradient.GradientItem
+import com.example.collageimage.adjust.AdjustMode
 import com.example.collageimage.adjust.ImageAdjustmentViewModel
+import com.example.collageimage.adjust.filter.FilterListener
+import com.example.collageimage.adjust.filter.FilterViewAdapter
+import com.example.collageimage.adjust.filter.PhotoEditor
+import com.example.collageimage.adjust.filter.PhotoFilter
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
+import com.example.collageimage.color.ColorMode
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
 import com.example.collageimage.databinding.DialogExitBinding
@@ -54,7 +60,7 @@ import com.hypersoft.pzlayout.view.PuzzleView
 import yuku.ambilwarna.AmbilWarnaDialog
 
 class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
-    OnColorClickListener {
+    OnColorClickListener, FilterListener {
 
     private val binding by lazy { ActivityHomeCollageBinding.inflate(layoutInflater) }
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
@@ -76,19 +82,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         )
     }
 
-    enum class ColorMode {
-        BORDER, BACKGROUND
-    }
-
     private var currentColorMode: ColorMode = ColorMode.BORDER
-
-    enum class AdjustMode {
-        BRIGHTNESS, CONTRAST, SATURATION, HIGHTLIGHT, SHADOW, WARMTH, VIGNETTE, HUE, TINT, FADE
-    }
-
     private var currentAdjustMode: AdjustMode = AdjustMode.BRIGHTNESS
-
-
+    private val mFilterViewAdapter = FilterViewAdapter(this)
+    lateinit var mPhotoEditor: PhotoEditor
     val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
@@ -129,7 +126,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         GradientItem(R.drawable.ic_gradient_13),
         GradientItem(R.drawable.ic_gradient_14),
         GradientItem(R.drawable.ic_gradient_15),
-
         )
 
     private var currentColor: Int = 0xFFFFFFFF.toInt()
@@ -156,7 +152,9 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         layoutBgFunc()
         layoutFrameFunc()
         colorrecylayout()
+        layoutStickerFunc()
         layoutFilterandAdjustFunc()
+        filterrcl()
         initListener2()
     }
 
@@ -343,7 +341,19 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.barFilterAndAdjust.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
             binding.linearLayout.visibility = View.VISIBLE
+            binding.barFilterAndAdjust.layoutAdjustfunc.root.visibility = View.GONE
+            binding.barFilterAndAdjust.layoutFilterControl.visibility = View.GONE
         }
+        binding.barFilterAndAdjust.btnRedoFilter.setOnClickListener {
+            binding.barFilterAndAdjust.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
+            binding.barFilterAndAdjust.layoutAdjustfunc.root.visibility = View.GONE
+        }
+        binding.barFilterAndAdjust.tabAdjust.setOnClickListener {
+            binding.barFilterAndAdjust.layoutAdjustfunc.root.visibility = View.VISIBLE
+        }
+
         binding.barFilterAndAdjust.layoutAdjustfunc.icBrightness.setOnClickListener {
             Toast.makeText(this, "Brightness", Toast.LENGTH_SHORT).show()
             currentAdjustMode = AdjustMode.BRIGHTNESS
@@ -366,7 +376,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
                             viewModel.brightness.value = brightnessValue
                             viewModel.updateFilter()
                         }
-
                         AdjustMode.CONTRAST -> TODO()
                         AdjustMode.SATURATION -> TODO()
                         AdjustMode.HIGHTLIGHT -> TODO()
@@ -387,6 +396,12 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         })
     }
 
+    private fun filterrcl(){
+       // binding.barFilterAndAdjust.rcvFilter.adapter = FilterViewAdapter(this)
+        val llmFilters = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
+        binding.barFilterAndAdjust.rcvFilters.layoutManager = llmFilters
+        binding.barFilterAndAdjust.rcvFilters.adapter = mFilterViewAdapter
+    }
     private fun layoutStickerFunc() {
         binding.barStickers.btnDismissStickerPicker.setOnClickListener {
             binding.barStickers.root.visibility = View.GONE
@@ -683,5 +698,9 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         layoutParams.height = height
         frameLayout.layoutParams = layoutParams
 
+    }
+
+    override fun onFilterSelected(photoFilter: PhotoFilter) {
+        mPhotoEditor.setFilterEffect(photoFilter)
     }
 }

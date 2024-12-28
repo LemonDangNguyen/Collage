@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.collageimage.Setting
 import com.example.collageimage.TemplateActivity
 import com.example.collageimage.databinding.FragmentTemplateBinding
 import com.example.collageimage.image_template.ImageTemplateAdapter
@@ -45,6 +46,10 @@ class TemplateFragment : Fragment() {
             startActivity(intent)
         }
         setupRecyclerView()
+
+        binding.btnSetting.setOnClickListener {
+            startActivity(Intent(requireContext(), Setting::class.java))
+        }
     }
 
     private fun setupRecyclerView() {

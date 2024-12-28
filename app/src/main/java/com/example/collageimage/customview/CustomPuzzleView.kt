@@ -55,10 +55,4 @@ class CustomPuzzleView @JvmOverloads constructor(
         borderPaint.strokeWidth = width
         invalidate()
     }
-
-    // Thêm phương thức setColorFilter
-    fun setColorFilter(filter: ColorFilter?) {
-        this.colorFilter = filter
-        invalidate() // Vẽ lại để áp dụng bộ lọc
-    }
 }
