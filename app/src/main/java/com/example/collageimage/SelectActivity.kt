@@ -1,5 +1,7 @@
-package com.example.collageimage;
+package com.example.collageimage
+
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -39,51 +41,69 @@ class SelectActivity : BaseActivity() {
     private var selectedImages = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var selectedImagesAdapter: SelectedImagesAdapter
+
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val repositoryMediaImages by lazy { RepositoryMediaImages(mediaStoreMediaImages) }
     private val useCaseMediaImageDetail by lazy { UseCaseMediaImageDetail(repositoryMediaImages) }
     private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> { ViewModelMediaImageDetailProvider(useCaseMediaImageDetail) }
     private val itemClick: ((Uri) -> Unit) = { viewModelMediaImageDetail.imageClick(it) }
     private val adapterEnhanceGalleryDetail by lazy { AdapterMediaImageDetail(itemClick) }
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions.all { it.value }) {
-                loadImages()
-            } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
-            }
+
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        if (permissions.all { it.value }) {
+            loadImages()
+        } else {
+            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
         }
+    }
+
     private var albumName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // Khởi tạo SelectedImagesAdapter
+        selectedImagesAdapter = SelectedImagesAdapter(this, selectedImages) { imageToRemove ->
+            selectedImages.remove(imageToRemove)
+            selectedImagesAdapter.notifyDataSetChanged()
+            imageAdapter.updateSelection(selectedImages)
+            selectedImagesAdapter.updateData(selectedImages)
+            updateSelectedCount()
+        }
 
-        val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
+        val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("IMG_FROM_CAM")
+
         if (selectedImagesFromIntent != null) {
-            selectedImages = selectedImagesFromIntent
-            if (::selectedImagesAdapter.isInitialized) {
-                updateSelectedAdapters()
-            }
+            selectedImages.clear()  // Xóa các ảnh cũ
+            selectedImages.addAll(selectedImagesFromIntent)  // Thêm ảnh mới vào danh sách
+            selectedImagesAdapter.notifyDataSetChanged()
+
+            updateSelectedAdapters()
+            updateSelectedCount()
         }
 
         albumName = intent.getStringExtra("ALBUM_NAME")
+
+        // Khởi tạo RecyclerView sau khi truyền vào dữ liệu
         setupRecyclerViews()
 
+        // Kiểm tra quyền và tải hình ảnh
         if (hasStoragePermissions()) {
             loadImages()
         } else {
             permissionLauncher.launch(storagePermissions)
         }
+
         setUpListener()
         initObservers()
     }
 
-    private fun setUpListener(){
+    private fun setUpListener() {
         binding.clearImgList.setOnClickListener {
             selectedImages.clear()
             selectedImagesAdapter.notifyDataSetChanged()
@@ -91,12 +111,12 @@ class SelectActivity : BaseActivity() {
             imageAdapter.updateSelection(selectedImages)
         }
         binding.nextSelect.setOnClickListener {
-            if(selectedImages.size >= 3){
+            if (selectedImages.size >= 3) {
                 val intent = Intent(this, HomeCollage::class.java)
                 intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
                 startActivity(intent)
                 finish()
-            }else{
+            } else {
                 Toast.makeText(this, "Please select at least 3 images", Toast.LENGTH_SHORT).show()
             }
         }
@@ -110,15 +130,18 @@ class SelectActivity : BaseActivity() {
             finish()
         }
     }
+
     private fun initObservers() {
         viewModelMediaImageDetail.imagesLiveData.observe(this) {
             adapterEnhanceGalleryDetail.submitList(it)
         }
-        viewModelMediaImageDetail.clickedImagesLiveData.observe(this) { clickedImagess ->
-            selectedImages = clickedImagess as MutableList<ImageModel>
+        viewModelMediaImageDetail.clickedImagesLiveData.observe(this) { clickedImages ->
+            selectedImages = clickedImages as MutableList<ImageModel>
         }
     }
+
     private fun setupRecyclerViews() {
+        // Khởi tạo adapter cho các hình ảnh
         imageAdapter = ImageAdapter(this, images) { image, isSelected ->
             if (isSelected) {
                 if (!selectedImages.contains(image)) {
@@ -134,22 +157,18 @@ class SelectActivity : BaseActivity() {
                 updateSelectedAdapters()
             }
         }
+
         binding.allImagesRecyclerView.apply {
             layoutManager = GridLayoutManager(this@SelectActivity, 3)
             adapter = imageAdapter
         }
-        selectedImagesAdapter = SelectedImagesAdapter(this, selectedImages) { imageToRemove ->
-            selectedImages.remove(imageToRemove)
-            selectedImagesAdapter.notifyDataSetChanged()
-            imageAdapter.updateSelection(selectedImages)
-            selectedImagesAdapter.updateData(selectedImages)
-            updateSelectedCount()
-        }
+
         binding.selectedImagesRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SelectActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = selectedImagesAdapter
         }
     }
+
     private fun loadImages() {
         val uri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
@@ -160,11 +179,13 @@ class SelectActivity : BaseActivity() {
             MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
+
         val (selection, selectionArgs) = if (albumName == "All Images" || albumName == null) {
             null to null
         } else {
             "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?" to arrayOf(albumName)
         }
+
         contentResolver.query(uri, projection, selection, selectionArgs, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
@@ -203,39 +224,48 @@ class SelectActivity : BaseActivity() {
     private fun hasStoragePermissions() = storagePermissions.all {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateSelectedAdapters() {
-        selectedImagesAdapter.notifyDataSetChanged()
-        imageAdapter.updateSelection(selectedImages)
+        if (::imageAdapter.isInitialized) {
+            imageAdapter.updateSelection(selectedImages)
+        }
         selectedImagesAdapter.updateData(selectedImages)
+        selectedImagesAdapter.notifyDataSetChanged()
         updateSelectedCount()
     }
+
     private fun updateSelectedCount() {
         binding.textViewCountItem.text = selectedImages.size.toString()
     }
-     override fun onBackPressed(){
-         val binding2 = DialogExitBinding.inflate(layoutInflater)
-         val dialog2 = Dialog(this)
-         dialog2.setContentView(binding2.root)
-         val window = dialog2.window
-         window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-         dialog2.setCanceledOnTouchOutside(false)
-         dialog2.setCancelable(false)
-         binding2.btnExit.setOnClickListener{
-             dialog2.dismiss()
-             val intent = Intent(this, MainActivity::class.java)
-             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-             startActivity(intent)
-             finish()
-             super.onBackPressed()
-         }
-         binding2.btnStay.setOnClickListener{
-             dialog2.dismiss()
-         }
-         dialog2.show()
+
+    override fun onBackPressed() {
+        val binding2 = DialogExitBinding.inflate(layoutInflater)
+        val dialog2 = Dialog(this)
+        dialog2.setContentView(binding2.root)
+        val window = dialog2.window
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog2.setCanceledOnTouchOutside(false)
+        dialog2.setCancelable(false)
+
+        binding2.btnExit.setOnClickListener {
+            dialog2.dismiss()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+            super.onBackPressed()
+        }
+
+        binding2.btnStay.setOnClickListener {
+            dialog2.dismiss()
+        }
+
+        dialog2.show()
     }
+
     companion object {
         const val REQUEST_CODE_SELECT_ALBUM = 1
     }
-
 }

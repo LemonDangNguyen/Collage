@@ -82,7 +82,8 @@ class Activity_Select_Image_Edit : BaseActivity() {
                         uri = Uri.withAppendedPath(
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                             cursor.getLong(idIndex).toString()
-                        )
+                        ),
+                        isCameraItem = false
                     )
                 )
             }
@@ -92,11 +93,14 @@ class Activity_Select_Image_Edit : BaseActivity() {
                     putExtra("selected_image_path", image.filePath)
                 }
                 setResult(RESULT_OK, intent)
-                finish()
+               // finish()
+                Toast.makeText(this, "Selected image: ${image.filePath}", Toast.LENGTH_SHORT).show()
             }
 
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter
+            imageAdapter.addCameraItem()
+            imageAdapter.notifyDataSetChanged()
         } ?: run {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }

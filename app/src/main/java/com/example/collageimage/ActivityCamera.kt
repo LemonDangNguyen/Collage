@@ -3,6 +3,7 @@ package com.example.collageimage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.collageimage.databinding.ActivityCameraBinding
@@ -37,6 +38,7 @@ class ActivityCamera : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        photoList.clear()
         cameraView = binding.cameraView
         cameraView.setLifecycleOwner(this)
         cameraView.addCameraListener(cameraListener)
@@ -55,7 +57,10 @@ class ActivityCamera : BaseActivity() {
                     uri = Uri.parse("file://$it"),
                     isCameraItem = true
                 ) }
-                intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
+                selectedImages.forEach { imageModel ->
+                    Log.d("ActivityCamera", "Image: ${imageModel.filePath}, URI: ${imageModel.uri}")
+                }
+                intent.putParcelableArrayListExtra("IMG_FROM_CAM", ArrayList(selectedImages))
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "No images captured", Toast.LENGTH_SHORT).show()
