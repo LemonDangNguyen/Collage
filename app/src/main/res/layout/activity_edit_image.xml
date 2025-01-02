@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="3dp"
-        android:text="Tap to edit"
+        android:text="@string/tap_to_edit"
         android:textAlignment="gravity"
         android:textSize="@dimen/_6ssp"
         android:visibility="invisible"
@@ -69,7 +69,38 @@
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <FrameLayout
+        android:id="@+id/flParent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/ctlToolBar">
 
+        <com.example.collageimage.customview.BlurParentCollage
+            android:id="@+id/ivBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/puzzleView"
+            app:layout_constraintEnd_toEndOf="@+id/puzzleView"
+            app:layout_constraintStart_toStartOf="@+id/puzzleView"
+            app:layout_constraintTop_toTopOf="@+id/puzzleView" />
+
+        <ImageView
+            android:id="@+id/edt_view"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/todo" />
+
+        <FrameLayout
+            android:id="@+id/framebg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlBottom"

@@ -61,4 +61,6 @@
     <string name="fade">Fade</string>
     <string name="staturation">Saturation</string>
     <string name="label_brush">Brush</string>
+    <string name="tap_to_edit">Tap to edit</string>
+    <string name="todo">TODO</string>
 </resources>

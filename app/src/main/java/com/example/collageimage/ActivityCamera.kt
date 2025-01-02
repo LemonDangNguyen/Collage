@@ -12,17 +12,21 @@ import com.otaliastudios.cameraview.CameraView
 import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.controls.Flash
 import java.io.File
+
 class ActivityCamera : BaseActivity() {
 
     private val binding by lazy { ActivityCameraBinding.inflate(layoutInflater) }
     private lateinit var cameraView: CameraView
     private val photoList = mutableListOf<String>()
-    private val maxPhotos = 9
+    private var maxPhotos = Int.MAX_VALUE // Mặc định là không giới hạn
 
     private val cameraListener = object : CameraListener() {
         override fun onPictureTaken(result: PictureResult) {
             super.onPictureTaken(result)
-            val photoFile = File(getExternalFilesDir(null), "photo_${photoList.size + 1}.jpg")
+            val photoFile = File(
+                getExternalFilesDir(null),
+                "photo_${photoList.size + 1}_${System.currentTimeMillis()}.jpg"
+            )
             result.toFile(photoFile) { file ->
                 file?.let {
                     photoList.add(it.absolutePath)
@@ -38,43 +42,80 @@ class ActivityCamera : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val sourceActivity = intent.getStringExtra("source_activity")
+        Log.d("ActivityCamera", "Activity nguồn: $sourceActivity")
+
+        if (sourceActivity == "Activity_Select_Image_Edit") {
+            maxPhotos = 1
+        } else {
+            maxPhotos = 9
+        }
+
+        // Làm mới danh sách ảnh
         photoList.clear()
+
         cameraView = binding.cameraView
         cameraView.setLifecycleOwner(this)
         cameraView.addCameraListener(cameraListener)
+
         binding.ivClose.setOnClickListener { finish() }
         binding.ivFlash.setOnClickListener { toggleFlash() }
         binding.ivCapture.setOnClickListener { takePicture() }
+
         binding.ivDone.setOnClickListener {
             if (photoList.isNotEmpty()) {
-                val intent = Intent(this, SelectActivity::class.java)
-                val selectedImages = photoList.map { ImageModel(
-                    id = System.currentTimeMillis(),
-                    dateTaken = System.currentTimeMillis(),
-                    fileName = File(it).name,
-                    filePath = it,
-                    album = "Camera",
-                    uri = Uri.parse("file://$it"),
-                    isCameraItem = true
-                ) }
-                selectedImages.forEach { imageModel ->
-                    Log.d("ActivityCamera", "Image: ${imageModel.filePath}, URI: ${imageModel.uri}")
+                if (sourceActivity == "Activity_Select_Image_Edit") {
+                    val intent = Intent(this, Activity_Edit_image::class.java)
+                    val selectedImage = photoList[0]  // Chỉ lấy ảnh đầu tiên
+                    val selectedImages = listOf(
+                        ImageModel(
+                            id = System.currentTimeMillis(),
+                            dateTaken = System.currentTimeMillis(),
+                            fileName = File(selectedImage).name,
+                            filePath = selectedImage,
+                            album = "Camera",
+                            uri = Uri.parse("file://$selectedImage"),
+                            isCameraItem = true
+                        )
+                    )
+
+                    intent.putParcelableArrayListExtra("IMG_FROM_CAM", ArrayList(selectedImages))
+                    startActivity(intent)
+                    finish()
+                } else {
+                    val intent = Intent(this, SelectActivity::class.java)
+                    val selectedImages = photoList.map {
+                        ImageModel(
+                            id = System.currentTimeMillis(),
+                            dateTaken = System.currentTimeMillis(),
+                            fileName = File(it).name,
+                            filePath = it,
+                            album = "Camera",
+                            uri = Uri.parse("file://$it"),
+                            isCameraItem = true
+                        )
+                    }
+                    intent.putParcelableArrayListExtra("IMG_FROM_CAM", ArrayList(selectedImages))
+                    startActivity(intent)
+                    finish()
                 }
-                intent.putParcelableArrayListExtra("IMG_FROM_CAM", ArrayList(selectedImages))
-                startActivity(intent)
             } else {
                 Toast.makeText(this, "No images captured", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         cameraView.open()
     }
+
     override fun onStop() {
         super.onStop()
         cameraView.close()
     }
+
     private fun takePicture() {
         if (photoList.size >= maxPhotos) {
             Toast.makeText(this, "Đã đạt giới hạn $maxPhotos ảnh", Toast.LENGTH_SHORT).show()
@@ -93,10 +134,12 @@ class ActivityCamera : BaseActivity() {
                 cameraView.flash = Flash.TORCH
                 binding.ivFlash.setImageResource(R.drawable.ic_flash)
             }
+
             Flash.TORCH -> {
                 cameraView.flash = Flash.OFF
                 binding.ivFlash.setImageResource(R.drawable.ic_no_flash)
             }
+
             else -> {
                 cameraView.flash = Flash.OFF
                 binding.ivFlash.setImageResource(R.drawable.ic_no_flash)
@@ -104,4 +147,3 @@ class ActivityCamera : BaseActivity() {
         }
     }
 }
-

@@ -18,10 +18,12 @@ class ImageAdapter(
     private val onItemSelected: (ImageModel, Boolean) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val selectedImagesMap = mutableMapOf<Long, Int>()
+
     companion object {
         const val VIEW_TYPE_CAMERA = 0
         const val VIEW_TYPE_IMAGE = 1
     }
+
     inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.findViewById(R.id.ifv)
         val selectionOrder: TextView = view.findViewById(R.id.selectionOrder)
@@ -41,7 +43,8 @@ class ImageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_CAMERA) {
-            val view = LayoutInflater.from(context).inflate(R.layout.layout_btn_camera, parent, false)
+            val view =
+                LayoutInflater.from(context).inflate(R.layout.layout_btn_camera, parent, false)
             CameraViewHolder(view)
         } else {
             val view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false)
@@ -54,23 +57,39 @@ class ImageAdapter(
 
         if (holder is CameraViewHolder) {
             holder.cameraView.setOnClickListener {
+                // Kiểm tra tên của Activity hiện tại để xác định nguồn
+                val activityName = when (context::class.java.simpleName) {
+                    "SelectActivity" -> "SelectActivity"
+                    "Activity_Select_Image_Edit" -> "Activity_Select_Image_Edit"
+                    else -> "Unknown"
+                }
+
+                // Tạo Intent chuyển đến ActivityCamera và truyền thông tin nguồn Activity
                 val intent = Intent(context, ActivityCamera::class.java)
+                intent.putExtra("source_activity", activityName)  // Truyền tên Activity nguồn vào Intent
                 context.startActivity(intent)
             }
         } else if (holder is ImageViewHolder) {
-            Glide.with(context).load(image.filePath).error(R.drawable.noimage).centerCrop().into(holder.imageView)
+            Glide.with(context).load(image.filePath).error(R.drawable.noimage).centerCrop()
+                .into(holder.imageView)
+
+            // Hiển thị thông tin chọn ảnh
             if (selectedImagesMap.containsKey(image.id)) {
                 holder.selectionOrder.text = selectedImagesMap[image.id].toString()
                 holder.selectionOrder.visibility = View.VISIBLE
             } else {
                 holder.selectionOrder.visibility = View.GONE
             }
+
+            // Xử lý sự kiện khi người dùng chọn ảnh
             holder.imageView.setOnClickListener {
                 val isSelected = !selectedImagesMap.containsKey(image.id)
                 onItemSelected(image, isSelected)
             }
         }
     }
+
+
     override fun getItemCount(): Int = images.size
     fun updateSelection(selectedImages: List<ImageModel>) {
         selectedImagesMap.clear()

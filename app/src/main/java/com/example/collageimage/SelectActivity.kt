@@ -79,7 +79,7 @@ class SelectActivity : BaseActivity() {
         val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("IMG_FROM_CAM")
 
         if (selectedImagesFromIntent != null) {
-            selectedImages.clear()  // Xóa các ảnh cũ
+        //    selectedImages.clear()  // Xóa các ảnh cũ
             selectedImages.addAll(selectedImagesFromIntent)  // Thêm ảnh mới vào danh sách
             selectedImagesAdapter.notifyDataSetChanged()
 
@@ -215,7 +215,7 @@ class SelectActivity : BaseActivity() {
                 )
             }
             imageAdapter.addCameraItem()
-            imageAdapter.notifyDataSetChanged()
+         //   imageAdapter.notifyDataSetChanged()
         } ?: run {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }
