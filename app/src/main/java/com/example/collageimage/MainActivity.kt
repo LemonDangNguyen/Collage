@@ -63,6 +63,7 @@ class MainActivity : BaseActivity() {
 
         }
     }
+
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
         FragmentStateAdapter(fragmentActivity) {
         override fun getItemCount(): Int = 3
