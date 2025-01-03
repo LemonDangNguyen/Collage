@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.collageimage"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.collageimage"
