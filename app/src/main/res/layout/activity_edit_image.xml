@@ -5,6 +5,7 @@
     android:id="@+id/ctlParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/_10sdp"
     tools:context=".Activity_Edit_image">
     <TextView
         android:id="@+id/previewText"
@@ -82,17 +83,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/puzzleView"
-            app:layout_constraintEnd_toEndOf="@+id/puzzleView"
-            app:layout_constraintStart_toStartOf="@+id/puzzleView"
-            app:layout_constraintTop_toTopOf="@+id/puzzleView" />
-
+            android:background="@color/white" />
         <ImageView
-            android:id="@+id/edt_view"
+            android:id="@+id/edtimg_view"
             android:layout_gravity="center"
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="20dp"
             android:contentDescription="@string/todo" />
 
         <FrameLayout
@@ -101,6 +98,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center" />
     </FrameLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlBottom"
@@ -112,7 +110,7 @@
 
         <include
             android:id="@+id/layoutParentTool"
-            layout="@layout/layout_parent_func"
+            layout="@layout/layout_parent_func2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent" />

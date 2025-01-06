@@ -89,13 +89,13 @@ class Activity_Select_Image_Edit : BaseActivity() {
             }
 
             imageAdapter = ImageAdapter(this, images) { image, isSelected ->
-                val intent = Intent().apply {
+                val intent = Intent(this, Activity_Edit_image::class.java).apply {
                     putExtra("selected_image_path", image.filePath)
                 }
-                setResult(RESULT_OK, intent)
-               // finish()
+                startActivity(intent)
                 Toast.makeText(this, "Selected image: ${image.filePath}", Toast.LENGTH_SHORT).show()
             }
+
 
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter

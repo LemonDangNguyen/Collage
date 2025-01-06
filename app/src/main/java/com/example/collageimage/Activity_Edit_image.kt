@@ -1,5 +1,6 @@
 package com.example.collageimage
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -31,20 +32,26 @@ class Activity_Edit_image : BaseActivity() {
 
 
         nitview()
-
+        val imagePath = intent.getStringExtra("selected_image_path")
+        if (imagePath != null) {
+            displayImage(imagePath)
+        }
 
     }
-
+    private fun displayImage(imagePath: String) {
+        val imageUri = Uri.parse(imagePath)
+        binding.edtimgView.setImageURI(imageUri)
+    }
     private fun nitview() {
         btntParentBottom()
     }
 
     private fun btntParentBottom() {
-        binding.layoutParentTool.llChangeLayout.setOnClickListener {
-            binding.layoutLayout.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.GONE
-
-        }
+//        binding.layoutParentTool.llChangeLayout.setOnClickListener {
+//            binding.layoutLayout.root.visibility = View.VISIBLE
+//            binding.layoutParentTool.root.visibility = View.GONE
+//
+//        }
         binding.layoutParentTool.llChangeBG.setOnClickListener {
             binding.layoutBg.root.visibility = View.VISIBLE
             binding.layoutLayout.root.visibility = View.GONE
