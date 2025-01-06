@@ -8,16 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.collageimage.databinding.ActivitySelectImageEditBinding
 
-class Activity_Select_Image_Edit : BaseActivity() {
+class ActivitySelectImageEdit : BaseActivity() {
     private val binding by lazy { ActivitySelectImageEditBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
@@ -89,11 +85,11 @@ class Activity_Select_Image_Edit : BaseActivity() {
             }
 
             imageAdapter = ImageAdapter(this, images) { image, isSelected ->
-                val intent = Intent(this, Activity_Edit_image::class.java).apply {
+                val intent = Intent(this, ActivityEditImage::class.java).apply {
                     putExtra("selected_image_path", image.filePath)
                 }
                 startActivity(intent)
-                Toast.makeText(this, "Selected image: ${image.filePath}", Toast.LENGTH_SHORT).show()
+               // Toast.makeText(this, "Selected image: ${image.filePath}", Toast.LENGTH_SHORT).show()
             }
 
 

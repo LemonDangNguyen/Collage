@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_4sdp"
-                android:text="@string/layout"
+                android:text="@string/Origin"
                 android:textColor="@color/smoke"
                 android:textSize="@dimen/_9ssp" />
         </LinearLayout>
@@ -62,36 +62,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_4sdp"
-                android:text="@string/layout"
+                android:text="@string/Fit"
                 android:textColor="@color/smoke"
                 android:textSize="@dimen/_9ssp" />
         </LinearLayout>
 
-
-        <LinearLayout
-            android:id="@+id/llChangeBG"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingVertical="@dimen/_15sdp"
-            android:paddingTop="@dimen/_15sdp"
-            android:paddingBottom="@dimen/_15sdp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_bg" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:text="@string/bg"
-                android:textColor="@color/smoke"
-                android:textSize="@dimen/_9ssp" />
-        </LinearLayout>
         <LinearLayout
             android:id="@+id/ratio"
             android:layout_width="@dimen/_50sdp"
@@ -119,6 +94,32 @@
                 android:textColor="@color/smoke"
                 android:textSize="@dimen/_9ssp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llChangeBG"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/_15sdp"
+            android:paddingTop="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_bg" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/bg"
+                android:textColor="@color/smoke"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/llChangeFrame"
             android:layout_width="@dimen/_50sdp"

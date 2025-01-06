@@ -24,8 +24,10 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.collageimage.CustomBg.CustomImage
 import com.example.collageimage.CustomBg.CustomImageAdapter
+import com.example.collageimage.CustomBg.CustomImageViewModel
 import com.example.collageimage.Gradient.GradientAdapter
 import com.example.collageimage.Gradient.GradientItem
+import com.example.collageimage.Gradient.GradientViewModel
 import com.example.collageimage.adjust.AdjustMode
 import com.example.collageimage.adjust.ImageAdjustmentViewModel
 import com.example.collageimage.adjust.filter.FilterListener
@@ -80,7 +82,8 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             UseCasePuzzleLayouts(RepoPuzzleUtils(PuzzleUtils()))
         )
     }
-
+    private val customImageViewModel: CustomImageViewModel by viewModels()
+    private val customGradientViewModel: GradientViewModel by viewModels()
     private var currentColorMode: ColorMode = ColorMode.BORDER
     private var currentAdjustMode: AdjustMode = AdjustMode.BRIGHTNESS
     private val mFilterViewAdapter = FilterViewAdapter(this)
@@ -97,35 +100,8 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     val viewModel: ImageAdjustmentViewModel by viewModels()
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var frameAdapter: FrameAdapter
-    val images = listOf(
-        CustomImage(R.drawable.ic_custom_bg_01),
-        CustomImage(R.drawable.ic_custom_bg_02),
-        CustomImage(R.drawable.ic_custom_bg_03),
-        CustomImage(R.drawable.ic_custom_bg_04),
-        CustomImage(R.drawable.ic_custom_bg_05),
-        CustomImage(R.drawable.ic_custom_bg_06),
-        CustomImage(R.drawable.ic_custom_bg_07),
-        CustomImage(R.drawable.ic_custom_bg_08),
-        CustomImage(R.drawable.ic_custom_bg_09),
-        CustomImage(R.drawable.ic_custom_bg_10)
-    )
-    val gradients = listOf(
-        GradientItem(R.drawable.ic_gradient_01),
-        GradientItem(R.drawable.ic_gradient_02),
-        GradientItem(R.drawable.ic_gradient_03),
-        GradientItem(R.drawable.ic_gradient_04),
-        GradientItem(R.drawable.ic_gradient_05),
-        GradientItem(R.drawable.ic_gradient_06),
-        GradientItem(R.drawable.ic_gradient_07),
-        GradientItem(R.drawable.ic_gradient_08),
-        GradientItem(R.drawable.ic_gradient_09),
-        GradientItem(R.drawable.ic_gradient_10),
-        GradientItem(R.drawable.ic_gradient_11),
-        GradientItem(R.drawable.ic_gradient_12),
-        GradientItem(R.drawable.ic_gradient_13),
-        GradientItem(R.drawable.ic_gradient_14),
-        GradientItem(R.drawable.ic_gradient_15),
-        )
+
+
 
     private var currentColor: Int = 0xFFFFFFFF.toInt()
     private var mList: List<ImageModel> = mutableListOf()
@@ -291,17 +267,16 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.layoutBg.rvGradient.visibility = View.GONE
             binding.layoutBg.rvColorln.visibility = View.GONE
             binding.layoutBg.rvcolorcustom.visibility = View.VISIBLE
-            binding.layoutBg.rvCustom.adapter = CustomImageAdapter(images) { image ->
-                binding.puzzleView.setBackgroundImage(image.resourceId)
-            }
+            setBgCus()
         }
         binding.layoutBg.tvGradient.setOnClickListener {
             binding.layoutBg.rvColorln.visibility = View.GONE
             binding.layoutBg.rvcolorcustom.visibility = View.GONE
             binding.layoutBg.rvGradient.visibility = View.VISIBLE
-            binding.layoutBg.rvGradient.adapter = GradientAdapter(gradients) { gradient ->
-                binding.puzzleView.setBackgroundImage(gradient.resourceId)
-            }
+            setBgGradi()
+        }
+        binding.layoutBg.tvBlur.setOnClickListener {
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -702,4 +677,29 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     override fun onFilterSelected(photoFilter: PhotoFilter) {
         mPhotoEditor.setFilterEffect(photoFilter)
     }
+
+    fun setBgCus() {
+        val adapter = CustomImageAdapter(emptyList()) { image ->
+            binding.puzzleView.setBackgroundImage(image.resourceId)
+        }
+        binding.layoutBg.rvCustom.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.layoutBg.rvCustom.adapter = adapter
+
+        customImageViewModel.customImages.observe(this, { images ->
+            adapter.updateImages(images)
+        })
+    }
+
+    fun  setBgGradi() {
+        val adapter = GradientAdapter(emptyList()) { gradient ->
+            binding.puzzleView.setBackgroundImage(gradient.resourceId)
+        }
+        binding.layoutBg.rvGradient.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.layoutBg.rvGradient.adapter = adapter
+
+        customGradientViewModel.selectedGradient.observe(this, { images ->
+            adapter.updateGradients(images)
+        })
+    }
+
 }

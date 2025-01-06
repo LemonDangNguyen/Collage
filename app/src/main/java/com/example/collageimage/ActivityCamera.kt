@@ -66,8 +66,8 @@ class ActivityCamera : BaseActivity() {
         binding.ivDone.setOnClickListener {
             if (photoList.isNotEmpty()) {
                 if (sourceActivity == "Activity_Select_Image_Edit") {
-                    val intent = Intent(this, Activity_Edit_image::class.java)
-                    val selectedImage = photoList[0]  // Chỉ lấy ảnh đầu tiên
+                    val intent = Intent(this, ActivityEditImage::class.java)
+                    val selectedImage = photoList[0]
                     val selectedImages = listOf(
                         ImageModel(
                             id = System.currentTimeMillis(),

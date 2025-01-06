@@ -29,10 +29,10 @@
         android:theme="@style/Theme.CollageImage"
         tools:targetApi="31">
         <activity
-            android:name=".Activity_Select_Image_Edit"
+            android:name=".ActivitySelectImageEdit"
             android:exported="false" />
         <activity
-            android:name=".Activity_Edit_image"
+            android:name=".ActivityEditImage"
             android:exported="false" />
         <activity
             android:name=".ActivityCamera"

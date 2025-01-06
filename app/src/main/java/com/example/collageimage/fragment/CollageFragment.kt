@@ -9,8 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearSmoothScroller
-import com.example.collageimage.Activity_Select_Image_Edit
-import com.example.collageimage.HomeCollage
+import com.example.collageimage.ActivitySelectImageEdit
 import com.example.collageimage.ImageInMainAdapter
 import com.example.collageimage.R
 import com.example.collageimage.SelectActivity
@@ -43,7 +42,7 @@ class CollageFragment : Fragment() {
             startActivity(Intent(requireContext(), SelectActivity::class.java))
         }
         binding.btnEditImage.setOnClickListener {
-            startActivity(Intent(requireContext(), Activity_Select_Image_Edit::class.java))
+            startActivity(Intent(requireContext(), ActivitySelectImageEdit::class.java))
         }
         setupViewPager()
         autoScrollViewPager()

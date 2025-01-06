@@ -23,29 +23,4 @@ class Setting : BaseActivity() {
         }
     }
 
-
-    override fun onBackPressed(){
-
-        val binding2 = DialogExitBinding.inflate(layoutInflater)
-        val dialog2 = Dialog(this)
-        dialog2.setContentView(binding2.root)
-        val window = dialog2.window
-        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(false)
-        dialog2.setCancelable(false)
-        binding2.btnExit.setOnClickListener{
-            dialog2.dismiss()
-
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-            super.onBackPressed()
-        }
-        binding2.btnStay.setOnClickListener{
-            dialog2.dismiss()
-        }
-        dialog2.show()
-    }
 }
