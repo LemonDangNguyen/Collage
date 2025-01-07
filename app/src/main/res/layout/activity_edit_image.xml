@@ -5,7 +5,6 @@
     android:id="@+id/ctlParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/_10sdp"
     tools:context=".ActivityEditImage">
 
 
@@ -59,32 +58,44 @@
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/flParent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/ctlBottom"
         app:layout_constraintTop_toBottomOf="@+id/ctlToolBar">
 
         <com.example.collageimage.customview.BlurParentCollage
             android:id="@+id/ivBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/white" />
+            android:layout_gravity="center" />
+
         <ImageView
             android:id="@+id/edtimg_view"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/todo" />
+            android:layout_gravity="center"
+            android:contentDescription="@string/todo"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <FrameLayout
+        <ImageView
             android:id="@+id/framebg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
-    </FrameLayout>
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.collageimage.customview.DrawView
+            android:id="@+id/drawview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -149,30 +160,6 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />
-
-        <!--                <include-->
-        <!--                    android:id="@+id/layoutEditImage"-->
-        <!--                    layout="@layout/layout_edit_item_collage"-->
-        <!--                    android:layout_width="match_parent"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:visibility="gone"-->
-        <!--                    app:layout_constraintBottom_toBottomOf="0" />-->
-
-        <!--                <include-->
-        <!--                    android:id="@+id/bar_add_image"-->
-        <!--                    layout="@layout/layout_add_image_source"-->
-        <!--                    android:layout_width="match_parent"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:visibility="gone"-->
-        <!--                    app:layout_constraintBottom_toBottomOf="0" />-->
-
-        <!--                <include-->
-        <!--                    android:id="@+id/bar_filter_and_adjust"-->
-        <!--                    layout="@layout/layout_filter_and_adjust"-->
-        <!--                    android:layout_width="match_parent"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:visibility="gone"-->
-        <!--                    app:layout_constraintBottom_toBottomOf="0" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

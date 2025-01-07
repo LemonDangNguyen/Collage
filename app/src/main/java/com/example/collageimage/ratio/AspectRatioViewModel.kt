@@ -7,7 +7,7 @@ import android.graphics.Color
 
 class AspectRatioViewModel : ViewModel() {
     private val _aspectRatio = MutableLiveData<Float>(1f) // Mặc định 1:1
-    private val _backgroundColor = MutableLiveData<Int>(Color.WHITE) // Mặc định màu trắng
+    private val _backgroundColor = MutableLiveData<Int>(Color.TRANSPARENT) // Mặc định màu trắng
 
     val aspectRatio: LiveData<Float> = _aspectRatio
     val backgroundColor: LiveData<Int> = _backgroundColor

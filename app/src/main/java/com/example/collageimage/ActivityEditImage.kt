@@ -141,6 +141,7 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
         binding.layoutParentTool.changeDraw.setOnClickListener {
             binding.barDrawing.root.visibility = View.VISIBLE
             binding.layoutParentTool.root.visibility = View.GONE
+            drawFun()
         }
         binding.layoutParentTool.addImage.setOnClickListener {
             binding.layoutParentTool.root.visibility = View.GONE
@@ -216,6 +217,17 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
 
     }
 
+    private fun drawFun(){
+        binding.barDrawing.btnCancelDraw.setOnClickListener {
+            binding.barDrawing.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+        }
+        binding.barDrawing.btnApplyDraw.setOnClickListener {
+            binding.barDrawing.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+        }
+    }
+
 
     private fun openColorPickerDialog2() {
         val colorPicker =
@@ -277,10 +289,11 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
 
     }
 
-    private fun updatebgFrame(frameLayout: FrameLayout, ratio: Float) {
+    private fun updatebgFrame(frameLayout: ImageView, ratio: Float) {
         val layoutParams = frameLayout.layoutParams
         val parentWidth = frameLayout.width
         val height = (parentWidth / ratio).toInt()
+     //   updateViewAspectRatio(frameLayout, ratio)
         layoutParams.height = height
         frameLayout.layoutParams = layoutParams
     }
