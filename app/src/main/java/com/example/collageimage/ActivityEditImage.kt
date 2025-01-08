@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,8 +19,11 @@ import com.example.collageimage.Gradient.GradientAdapter
 import com.example.collageimage.Gradient.GradientViewModel
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
+import com.example.collageimage.color.ColorItem2
 import com.example.collageimage.color.ColorMode
+import com.example.collageimage.color.ColorPenAdapter
 import com.example.collageimage.color.OnColorClickListener
+import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityEditImageBinding
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
@@ -28,7 +32,7 @@ import com.example.collageimage.ratio.adapter.RatioAdapter
 import yuku.ambilwarna.AmbilWarnaDialog
 
 
-class ActivityEditImage : BaseActivity(), OnColorClickListener {
+class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickListener2 {
 
     private val binding by lazy { ActivityEditImageBinding.inflate(layoutInflater) }
     private lateinit var frameAdapter: FrameAdapter
@@ -38,6 +42,7 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
     private val customImageViewModel: CustomImageViewModel by viewModels()
     private val customGradientViewModel: GradientViewModel by viewModels()
     private lateinit var colorAdapter: ColorAdapter
+    private lateinit var colorAdapterpen: ColorPenAdapter
     val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
@@ -46,7 +51,14 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
         ColorItem("#BA85FE"), ColorItem("#933EFF"), ColorItem("#350077"),
         ColorItem("#E8F403"), ColorItem("#F403D4")
     )
+    val pencolors = listOf(
 
+        ColorItem2("#FF005C"), ColorItem2("#FF007A"),ColorItem2("#9B00E4"), ColorItem2("#630285"),
+        ColorItem2("#022785"), ColorItem2("#007CD7"),ColorItem2("#00A0E4"), ColorItem2("#00B88C"),
+        ColorItem2("#00B8B8"), ColorItem2("#00A08D"),ColorItem2("#009F40"), ColorItem2("#82CC0A"),
+        ColorItem2("#FFE500"), ColorItem2("#FFB800"),ColorItem2("#FF1F00"), ColorItem2("#64332C"),
+        ColorItem2("#736A69"), ColorItem2("#425C58"),ColorItem2("#010101"), ColorItem2("#F403D4")
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -139,8 +151,9 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
             binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.changeDraw.setOnClickListener {
-            binding.barDrawing.root.visibility = View.VISIBLE
+            binding.drawview.setInteractionEnabled(true)
             binding.layoutParentTool.root.visibility = View.GONE
+            binding.barDrawing.root.visibility = View.VISIBLE
             drawFun()
         }
         binding.layoutParentTool.addImage.setOnClickListener {
@@ -218,16 +231,64 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
     }
 
     private fun drawFun(){
+        colorrecyPenlayout()
         binding.barDrawing.btnCancelDraw.setOnClickListener {
+            binding.drawview.setInteractionEnabled(false)
             binding.barDrawing.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
         }
         binding.barDrawing.btnApplyDraw.setOnClickListener {
+            binding.drawview.setInteractionEnabled(false)
             binding.barDrawing.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
         }
+        binding.barDrawing.btnUndo.setOnClickListener {
+            binding.drawview.setUndo()
+        }
+        binding.barDrawing.btnRedo.setOnClickListener {
+            binding.drawview.setRedo()
+        }
+        binding.barDrawing.sbBrushSize.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                binding.barDrawing.tvBrushSizePercent.text = progress.toString()
+                binding.drawview.setPenWidth(progress.toFloat())
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+        })
+        binding.barDrawing.btnBrushMode.setOnClickListener {
+            binding.drawview.setEraserMode(false)
+        }
+        binding.barDrawing.btnEraserMode.setOnClickListener {
+            binding.drawview.setEraserMode(true)
+        }
+
+        binding.barDrawing.seleccolor.setOnClickListener {
+            openColorPickerDialog()
+        }
     }
 
+    private fun openColorPickerDialog() {
+        val colorPicker =
+            AmbilWarnaDialog(this, currentColor, object : AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    currentColor = color
+                    binding.drawview.setPenColor(color)
+                }
+
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                }
+            })
+        colorPicker.show()
+    }
 
     private fun openColorPickerDialog2() {
         val colorPicker =
@@ -242,7 +303,6 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
             })
         colorPicker.show()
     }
-
     private fun setupRecyclerView() {
         val frames = (1..20).map { FrameItem("frames/frame_$it.webp") }
         frameAdapter = FrameAdapter(frames) { drawable ->
@@ -324,8 +384,16 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
         })
     }
 
-    private fun colorrecylayout() {
+    private fun colorrecyPenlayout() {
+        colorAdapterpen = ColorPenAdapter(pencolors, this)
+        binding.barDrawing.rcvColorDraw.apply {
+            layoutManager =
+                LinearLayoutManager(this@ActivityEditImage, LinearLayoutManager.HORIZONTAL, false)
+            adapter = colorAdapterpen
+        }
+    }
 
+    private fun colorrecylayout() {
         colorAdapter = ColorAdapter(colors, this)
         binding.layoutBg.rvColor.apply {
             layoutManager =
@@ -333,6 +401,8 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
             adapter = colorAdapter
         }
     }
+
+
 
     override fun onColorClick(color: ColorItem) {
         val colorInt = Color.parseColor(color.colorHex)
@@ -344,6 +414,11 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener {
                 binding.edtimgView.setBackgroundColor(colorInt)
             }
         }
+    }
+
+    override fun onColorClick2(color2: ColorItem2) {
+        val colorInt = Color.parseColor(color2.colorHex2)
+       binding.drawview.setPenColor(colorInt)
     }
 
 }

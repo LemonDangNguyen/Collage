@@ -22,11 +22,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.collageimage.CustomBg.CustomImage
 import com.example.collageimage.CustomBg.CustomImageAdapter
 import com.example.collageimage.CustomBg.CustomImageViewModel
 import com.example.collageimage.Gradient.GradientAdapter
-import com.example.collageimage.Gradient.GradientItem
 import com.example.collageimage.Gradient.GradientViewModel
 import com.example.collageimage.adjust.AdjustMode
 import com.example.collageimage.adjust.ImageAdjustmentViewModel
@@ -36,6 +34,7 @@ import com.example.collageimage.adjust.filter.PhotoEditor
 import com.example.collageimage.adjust.filter.PhotoFilter
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
+import com.example.collageimage.color.ColorItem2
 import com.example.collageimage.color.ColorMode
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
@@ -425,18 +424,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         }
     }
 
-    override fun onColorClick(color: ColorItem) {
-        val colorInt = Color.parseColor(color.colorHex)
-        when (currentColorMode) {
-            ColorMode.BORDER -> {
-                binding.puzzleView.setBorderColor(colorInt)
-            }
 
-            ColorMode.BACKGROUND -> {
-                binding.puzzleView.setBackgroundColor(colorInt)
-            }
-        }
-    }
 
     private fun initListener() = binding.apply {
         layoutLayout.sbBorder.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -700,6 +688,19 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         customGradientViewModel.selectedGradient.observe(this, { images ->
             adapter.updateGradients(images)
         })
+    }
+
+    override fun onColorClick(color: ColorItem) {
+        val colorInt = Color.parseColor(color.colorHex)
+        when (currentColorMode) {
+            ColorMode.BORDER -> {
+                binding.puzzleView.setBorderColor(colorInt)
+            }
+
+            ColorMode.BACKGROUND -> {
+                binding.puzzleView.setBackgroundColor(colorInt)
+            }
+        }
     }
 
 }

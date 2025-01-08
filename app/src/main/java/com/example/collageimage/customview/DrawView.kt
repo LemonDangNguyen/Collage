@@ -42,7 +42,7 @@ class DrawView @JvmOverloads constructor(
     private var mode = NONE
     private var startPoint = PointF()
     private var oldDist = 1f
-
+     var isInteractable: Boolean = true
     private var isFirstDraw = true
     private var onDrawChange: OnDrawChange? = null
     var backgroundBitmap: Bitmap? = null
@@ -80,7 +80,12 @@ class DrawView @JvmOverloads constructor(
             }
         }
     }
-
+    fun setInteractionEnabled(enabled: Boolean) {
+        isInteractable = enabled
+        // Thay đổi độ trong suốt hoặc các thuộc tính khác nếu cần
+        alpha = if (enabled) 1.0f else 0.5f
+        invalidate()
+    }
     override fun onDraw(canvas: Canvas) {
         canvas.save()
         canvas.concat(zoomMatrix)
@@ -99,14 +104,10 @@ class DrawView @JvmOverloads constructor(
 
         for (paintPath in pathListHistory) {
             if (paintPath != null) {
-                // Nếu là đường tô màu, sử dụng paint riêng cho mỗi path
-                if (paintPath.isColored) {
-                    canvas.drawPath(paintPath.path, paintPath.paint)
-                } else {
-                    canvas.drawPath(paintPath.path, getPaint())
-                }
+                canvas.drawPath(paintPath.path, paintPath.paint)
             }
         }
+
         canvas.restore()
     }
 
@@ -120,6 +121,9 @@ class DrawView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isInteractable){
+            return false
+        }
         val x = event.x
         val y = event.y
 
@@ -216,11 +220,13 @@ class DrawView @JvmOverloads constructor(
         pathListUndo.clear()
         mPath!!.reset()
         mPath!!.moveTo(xPos, yPos)
+
         currentX = xPos
         currentY = yPos
 
-       // playSoundLooping()
+        //playSoundLooping()
     }
+
 
     private fun touchMove(xPos: Float, yPos: Float) {
         val dx = abs(xPos - currentX!!)

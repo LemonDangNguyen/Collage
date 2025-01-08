@@ -8,6 +8,6 @@
         android:id="@+id/colorView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/color_circle_background" />
+        android:background="@drawable/color_background" />
 
 </LinearLayout>
