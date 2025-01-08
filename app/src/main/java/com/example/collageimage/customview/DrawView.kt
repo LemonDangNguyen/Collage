@@ -42,7 +42,7 @@ class DrawView @JvmOverloads constructor(
     private var mode = NONE
     private var startPoint = PointF()
     private var oldDist = 1f
-     var isInteractable: Boolean = true
+     var isInteractable: Boolean = false
     private var isFirstDraw = true
     private var onDrawChange: OnDrawChange? = null
     var backgroundBitmap: Bitmap? = null
@@ -79,7 +79,9 @@ class DrawView @JvmOverloads constructor(
                 recycle()
             }
         }
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
     }
+
     fun setInteractionEnabled(enabled: Boolean) {
         isInteractable = enabled
         // Thay đổi độ trong suốt hoặc các thuộc tính khác nếu cần
@@ -371,16 +373,29 @@ class DrawView @JvmOverloads constructor(
     private fun getPaint(): Paint {
         val paint = Paint()
         if (isEraserMode) {
-            paint.color = -1
+            paint.apply {
+                // Thiết lập chế độ xfermode để xóa
+                xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+                // Thiết lập các thuộc tính khác cho Paint
+                strokeWidth = penWidth
+                style = Paint.Style.STROKE
+                strokeCap = Paint.Cap.ROUND
+                isAntiAlias = true
+            }
         } else {
-            paint.color = color
+            paint.apply {
+                color = this@DrawView.color
+                strokeWidth = penWidth
+                style = Paint.Style.STROKE
+                strokeCap = Paint.Cap.ROUND
+                isAntiAlias = true
+                // Đảm bảo xfermode được đặt về null khi không ở chế độ tẩy
+                xfermode = null
+            }
         }
-        paint.strokeWidth = penWidth
-        paint.style = Paint.Style.STROKE
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.isAntiAlias = true
         return paint
     }
+
 
     private fun flipPath(path: Path, canvasWidth: Float): Path {
         val matrix = Matrix()
@@ -449,26 +464,4 @@ class DrawView @JvmOverloads constructor(
         zoomMatrixInverse.reset()
         oldDist = 1f
     }
-
-//    private fun playSoundLooping() {
-//        stopSound()
-//        if (context == null) {
-//            return
-//        }
-//        mediaPlayer = MediaPlayer.create(context, R.raw.draw_sound)
-//        mediaPlayer.isLooping = true
-//        mediaPlayer.start()
-//        isPlay = true
-//    }
-
-//    private fun stopSound() {
-//        if (isPlay) {
-//            if (mediaPlayer.isPlaying) {
-//                mediaPlayer.stop()
-//                mediaPlayer.reset()
-//            }
-//        }
-//        isPlay = false
-//    }
-
 }

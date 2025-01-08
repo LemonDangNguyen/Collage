@@ -1,17 +1,25 @@
-    <androidx.appcompat.widget.AppCompatSeekBar
-        android:id="@+id/seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginBottom="4dp"
-        android:max="100"
-        android:progress="10"
-        android:progressBackgroundTint="@color/grey"
-        android:progressTint="#009EFD"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/ctlBottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
-        code newwww
+var isEraserMode: Boolean = false
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+private fun getPaint(): Paint {
+    val paint = Paint()
+    paint.strokeWidth = penWidth
+    paint.style = Paint.Style.STROKE
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.isAntiAlias = true
+
+    if (isEraserMode) { // Sử dụng như thuộc tính
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        paint.color = Color.TRANSPARENT
+    } else {
+        paint.xfermode = null
+        paint.color = color
+    }
+
+    return paint
+}
