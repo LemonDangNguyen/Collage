@@ -42,7 +42,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/btn_album"
+            android:id="@+id/tvSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
@@ -54,7 +54,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/flParent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -68,23 +68,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/puzzleView"
-            app:layout_constraintEnd_toEndOf="@+id/puzzleView"
-            app:layout_constraintStart_toStartOf="@+id/puzzleView"
-            app:layout_constraintTop_toTopOf="@+id/puzzleView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/puzzle_view"
+            app:layout_constraintEnd_toEndOf="@+id/puzzle_view"
+            app:layout_constraintStart_toStartOf="@+id/puzzle_view"
+            app:layout_constraintTop_toTopOf="@+id/puzzle_view" />
 
         <com.example.collageimage.customview.CustomPuzzleView
             android:id="@+id/puzzle_view"
-            android:layout_gravity="center"
-            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="20dp" />
+
         <FrameLayout
             android:id="@+id/framebg"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <com.example.collageimage.customview.DrawView
+            android:id="@+id/drawview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlBottom"
         android:layout_width="match_parent"

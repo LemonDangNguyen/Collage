@@ -65,4 +65,7 @@
     <string name="todo">TODO</string>
     <string name="Origin">Origin</string>
     <string name="Fit">Fit</string>
+    <string name="save_successful">Save Succcessful</string>
+    <string name="mess_save_ss">You have saved your image successfully\nEnjoy your time now!</string>
+    <string name="back_to_home">Back to home</string>
 </resources>

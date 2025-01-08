@@ -1,14 +1,29 @@
 package com.example.collageimage
 
+import android.app.Dialog
+import android.content.ContentValues
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,11 +40,17 @@ import com.example.collageimage.color.ColorPenAdapter
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityEditImageBinding
+import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
 import com.example.collageimage.ratio.AspectRatioViewModel
 import com.example.collageimage.ratio.adapter.RatioAdapter
+import com.example.collageimage.saveImage.SaveFromEditImage
 import yuku.ambilwarna.AmbilWarnaDialog
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 
 
 class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickListener2 {
@@ -43,6 +64,7 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
     private val customGradientViewModel: GradientViewModel by viewModels()
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var colorAdapterpen: ColorPenAdapter
+
     val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
@@ -53,12 +75,23 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
     )
     val pencolors = listOf(
 
-        ColorItem2("#FF005C"), ColorItem2("#FF007A"),ColorItem2("#9B00E4"), ColorItem2("#630285"),
-        ColorItem2("#022785"), ColorItem2("#007CD7"),ColorItem2("#00A0E4"), ColorItem2("#00B88C"),
-        ColorItem2("#00B8B8"), ColorItem2("#00A08D"),ColorItem2("#009F40"), ColorItem2("#82CC0A"),
-        ColorItem2("#FFE500"), ColorItem2("#FFB800"),ColorItem2("#FF1F00"), ColorItem2("#64332C"),
-        ColorItem2("#736A69"), ColorItem2("#425C58"),ColorItem2("#010101"), ColorItem2("#F403D4")
+        ColorItem2("#FF005C"), ColorItem2("#FF007A"), ColorItem2("#9B00E4"), ColorItem2("#630285"),
+        ColorItem2("#022785"), ColorItem2("#007CD7"), ColorItem2("#00A0E4"), ColorItem2("#00B88C"),
+        ColorItem2("#00B8B8"), ColorItem2("#00A08D"), ColorItem2("#009F40"), ColorItem2("#82CC0A"),
+        ColorItem2("#FFE500"), ColorItem2("#FFB800"), ColorItem2("#FF1F00"), ColorItem2("#64332C"),
+        ColorItem2("#736A69"), ColorItem2("#425C58"), ColorItem2("#010101"), ColorItem2("#F403D4")
     )
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            saveFlParentAsImage()
+        } else {
+            Toast.makeText(this, "Permission denied. Cannot save image.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -68,6 +101,114 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
             displayImage(imagePath)
         }
         loadimgCam()
+        backfun()
+
+        binding.tvSave.setOnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+            }
+        }
+    }
+
+    private fun saveFlParentAsImage() {
+        val bitmap = getBitmapFromView(binding.flParent)
+        val saved = saveBitmapToGallery(bitmap)
+        if (saved) {
+            // Lưu ảnh thành công, mở Activity SaveFromEditImage và truyền ảnh
+            val intent = Intent(this, SaveFromEditImage::class.java)
+            // Lưu ảnh vào một tệp tạm thời để truyền
+            val file = File(cacheDir, "saved_image.png")
+            FileOutputStream(file).use { fos ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            }
+
+            // Truyền đường dẫn của tệp ảnh tới Activity mới
+            intent.putExtra("image_path", file.absolutePath)
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    private fun getBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    private fun saveBitmapToGallery(bitmap: Bitmap): Boolean {
+        val filename = "IMG_${System.currentTimeMillis()}.png"
+        var fos: OutputStream? = null
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = contentResolver
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/CollageImage")
+                }
+                val imageUri =
+                    resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                if (imageUri != null) {
+                    fos = resolver.openOutputStream(imageUri)
+                }
+            } else {
+                val imagesDir =
+                    android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DCIM)
+                        .toString() + "/CollageImage"
+                val file = java.io.File(imagesDir)
+                if (!file.exists()) {
+                    file.mkdir()
+                }
+                val image = java.io.File(file, filename)
+                fos = java.io.FileOutputStream(image)
+                val values = ContentValues().apply {
+                    put(MediaStore.Images.Media.DATA, image.absolutePath)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+                }
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            }
+
+            fos?.use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                it.flush()
+            }
+            return true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return false
+        }
+    }
+
+    fun backfun() {
+        binding.tvCancel.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     fun loadimgCam() {
@@ -140,15 +281,18 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
             frameFun()
         }
         binding.layoutParentTool.llChangeText.setOnClickListener {
-            binding.layoutAddText.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.GONE
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+//            binding.layoutAddText.root.visibility = View.VISIBLE
+//            binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeFilter.setOnClickListener {
-            binding.layoutParentTool.root.visibility = View.GONE
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+            //      binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeSticker.setOnClickListener {
-            binding.barStickers.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.GONE
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+//            binding.barStickers.root.visibility = View.VISIBLE
+//            binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.changeDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(true)
@@ -157,7 +301,8 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
             drawFun()
         }
         binding.layoutParentTool.addImage.setOnClickListener {
-            binding.layoutParentTool.root.visibility = View.GONE
+//            binding.layoutParentTool.root.visibility = View.GONE
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -184,37 +329,66 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
             binding.layoutParentTool.root.visibility = View.VISIBLE
         }
 
-        binding.layoutBg.seleccolor.setOnClickListener {
-            openColorPickerDialog2()
-        }
-
-        currentColorMode = ColorMode.BACKGROUND
+        // Xử lý click cho từng TextView
         binding.layoutBg.tvColor.setOnClickListener {
+            updateTextViewStyle(binding.layoutBg.tvColor)
             binding.layoutBg.rvGradient.visibility = View.GONE
             binding.layoutBg.rvcolorcustom.visibility = View.GONE
             currentColorMode = ColorMode.BACKGROUND
-            binding.layoutBg.seleccolor.setOnClickListener {
-                openColorPickerDialog2()
-            }
             binding.layoutBg.rvColorln.visibility = View.VISIBLE
         }
 
         binding.layoutBg.tvCustom.setOnClickListener {
+            updateTextViewStyle(binding.layoutBg.tvCustom)
             binding.layoutBg.rvGradient.visibility = View.GONE
             binding.layoutBg.rvColorln.visibility = View.GONE
             binding.layoutBg.rvcolorcustom.visibility = View.VISIBLE
             setBgCus()
         }
+
         binding.layoutBg.tvGradient.setOnClickListener {
+            updateTextViewStyle(binding.layoutBg.tvGradient)
             binding.layoutBg.rvColorln.visibility = View.GONE
             binding.layoutBg.rvcolorcustom.visibility = View.GONE
             binding.layoutBg.rvGradient.visibility = View.VISIBLE
             setBgGradi()
         }
+
         binding.layoutBg.tvBlur.setOnClickListener {
+            updateTextViewStyle(binding.layoutBg.tvBlur)
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun updateTextViewStyle(selectedTextView: TextView) {
+        resetTextViewStyles()
+        selectedTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        selectedTextView.backgroundTintList =
+            ContextCompat.getColorStateList(this, R.color.bg_border_tab)
+    }
+
+    private fun resetTextViewStyles() {
+        binding.layoutBg.tvColor.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.black
+            )
+        )
+        binding.layoutBg.tvColor.backgroundTintList = ContextCompat.getColorStateList(
+            this,
+            android.R.color.transparent
+        )
+        binding.layoutBg.tvCustom.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.layoutBg.tvCustom.backgroundTintList =
+            ContextCompat.getColorStateList(this, android.R.color.transparent)
+        binding.layoutBg.tvGradient.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.layoutBg.tvGradient.backgroundTintList =
+            ContextCompat.getColorStateList(this, android.R.color.transparent)
+        binding.layoutBg.tvBlur.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.layoutBg.tvBlur.backgroundTintList =
+            ContextCompat.getColorStateList(this, android.R.color.transparent)
+    }
+
 
     private fun frameFun() {
         binding.layoutFrame.ivRefresh.setOnClickListener {
@@ -230,7 +404,7 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
 
     }
 
-    private fun drawFun(){
+    private fun drawFun() {
         colorrecyPenlayout()
         binding.barDrawing.btnCancelDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(false)
@@ -265,9 +439,13 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
             }
         })
         binding.barDrawing.btnBrushMode.setOnClickListener {
+            binding.barDrawing.btnBrushMode.setImageResource(R.drawable.ic_brush_mode_selected)
+            binding.barDrawing.btnEraserMode.setImageResource(R.drawable.ic_eraser_mode)
             binding.drawview.setEraserMode(false)
         }
         binding.barDrawing.btnEraserMode.setOnClickListener {
+            binding.barDrawing.btnBrushMode.setImageResource(R.drawable.ic_brush_mode)
+            binding.barDrawing.btnEraserMode.setImageResource(R.drawable.ic_eraser_mode_selected)
             binding.drawview.setEraserMode(true)
         }
 
@@ -282,20 +460,6 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
                     currentColor = color
                     binding.drawview.setPenColor(color)
-                }
-
-                override fun onCancel(dialog: AmbilWarnaDialog?) {
-                }
-            })
-        colorPicker.show()
-    }
-
-    private fun openColorPickerDialog2() {
-        val colorPicker =
-            AmbilWarnaDialog(this, currentColor, object : AmbilWarnaDialog.OnAmbilWarnaListener {
-                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
-                    currentColor = color
-                    binding.edtimgView.setBackgroundColor(color)
                 }
 
                 override fun onCancel(dialog: AmbilWarnaDialog?) {
@@ -353,7 +517,7 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
         val layoutParams = frameLayout.layoutParams
         val parentWidth = frameLayout.width
         val height = (parentWidth / ratio).toInt()
-     //   updateViewAspectRatio(frameLayout, ratio)
+        //   updateViewAspectRatio(frameLayout, ratio)
         layoutParams.height = height
         frameLayout.layoutParams = layoutParams
     }
@@ -403,7 +567,6 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
     }
 
 
-
     override fun onColorClick(color: ColorItem) {
         val colorInt = Color.parseColor(color.colorHex)
         when (currentColorMode) {
@@ -418,7 +581,27 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
 
     override fun onColorClick2(color2: ColorItem2) {
         val colorInt = Color.parseColor(color2.colorHex2)
-       binding.drawview.setPenColor(colorInt)
+        binding.drawview.setPenColor(colorInt)
     }
 
+    override fun onBackPressed() {
+
+        val binding2 = DialogExitBinding.inflate(layoutInflater)
+        val dialog2 = Dialog(this)
+        dialog2.setContentView(binding2.root)
+        val window = dialog2.window
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog2.setCanceledOnTouchOutside(false)
+        dialog2.setCancelable(false)
+        binding2.btnExit.setOnClickListener {
+            dialog2.dismiss()
+            finish()
+            super.onBackPressed()
+        }
+        binding2.btnStay.setOnClickListener {
+            dialog2.dismiss()
+        }
+        dialog2.show()
+    }
 }

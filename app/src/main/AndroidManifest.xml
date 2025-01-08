@@ -29,6 +29,9 @@
         android:theme="@style/Theme.CollageImage"
         tools:targetApi="31">
         <activity
+            android:name=".saveImage.SaveFromEditImage"
+            android:exported="false" />
+        <activity
             android:name=".ActivitySelectImageEdit"
             android:exported="false" />
         <activity
