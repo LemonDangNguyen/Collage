@@ -5,21 +5,17 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,8 +30,7 @@ import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
 
-@Suppress("DEPRECATION")
-class SelectActivity : BaseActivity() {
+class SelectActivity : BaseActivity(), OnAlbumSelectedListener {
     private val binding by lazy { ActivitySelectBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private var selectedImages = mutableListOf<ImageModel>()
@@ -63,6 +58,7 @@ class SelectActivity : BaseActivity() {
 
     private var albumName: String? = null
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -79,20 +75,13 @@ class SelectActivity : BaseActivity() {
         val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("IMG_FROM_CAM")
 
         if (selectedImagesFromIntent != null) {
-        //    selectedImages.clear()  // Xóa các ảnh cũ
-            selectedImages.addAll(selectedImagesFromIntent)  // Thêm ảnh mới vào danh sách
+            selectedImages.addAll(selectedImagesFromIntent)
             selectedImagesAdapter.notifyDataSetChanged()
-
             updateSelectedAdapters()
             updateSelectedCount()
         }
-
-        albumName = intent.getStringExtra("ALBUM_NAME")
-
-        // Khởi tạo RecyclerView sau khi truyền vào dữ liệu
         setupRecyclerViews()
 
-        // Kiểm tra quyền và tải hình ảnh
         if (hasStoragePermissions()) {
             loadImages()
         } else {
@@ -124,10 +113,8 @@ class SelectActivity : BaseActivity() {
             onBackPressed()
         }
         binding.btnAlbum.setOnClickListener {
-            val intent = Intent(this, SelectAlbum::class.java)
-            intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
-            startActivityForResult(intent, REQUEST_CODE_SELECT_ALBUM)
-            finish()
+            val bottomSheet = SelectAlbumBottomSheet()
+            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
     }
 
@@ -135,6 +122,7 @@ class SelectActivity : BaseActivity() {
         viewModelMediaImageDetail.imagesLiveData.observe(this) {
             adapterEnhanceGalleryDetail.submitList(it)
         }
+
         viewModelMediaImageDetail.clickedImagesLiveData.observe(this) { clickedImages ->
             selectedImages = clickedImages as MutableList<ImageModel>
         }
@@ -196,7 +184,11 @@ class SelectActivity : BaseActivity() {
 
             images.clear()
             while (cursor.moveToNext()) {
-                val date = cursor.getLong(dateModifiedIndex) ?: cursor.getLong(dateTakenIndex)
+                val date = if (!cursor.isNull(dateModifiedIndex)) {
+                    cursor.getLong(dateModifiedIndex)
+                } else {
+                    cursor.getLong(dateTakenIndex)
+                }
 
                 images.add(
                     ImageModel(
@@ -215,7 +207,7 @@ class SelectActivity : BaseActivity() {
                 )
             }
             imageAdapter.addCameraItem()
-         //   imageAdapter.notifyDataSetChanged()
+            imageAdapter.notifyDataSetChanged()
         } ?: run {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }
@@ -263,6 +255,14 @@ class SelectActivity : BaseActivity() {
         }
 
         dialog2.show()
+    }
+
+    override fun onAlbumSelected(albumName: String) {
+        this.albumName = albumName
+        images.clear()
+        imageAdapter.notifyDataSetChanged()
+        loadImages()
+
     }
 
     companion object {

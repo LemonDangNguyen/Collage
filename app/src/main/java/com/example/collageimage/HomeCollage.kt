@@ -414,7 +414,11 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
 
     private fun bgFun() {
+        binding.layoutBg.seleccolor.setOnClickListener{
+            openColorPickerDialog2()
+        }
         colorrecylayout()
+        currentColorMode = ColorMode.BACKGROUND
         binding.layoutBg.ivClose.setOnClickListener {
             binding.layoutBg.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
@@ -431,7 +435,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             updateTextViewStyle(binding.layoutBg.tvColor)
             binding.layoutBg.rvGradient.visibility = View.GONE
             binding.layoutBg.rvcolorcustom.visibility = View.GONE
-            currentColorMode = ColorMode.BACKGROUND
             binding.layoutBg.rvColorln.visibility = View.VISIBLE
         }
 

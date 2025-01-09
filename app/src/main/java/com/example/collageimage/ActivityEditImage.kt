@@ -272,6 +272,9 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
         binding.layoutParentTool.llChangeBG.setOnClickListener {
             binding.layoutBg.root.visibility = View.VISIBLE
             binding.layoutParentTool.root.visibility = View.GONE
+            binding.layoutBg.seleccolor.setOnClickListener {
+                openColorPickerDialog2()
+            }
             bgFun()
         }
         binding.layoutParentTool.llChangeFrame.setOnClickListener {
@@ -320,6 +323,7 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
 
     private fun bgFun() {
         colorrecylayout()
+        currentColorMode = ColorMode.BACKGROUND
         binding.layoutBg.ivClose.setOnClickListener {
             binding.layoutBg.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
@@ -334,8 +338,10 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
             updateTextViewStyle(binding.layoutBg.tvColor)
             binding.layoutBg.rvGradient.visibility = View.GONE
             binding.layoutBg.rvcolorcustom.visibility = View.GONE
-            currentColorMode = ColorMode.BACKGROUND
             binding.layoutBg.rvColorln.visibility = View.VISIBLE
+            binding.layoutBg.seleccolor.setOnClickListener {
+                openColorPickerDialog2()
+            }
         }
 
         binding.layoutBg.tvCustom.setOnClickListener {
@@ -460,6 +466,19 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
                 override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
                     currentColor = color
                     binding.drawview.setPenColor(color)
+                }
+
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                }
+            })
+        colorPicker.show()
+    }
+    private fun openColorPickerDialog2() {
+        val colorPicker =
+            AmbilWarnaDialog(this, currentColor, object : AmbilWarnaDialog.OnAmbilWarnaListener {
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    currentColor = color
+                    binding.edtimgView.setBackgroundColor(color)
                 }
 
                 override fun onCancel(dialog: AmbilWarnaDialog?) {

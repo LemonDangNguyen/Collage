@@ -1,27 +1,28 @@
-package com.example.collageimage;
+package com.example.collageimage
 
 import android.Manifest
-import android.app.Dialog
-import android.content.Intent
+import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.collageimage.databinding.ActivitySelectAlbumBinding
-import com.example.collageimage.databinding.DialogExitBinding
+import com.example.collageimage.databinding.FragmentSelectAlbumBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+class SelectAlbumBottomSheet : BottomSheetDialogFragment() {
 
-class SelectAlbum : BaseActivity() {
+    private var _binding: FragmentSelectAlbumBinding? = null
+    private val binding get() = _binding!!
 
-    private val binding by lazy { ActivitySelectAlbumBinding.inflate(layoutInflater) }
     private val albumList = mutableListOf<AlbumModel>()
     private lateinit var albumAdapter: AlbumAdapter
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -31,23 +32,52 @@ class SelectAlbum : BaseActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
-    private val selectedImages = mutableListOf<ImageModel>()
+
+    private var albumSelectedListener: OnAlbumSelectedListener? = null
+
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { it.value }) {
                 loadAlbums()
             } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnAlbumSelectedListener) {
+            albumSelectedListener = context
+        } else {
+            throw RuntimeException("$context must implement OnAlbumSelectedListener")
+        }
+    }
 
-        val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("SELECTED_IMAGES")
-        if (selectedImagesFromIntent != null) {
-            selectedImages.addAll(selectedImagesFromIntent)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSelectAlbumBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        dialog?.setOnShowListener { dialogInterface ->
+            val dialog = dialog as? com.google.android.material.bottomsheet.BottomSheetDialog
+            dialog?.let {
+                val bottomSheet = it.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheet?.let { sheet ->
+                    val behavior = BottomSheetBehavior.from(sheet)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    behavior.isHideable = false
+
+                    val layoutParams = sheet.layoutParams
+                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    sheet.layoutParams = layoutParams
+                }
+            }
         }
 
         setupRecyclerView()
@@ -59,23 +89,22 @@ class SelectAlbum : BaseActivity() {
         }
 
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            dismiss()
         }
     }
 
-
     private fun setupRecyclerView() {
-        albumAdapter = AlbumAdapter(this, albumList) { album ->
-            val intent = Intent(this, SelectActivity::class.java)
-            intent.putExtra("ALBUM_NAME", album.name)
-            intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
-            startActivity(intent)
+        albumAdapter = AlbumAdapter(requireContext(), albumList) { album ->
+            albumSelectedListener?.onAlbumSelected(album.name)
+            dismiss()
         }
+
         binding.selectedAlbum.apply {
-            layoutManager = GridLayoutManager(this@SelectAlbum, 1)
+            layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = albumAdapter
         }
     }
+
     private fun loadAlbums() {
         val uri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection = arrayOf(
@@ -88,9 +117,9 @@ class SelectAlbum : BaseActivity() {
         var recentImagesCount = 0
         var recentCoverImagePath: String? = null
 
-        contentResolver.query(uri, projection, selection, null, "${MediaStore.Images.Media.DATE_ADDED} DESC")?.use { cursor ->
+        requireContext().contentResolver.query(uri, projection, selection, null, "${MediaStore.Images.Media.DATE_ADDED} DESC")?.use { cursor ->
             if (cursor.count == 0) {
-                Toast.makeText(this, "No albums found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "No albums found", Toast.LENGTH_SHORT).show()
                 return
             }
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
@@ -101,7 +130,7 @@ class SelectAlbum : BaseActivity() {
                 val albumName = cursor.getString(nameIndex)
                 val coverImagePath = cursor.getString(pathIndex)
                 if (recentCoverImagePath == null) {
-                    recentCoverImagePath = coverImagePath // First image is used as cover
+                    recentCoverImagePath = coverImagePath
                 }
                 recentImagesCount++
                 if (!albumMap.containsKey(albumName)) {
@@ -117,7 +146,7 @@ class SelectAlbum : BaseActivity() {
             }
             if (recentImagesCount > 0) {
                 albumList.add(
-                    0, // Add at the top
+                    0,
                     AlbumModel(
                         name = "All Images",
                         coverImagePath = recentCoverImagePath ?: "",
@@ -128,38 +157,17 @@ class SelectAlbum : BaseActivity() {
             albumList.addAll(albumMap.values)
             albumAdapter.notifyDataSetChanged()
         } ?: run {
-            Toast.makeText(this, "Failed to load albums", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Failed to load albums", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun hasStoragePermissions(): Boolean =
         storagePermissions.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
         }
-    override fun onBackPressed(){
 
-        val binding2 = DialogExitBinding.inflate(layoutInflater)
-        val dialog2 = Dialog(this)
-        dialog2.setContentView(binding2.root)
-        val window = dialog2.window
-        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(false)
-        dialog2.setCancelable(false)
-        binding2.btnExit.setOnClickListener{
-            dialog2.dismiss()
-
-            val intent = Intent(this, SelectActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-            super.onBackPressed()
-        }
-        binding2.btnStay.setOnClickListener{
-            dialog2.dismiss()
-        }
-        dialog2.show()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
-
 }

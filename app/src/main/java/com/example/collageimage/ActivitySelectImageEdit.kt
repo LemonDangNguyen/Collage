@@ -13,16 +13,15 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.collageimage.databinding.ActivitySelectImageEditBinding
 
-class ActivitySelectImageEdit : BaseActivity() {
+class ActivitySelectImageEdit : BaseActivity(), OnAlbumSelectedListener {
     private val binding by lazy { ActivitySelectImageEditBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-
     private var selectedPathIndex: Int = -1
-
+    private var albumName: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -41,6 +40,10 @@ class ActivitySelectImageEdit : BaseActivity() {
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
+        binding.btnAlbum.setOnClickListener {
+            val bottomSheet = SelectAlbumBottomSheet()
+            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+        }
     }
 
     private fun loadImages() {
@@ -54,7 +57,14 @@ class ActivitySelectImageEdit : BaseActivity() {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
 
-        contentResolver.query(uri, projection, null, null, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
+        var selection: String? = null
+        var selectionArgs: Array<String>? = null
+        if (!albumName.isNullOrEmpty() && albumName != "All Images") {
+            selection = "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?"
+            selectionArgs = arrayOf(albumName!!)
+        }
+
+        contentResolver.query(uri, projection, selection, selectionArgs, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
             val dateModifiedIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED)
@@ -65,12 +75,12 @@ class ActivitySelectImageEdit : BaseActivity() {
             images.clear()
 
             while (cursor.moveToNext()) {
-                val date = cursor.getLong(dateModifiedIndex) ?: cursor.getLong(dateTakenIndex)
+                val date = cursor.getLong(dateModifiedIndex).takeIf { it != 0L } ?: cursor.getLong(dateTakenIndex)
 
                 images.add(
                     ImageModel(
                         id = cursor.getLong(idIndex),
-                        dateTaken = date, // Sử dụng DATE_MODIFIED nếu có, nếu không thì DATE_TAKEN
+                        dateTaken = date,
                         fileName = cursor.getString(nameIndex),
                         filePath = cursor.getString(pathIndex),
                         album = cursor.getString(albumIndex),
@@ -89,9 +99,7 @@ class ActivitySelectImageEdit : BaseActivity() {
                     putExtra("selected_image_path", image.filePath)
                 }
                 startActivity(intent)
-               // Toast.makeText(this, "Selected image: ${image.filePath}", Toast.LENGTH_SHORT).show()
             }
-
 
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter
@@ -101,6 +109,7 @@ class ActivitySelectImageEdit : BaseActivity() {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun hasStoragePermissions() = storagePermissions.all {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
@@ -114,4 +123,12 @@ class ActivitySelectImageEdit : BaseActivity() {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
+
+    override fun onAlbumSelected(albumName: String) {
+        this.albumName = albumName
+        images.clear()
+        imageAdapter.notifyDataSetChanged()
+        loadImages()
+
+    }
 }
