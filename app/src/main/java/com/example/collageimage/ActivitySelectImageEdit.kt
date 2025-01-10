@@ -1,44 +1,34 @@
 package com.example.collageimage
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.collageimage.databinding.ActivitySelectImageEditBinding
 
-class ActivitySelectImageEdit : BaseActivity(), OnAlbumSelectedListener {
+
+class ActivitySelectImageEdit : BaseActivity(), OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
     private val binding by lazy { ActivitySelectImageEditBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
-    private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-    else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
     private var selectedPathIndex: Int = -1
     private var albumName: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         selectedPathIndex = intent.getIntExtra("selected_path", -1)
 
-        if (hasStoragePermissions()) {
-            loadImages()
-        } else {
-            permissionLauncher.launch(storagePermissions)
-        }
+        loadImages()
 
         setUpListener()
     }
 
     private fun setUpListener() {
         binding.btnBack.setOnClickListener {
-            onBackPressed()
+            finish()
         }
         binding.btnAlbum.setOnClickListener {
             val bottomSheet = SelectAlbumBottomSheet()
@@ -94,12 +84,14 @@ class ActivitySelectImageEdit : BaseActivity(), OnAlbumSelectedListener {
                 )
             }
 
-            imageAdapter = ImageAdapter(this, images) { image, isSelected ->
-                val intent = Intent(this, ActivityEditImage::class.java).apply {
-                    putExtra("selected_image_path", image.filePath)
+            imageAdapter = ImageAdapter(this, images, onItemSelected = { image, isSelected ->
+                if (isSelected) {
+                    val intent = Intent(this, ActivityEditImage::class.java).apply {
+                        putExtra("selected_image_path", image.filePath)
+                    }
+                    startActivity(intent)
                 }
-                startActivity(intent)
-            }
+            }, onCameraClick = { showCameraBottomSheet() })
 
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter
@@ -110,25 +102,24 @@ class ActivitySelectImageEdit : BaseActivity(), OnAlbumSelectedListener {
         }
     }
 
-
-    private fun hasStoragePermissions() = storagePermissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+    private fun showCameraBottomSheet() {
+        val bottomSheet = BottomSheetDialogCamera.newInstance("ActivitySelectImageEdit")
+        bottomSheet.show(supportFragmentManager, "BottomSheetCamera")
     }
-
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions.all { it.value }) {
-                loadImages()
-            } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
 
     override fun onAlbumSelected(albumName: String) {
         this.albumName = albumName
         images.clear()
         imageAdapter.notifyDataSetChanged()
         loadImages()
+    }
 
+    override fun onImagesCaptured(images: ArrayList<ImageModel>) {
+        images.forEach { image ->
+            val intent = Intent(this, ActivityEditImage::class.java).apply {
+                putExtra("selected_image_path", image.filePath)
+            }
+            startActivity(intent)
+        }
     }
 }

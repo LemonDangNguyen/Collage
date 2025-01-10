@@ -18,7 +18,7 @@ class ActivityCamera : BaseActivity() {
     private val binding by lazy { ActivityCameraBinding.inflate(layoutInflater) }
     private lateinit var cameraView: CameraView
     private val photoList = mutableListOf<String>()
-    private var maxPhotos = Int.MAX_VALUE // Mặc định là không giới hạn
+    private var maxPhotos = Int.MAX_VALUE
 
     private val cameraListener = object : CameraListener() {
         override fun onPictureTaken(result: PictureResult) {
@@ -46,15 +46,12 @@ class ActivityCamera : BaseActivity() {
         val sourceActivity = intent.getStringExtra("source_activity")
         Log.d("ActivityCamera", "Activity nguồn: $sourceActivity")
 
-        if (sourceActivity == "Activity_Select_Image_Edit") {
+        if (sourceActivity == "ActivitySelectImageEdit") {
             maxPhotos = 1
         } else {
             maxPhotos = 9
         }
-
-        // Làm mới danh sách ảnh
         photoList.clear()
-
         cameraView = binding.cameraView
         cameraView.setLifecycleOwner(this)
         cameraView.addCameraListener(cameraListener)
@@ -65,7 +62,7 @@ class ActivityCamera : BaseActivity() {
 
         binding.ivDone.setOnClickListener {
             if (photoList.isNotEmpty()) {
-                if (sourceActivity == "Activity_Select_Image_Edit") {
+                if (sourceActivity == "ActivitySelectImageEdit") {
                     val intent = Intent(this, ActivityEditImage::class.java)
                     val selectedImage = photoList[0]
                     val selectedImages = listOf(

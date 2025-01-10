@@ -1,22 +1,17 @@
 package com.example.collageimage
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.collageimage.BaseActivity
@@ -30,16 +25,13 @@ import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
 
-class SelectActivity : BaseActivity(), OnAlbumSelectedListener {
+class SelectActivity : BaseActivity(), OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
+
     private val binding by lazy { ActivitySelectBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private var selectedImages = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var selectedImagesAdapter: SelectedImagesAdapter
-
-    private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-    else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
 
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val repositoryMediaImages by lazy { RepositoryMediaImages(mediaStoreMediaImages) }
@@ -47,14 +39,6 @@ class SelectActivity : BaseActivity(), OnAlbumSelectedListener {
     private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> { ViewModelMediaImageDetailProvider(useCaseMediaImageDetail) }
     private val itemClick: ((Uri) -> Unit) = { viewModelMediaImageDetail.imageClick(it) }
     private val adapterEnhanceGalleryDetail by lazy { AdapterMediaImageDetail(itemClick) }
-
-    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        if (permissions.all { it.value }) {
-            loadImages()
-        } else {
-            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     private var albumName: String? = null
 
@@ -80,13 +64,9 @@ class SelectActivity : BaseActivity(), OnAlbumSelectedListener {
             updateSelectedAdapters()
             updateSelectedCount()
         }
-        setupRecyclerViews()
 
-        if (hasStoragePermissions()) {
-            loadImages()
-        } else {
-            permissionLauncher.launch(storagePermissions)
-        }
+        setupRecyclerViews()
+        loadImages()
 
         setUpListener()
         initObservers()
@@ -129,22 +109,26 @@ class SelectActivity : BaseActivity(), OnAlbumSelectedListener {
     }
 
     private fun setupRecyclerViews() {
-        // Khởi tạo adapter cho các hình ảnh
-        imageAdapter = ImageAdapter(this, images) { image, isSelected ->
-            if (isSelected) {
-                if (!selectedImages.contains(image)) {
-                    if (selectedImages.size < 9) {
-                        selectedImages.add(image)
-                        updateSelectedAdapters()
-                    } else {
-                        Toast.makeText(this, "Maximum is 9 images only", Toast.LENGTH_SHORT).show()
+        imageAdapter = ImageAdapter(
+            this,
+            images,
+            onItemSelected = { image, isSelected ->
+                if (isSelected) {
+                    if (!selectedImages.contains(image)) {
+                        if (selectedImages.size < 9) {
+                            selectedImages.add(image)
+                            updateSelectedAdapters()
+                        } else {
+                            Toast.makeText(this, "Maximum is 9 images only", Toast.LENGTH_SHORT).show()
+                        }
                     }
+                } else {
+                    selectedImages.remove(image)
+                    updateSelectedAdapters()
                 }
-            } else {
-                selectedImages.remove(image)
-                updateSelectedAdapters()
-            }
-        }
+            },
+            onCameraClick = { showCameraBottomSheet() }
+        )
 
         binding.allImagesRecyclerView.apply {
             layoutManager = GridLayoutManager(this@SelectActivity, 3)
@@ -213,10 +197,6 @@ class SelectActivity : BaseActivity(), OnAlbumSelectedListener {
         }
     }
 
-    private fun hasStoragePermissions() = storagePermissions.all {
-        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     private fun updateSelectedAdapters() {
         if (::imageAdapter.isInitialized) {
@@ -262,10 +242,38 @@ class SelectActivity : BaseActivity(), OnAlbumSelectedListener {
         images.clear()
         imageAdapter.notifyDataSetChanged()
         loadImages()
-
     }
 
-    companion object {
-        const val REQUEST_CODE_SELECT_ALBUM = 1
+    private fun showCameraBottomSheet() {
+        val bottomSheet = BottomSheetDialogCamera.newInstance(getCurrentActivityName())
+        bottomSheet.setTargetFragment(null, 0)
+        bottomSheet.show(supportFragmentManager, "BottomSheetCamera")
+        supportFragmentManager.setFragmentResultListener("cameraRequestKey", this) { requestKey, bundle ->
+            val selectedImagesFromCamera = bundle.getParcelableArrayList<ImageModel>("IMG_FROM_CAM")
+            selectedImagesFromCamera?.let {
+                selectedImages.addAll(it)
+                selectedImagesAdapter.notifyDataSetChanged()
+                imageAdapter.updateSelection(selectedImages)
+                updateSelectedAdapters()
+                updateSelectedCount()
+            }
+        }
+    }
+
+    private fun getCurrentActivityName(): String {
+        return when (this::class.java.simpleName) {
+            "SelectActivity" -> "SelectActivity"
+            "ActivitySelectImageEdit" -> "ActivitySelectImageEdit"
+            else -> "Unknown"
+        }
+    }
+
+
+    override fun onImagesCaptured(images: ArrayList<ImageModel>) {
+        selectedImages.addAll(images)
+        selectedImagesAdapter.notifyDataSetChanged()
+        imageAdapter.updateSelection(selectedImages)
+        updateSelectedAdapters()
+        updateSelectedCount()
     }
 }

@@ -323,12 +323,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
     private fun layoutToolFunc() {
         binding.layoutLayout.ivDone.setOnClickListener {
+            currentColorMode = ColorMode.BACKGROUND
             adapterPuzzleLayoutsPieces.confirmSelection()
             binding.layoutLayout.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
             binding.linearLayout.visibility = View.VISIBLE
         }
         binding.layoutLayout.ivClose.setOnClickListener {
+            currentColorMode = ColorMode.BACKGROUND
             adapterPuzzleLayoutsPieces.discardSelection()
             binding.layoutLayout.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
@@ -414,11 +416,12 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 
 
     private fun bgFun() {
+        currentColorMode = ColorMode.BACKGROUND
         binding.layoutBg.seleccolor.setOnClickListener{
             openColorPickerDialog2()
         }
         colorrecylayout()
-        currentColorMode = ColorMode.BACKGROUND
+
         binding.layoutBg.ivClose.setOnClickListener {
             binding.layoutBg.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE

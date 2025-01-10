@@ -6,16 +6,16 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.collageimage.databinding.ItemImageBinding
+import com.example.collageimage.databinding.LayoutBtnCameraBinding
 
 class ImageAdapter(
     private val context: Context,
     private val images: MutableList<ImageModel>,
-    private val onItemSelected: (ImageModel, Boolean) -> Unit
+    private val onItemSelected: (ImageModel, Boolean) -> Unit,
+    private val onCameraClick: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val selectedImagesMap = mutableMapOf<Long, Int>()
 
@@ -24,14 +24,9 @@ class ImageAdapter(
         const val VIEW_TYPE_IMAGE = 1
     }
 
-    inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView = view.findViewById(R.id.ifv)
-        val selectionOrder: TextView = view.findViewById(R.id.selectionOrder)
-    }
+    inner class ImageViewHolder(val binding: ItemImageBinding) : RecyclerView.ViewHolder(binding.root)
 
-    inner class CameraViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val cameraView: ImageView = view.findViewById(R.id.ivcf_camera)
-    }
+    inner class CameraViewHolder(val binding: LayoutBtnCameraBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
         return if (images[position].isCameraItem) {
@@ -43,12 +38,11 @@ class ImageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_CAMERA) {
-            val view =
-                LayoutInflater.from(context).inflate(R.layout.layout_btn_camera, parent, false)
-            CameraViewHolder(view)
+            val binding = LayoutBtnCameraBinding.inflate(LayoutInflater.from(context), parent, false)
+            CameraViewHolder(binding)
         } else {
-            val view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false)
-            ImageViewHolder(view)
+            val binding = ItemImageBinding.inflate(LayoutInflater.from(context), parent, false)
+            ImageViewHolder(binding)
         }
     }
 
@@ -56,41 +50,29 @@ class ImageAdapter(
         val image = images[position]
 
         if (holder is CameraViewHolder) {
-            holder.cameraView.setOnClickListener {
-                // Kiểm tra tên của Activity hiện tại để xác định nguồn
-                val activityName = when (context::class.java.simpleName) {
-                    "SelectActivity" -> "SelectActivity"
-                    "Activity_Select_Image_Edit" -> "Activity_Select_Image_Edit"
-                    else -> "Unknown"
-                }
-
-                // Tạo Intent chuyển đến ActivityCamera và truyền thông tin nguồn Activity
-                val intent = Intent(context, ActivityCamera::class.java)
-                intent.putExtra("source_activity", activityName)  // Truyền tên Activity nguồn vào Intent
-                context.startActivity(intent)
+            holder.binding.ivcfCamera.setOnClickListener {
+                onCameraClick()
             }
         } else if (holder is ImageViewHolder) {
             Glide.with(context).load(image.filePath).error(R.drawable.noimage).centerCrop()
-                .into(holder.imageView)
+                .into(holder.binding.ifv)
 
-            // Hiển thị thông tin chọn ảnh
             if (selectedImagesMap.containsKey(image.id)) {
-                holder.selectionOrder.text = selectedImagesMap[image.id].toString()
-                holder.selectionOrder.visibility = View.VISIBLE
+                holder.binding.selectionOrder.text = selectedImagesMap[image.id].toString()
+                holder.binding.selectionOrder.visibility = View.VISIBLE
             } else {
-                holder.selectionOrder.visibility = View.GONE
+                holder.binding.selectionOrder.visibility = View.GONE
             }
 
-            // Xử lý sự kiện khi người dùng chọn ảnh
-            holder.imageView.setOnClickListener {
+            holder.binding.ifv.setOnClickListener {
                 val isSelected = !selectedImagesMap.containsKey(image.id)
                 onItemSelected(image, isSelected)
             }
         }
     }
 
-
     override fun getItemCount(): Int = images.size
+
     fun updateSelection(selectedImages: List<ImageModel>) {
         selectedImagesMap.clear()
         selectedImages.forEachIndexed { index, image ->
@@ -106,7 +88,6 @@ class ImageAdapter(
             fileName = "Camera",
             filePath = "",
             album = "",
-            selected = false,
             uri = Uri.EMPTY,
             isCameraItem = true
         )
@@ -114,3 +95,4 @@ class ImageAdapter(
         notifyItemInserted(0)
     }
 }
+
