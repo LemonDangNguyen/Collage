@@ -35,6 +35,10 @@ class TemplateActivity : BaseActivity() {
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
+
+        binding.btnChangeImage.setOnClickListener {
+
+        }
     }
 
     private fun setupTemplate(template: TemplateModel) {

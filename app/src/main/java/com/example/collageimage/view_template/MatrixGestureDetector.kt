@@ -17,6 +17,9 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
     private var mCount = 0
     private var previousDistance = 0f
     private var scaleFactor = 1f
+    private var midPointX = 0f
+    private var midPointY = 0f
+
     fun onTouchEvent(event: MotionEvent) {
         if (event.pointerCount > 2) {
             return
@@ -47,7 +50,8 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
                     val distance = calculateDistance(event)
                     if (previousDistance > 0) {
                         val scale = distance / previousDistance
-                        scaleImage(scale)
+                        calculateMidPoint(event)
+                        scaleImage(scale, midPointX, midPointY)
                     }
                     previousDistance = distance
                 }
@@ -60,6 +64,7 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
             }
         }
     }
+
     private fun calculateDistance(event: MotionEvent): Float {
         val x1 = event.getX(0)
         val y1 = event.getY(0)
@@ -67,11 +72,19 @@ class MatrixGestureDetector(matrix: Matrix, listener: OnMatrixChangeListener) {
         val y2 = event.getY(1)
         return Math.sqrt(((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)).toDouble()).toFloat()
     }
-    private fun scaleImage(scale: Float) {
+
+    private fun calculateMidPoint(event: MotionEvent) {
+        val x1 = event.getX(0)
+        val y1 = event.getY(0)
+        val x2 = event.getX(1)
+        val y2 = event.getY(1)
+        midPointX = (x1 + x2) / 2
+        midPointY = (y1 + y2) / 2
+    }
+
+    private fun scaleImage(scale: Float, centerX: Float, centerY: Float) {
         scaleFactor *= scale
-        val values = FloatArray(9)
-        mMatrix.getValues(values)
-        mMatrix.postScale(scale, scale, values[Matrix.MSCALE_X] / 2f, values[Matrix.MSCALE_Y] / 2f)
+        mMatrix.postScale(scale, scale, centerX, centerY)
         mListener.onChange(mMatrix)
     }
 }

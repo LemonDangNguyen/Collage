@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.collageimage.databinding.ActivitySelectImageTemplateBinding
 
-class SelectImageTemplate : BaseActivity() {
+class SelectImageTemplate : BaseActivity(), BottomSheetDialogCamera.OnImagesCapturedListener  {
     private val binding by lazy { ActivitySelectImageTemplateBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
@@ -54,7 +54,6 @@ class SelectImageTemplate : BaseActivity() {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
 
-        // Thay đổi sắp xếp theo DATE_MODIFIED DESC
         contentResolver.query(uri, projection, null, null, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
@@ -66,7 +65,6 @@ class SelectImageTemplate : BaseActivity() {
             images.clear()
 
             while (cursor.moveToNext()) {
-                // Dùng DATE_MODIFIED nếu có, nếu không thì dùng DATE_TAKEN
                 val date = cursor.getLong(dateModifiedIndex) ?: cursor.getLong(dateTakenIndex)
 
                 images.add(
@@ -84,14 +82,15 @@ class SelectImageTemplate : BaseActivity() {
                     )
                 )
             }
-
-//            imageAdapter = ImageAdapter(this, images) { image, isSelected ->
-//                val intent = Intent().apply {
-//                    putExtra("selected_image_path", image.filePath)
-//                }
-//                setResult(RESULT_OK, intent)
-//                finish()
-//            }
+            imageAdapter = ImageAdapter(this, images, onItemSelected = { image, isSelected ->
+                if (isSelected) {
+                    val intent = Intent(this, TemplateActivity::class.java).apply {
+                        putExtra("selected_image_path", image.filePath)
+                    }
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
+            }, onCameraClick = { showCameraBottomSheet() })
 
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter
@@ -112,4 +111,12 @@ class SelectImageTemplate : BaseActivity() {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
+    private fun showCameraBottomSheet() {
+        val bottomSheet = BottomSheetDialogCamera.newInstance("ActivitySelectImageEdit")
+        bottomSheet.show(supportFragmentManager, "BottomSheetCamera")
+    }
+
+    override fun onImagesCaptured(images: ArrayList<ImageModel>) {
+        TODO("Not yet implemented")
+    }
 }

@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -136,15 +135,11 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
         val bitmap = getBitmapFromView(binding.flParent)
         val saved = saveBitmapToGallery(bitmap)
         if (saved) {
-            // Lưu ảnh thành công, mở Activity SaveFromEditImage và truyền ảnh
             val intent = Intent(this, SaveFromEditImage::class.java)
-            // Lưu ảnh vào một tệp tạm thời để truyền
             val file = File(cacheDir, "saved_image.png")
             FileOutputStream(file).use { fos ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
             }
-
-            // Truyền đường dẫn của tệp ảnh tới Activity mới
             intent.putExtra("image_path", file.absolutePath)
             startActivity(intent)
         } else {

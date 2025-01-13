@@ -56,9 +56,6 @@
             android:name=".HomeCollage"
             android:exported="false" />
         <activity
-            android:name=".SelectAlbum"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
