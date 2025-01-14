@@ -3,7 +3,6 @@ package com.example.collageimage
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope

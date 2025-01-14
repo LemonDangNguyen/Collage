@@ -18,17 +18,14 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     private var onPathClickListener: ((Int) -> Unit)? = null
     private var matrixGestureDetector: MatrixGestureDetector? = null
 
-    // Biến để theo dõi Path được chọn
     private var selectedPathIndex: Int = -1
 
-    // Paint để vẽ màu nền cho Path
     private val fillPaint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.fill_color)
         style = Paint.Style.FILL
         isAntiAlias = true
     }
 
-    // Paint để vẽ viền đỏ quanh Path được chọn
     private val strokePaint = Paint().apply {
         color = Color.RED
         style = Paint.Style.STROKE
@@ -61,7 +58,6 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     }
 
     override fun onDraw(canvas: Canvas) {
-        // Vẽ hình nền nếu đã được khởi tạo
         if (::backgroundBitmap.isInitialized) {
             val rectFBackground = RectF(0f, 0f, width.toFloat(), height.toFloat())
             canvas.drawBitmap(backgroundBitmap, null, rectFBackground, Paint())
@@ -77,15 +73,12 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
             scaledPath.transform(matrix)
             scaledPaths.add(scaledPath)
 
-            // Vẽ Path với màu nền
             canvas.drawPath(scaledPath, fillPaint)
 
-            // Nếu đây là Path được chọn, vẽ viền đỏ
             if (index == selectedPathIndex) {
                 canvas.drawPath(scaledPath, strokePaint)
             }
 
-            // Vẽ Bitmap bên trong Path nếu có
             selectedBitmapsAndMatrices[index]?.let { (bitmap, matrix) ->
                 bitmap?.let {
                     val bounds = RectF()
@@ -158,8 +151,11 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     }
 
     private fun isPointInPath(path: Path, x: Float, y: Float): Boolean {
+        val region = Region()
         val bounds = RectF()
         path.computeBounds(bounds, true)
-        return x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom
+        region.setPath(path, Region(bounds.left.toInt(), bounds.top.toInt(), bounds.right.toInt(), bounds.bottom.toInt()))
+        return region.contains(x.toInt(), y.toInt())
     }
+
 }
