@@ -60,13 +60,12 @@
         app:layout_constraintBottom_toTopOf="@+id/lnBottomBar"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <FrameLayout
+        <com.example.collageimage.view_template.ViewTemplateAdapter
             android:id="@+id/view_tempalte"
             android:layout_width="match_parent"
-            app:layout_constraintDimensionRatio="340:604"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="340:604" />
     </RelativeLayout>
-
 
     <LinearLayout
         android:id="@+id/lnBottomBar"

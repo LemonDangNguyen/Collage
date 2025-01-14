@@ -1,13 +1,7 @@
 package com.example.collageimage.view_template
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Matrix
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -23,6 +17,24 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     private val selectedBitmapsAndMatrices = mutableListOf<Pair<Bitmap?, Matrix?>>()
     private var onPathClickListener: ((Int) -> Unit)? = null
     private var matrixGestureDetector: MatrixGestureDetector? = null
+
+    // Biến để theo dõi Path được chọn
+    private var selectedPathIndex: Int = -1
+
+    // Paint để vẽ màu nền cho Path
+    private val fillPaint = Paint().apply {
+        color = ContextCompat.getColor(context, R.color.fill_color)
+        style = Paint.Style.FILL
+        isAntiAlias = true
+    }
+
+    // Paint để vẽ viền đỏ quanh Path được chọn
+    private val strokePaint = Paint().apply {
+        color = Color.RED
+        style = Paint.Style.STROKE
+        strokeWidth = 4f
+        isAntiAlias = true
+    }
 
     fun setBackgroundDrawable(imageResId: Int) {
         backgroundBitmap = BitmapFactory.decodeResource(context.resources, imageResId)
@@ -40,7 +52,7 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
 
     fun setSelectedImage(bitmap: Bitmap, pathIndex: Int) {
         selectedBitmapsAndMatrices[pathIndex] =
-            Pair(bitmap, Matrix())  // Thêm ảnh và khởi tạo Matrix mới cho ảnh
+            Pair(bitmap, Matrix())
         invalidate()
     }
 
@@ -49,6 +61,12 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     }
 
     override fun onDraw(canvas: Canvas) {
+        // Vẽ hình nền nếu đã được khởi tạo
+        if (::backgroundBitmap.isInitialized) {
+            val rectFBackground = RectF(0f, 0f, width.toFloat(), height.toFloat())
+            canvas.drawBitmap(backgroundBitmap, null, rectFBackground, Paint())
+        }
+
         scaledPaths.clear()
         pathObjects.forEachIndexed { index, path ->
             val scaledPath = Path(path)
@@ -58,25 +76,29 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
             matrix.setScale(scaleX, scaleY)
             scaledPath.transform(matrix)
             scaledPaths.add(scaledPath)
-            val paint = Paint().apply {
-                color = ContextCompat.getColor(context, R.color.fill_color)
+
+            // Vẽ Path với màu nền
+            canvas.drawPath(scaledPath, fillPaint)
+
+            // Nếu đây là Path được chọn, vẽ viền đỏ
+            if (index == selectedPathIndex) {
+                canvas.drawPath(scaledPath, strokePaint)
             }
-            canvas.drawPath(scaledPath, paint)
+
+            // Vẽ Bitmap bên trong Path nếu có
             selectedBitmapsAndMatrices[index]?.let { (bitmap, matrix) ->
                 bitmap?.let {
                     val bounds = RectF()
                     scaledPath.computeBounds(bounds, true)
                     canvas.save()
-                    canvas.clipPath(scaledPath)  // Cắt vùng theo path
-                    canvas.concat(matrix!!)  // Áp dụng Matrix cho canvas
+                    canvas.clipPath(scaledPath)
+                    canvas.concat(matrix!!)
                     canvas.drawBitmap(it, null, bounds, null)
                     canvas.restore()
                 }
             }
         }
         super.onDraw(canvas)
-        val rectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
-        canvas.drawBitmap(backgroundBitmap, null, rectF, Paint())
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -85,10 +107,18 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                var pathSelected = false
                 scaledPaths.forEachIndexed { index, path ->
                     if (isPointInPath(path, x, y)) {
+                        if (selectedPathIndex == index) {
+                            selectedPathIndex = -1
+                        } else {
+                            selectedPathIndex = index
+                        }
+                        pathSelected = true
+                        invalidate()
+
                         if (selectedBitmapsAndMatrices[index].first != null) {
-                            // Khởi tạo MatrixGestureDetector
                             matrixGestureDetector = selectedBitmapsAndMatrices[index].second?.let {
                                 MatrixGestureDetector(
                                     it,
@@ -106,6 +136,11 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
                         }
                         return@forEachIndexed
                     }
+                }
+
+                if (!pathSelected) {
+                    selectedPathIndex = -1
+                    invalidate()
                 }
             }
 
