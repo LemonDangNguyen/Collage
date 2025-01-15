@@ -63,7 +63,6 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
             val currentPair = selectedBitmapsAndMatrices[pathIndex]
             selectedBitmapsAndMatrices[pathIndex] = Pair(bitmap, currentPair.second ?: Matrix())
         } else {
-            // Nếu pathIndex vượt quá kích thước hiện tại, mở rộng danh sách
             while (selectedBitmapsAndMatrices.size <= pathIndex) {
                 selectedBitmapsAndMatrices.add(Pair(null, Matrix()))
             }
@@ -121,7 +120,7 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         gestureDetector.onTouchEvent(event)
         scaleGestureDetector.onTouchEvent(event)
-        rotationGestureDetector.onTouchEvent(event) // Xử lý xoay
+        rotationGestureDetector.onTouchEvent(event)
 
         val x = event.x
         val y = event.y
@@ -199,7 +198,6 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
                 val rotationDegrees = rotationDetector.rotationDegrees
                 val pair = selectedBitmapsAndMatrices[selectedPathIndex]
                 if (pair.second != null) {
-                    // Tính trung điểm của Path để xoay quanh đó
                     val path = scaledPaths[selectedPathIndex]
                     val bounds = RectF()
                     path.computeBounds(bounds, true)

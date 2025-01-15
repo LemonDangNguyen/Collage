@@ -9,7 +9,7 @@
     android:tag="layout/layout_stickers_0">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/btn_dismiss_sticker_picker"
+        android:id="@+id/ic_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
@@ -38,10 +38,10 @@
         android:orientation="horizontal"
         android:tag="binding_1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_dismiss_sticker_picker"
+        app:layout_constraintBottom_toBottomOf="@+id/ic_close"
         app:layout_constraintEnd_toStartOf="@+id/btn_done_sticker"
-        app:layout_constraintStart_toEndOf="@+id/btn_dismiss_sticker_picker"
-        app:layout_constraintTop_toTopOf="@+id/btn_dismiss_sticker_picker" />
+        app:layout_constraintStart_toEndOf="@+id/ic_close"
+        app:layout_constraintTop_toTopOf="@+id/ic_close" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_stickers"

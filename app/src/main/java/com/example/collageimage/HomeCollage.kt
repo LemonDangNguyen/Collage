@@ -652,7 +652,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private fun layoutStickerFunc() {
-        binding.barStickers.btnDismissStickerPicker.setOnClickListener {
+        binding.barStickers.icClose.setOnClickListener {
             binding.barStickers.root.visibility = View.GONE
         }
     }
