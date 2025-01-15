@@ -9,18 +9,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.PathParser
 import com.example.collageimage.R
 
-class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+class ViewTemplateAdapter22(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
-    private var backgroundBitmap: Bitmap? = null
+    private lateinit var backgroundBitmap: Bitmap
     private val pathObjects = mutableListOf<Path>()
     private val scaledPaths = mutableListOf<Path>()
     private val selectedBitmapsAndMatrices = mutableListOf<Pair<Bitmap?, Matrix?>>()
+    private var onPathClickListener: ((Int) -> Unit)? = null
+    private var matrixGestureDetector: MatrixGestureDetector? = null
 
     private var selectedPathIndex: Int = -1
-    private var onPathClickListener: ((Int) -> Unit)? = null
-    private var onBitmapClickListener: ((Int) -> Unit)? = null
-
-    private var matrixGestureDetector: MatrixGestureDetector? = null
 
     private val fillPaint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.fill_color)
@@ -43,12 +41,15 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     fun setPath(index: Int, pathData: String) {
         val pathObj = PathParser.createPathFromPathData(pathData)
         pathObjects.add(pathObj)
+
         if (index >= selectedBitmapsAndMatrices.size) {
             selectedBitmapsAndMatrices.add(Pair(null, Matrix()))
         }
     }
+
     fun setSelectedImage(bitmap: Bitmap, pathIndex: Int) {
-        selectedBitmapsAndMatrices[pathIndex] = Pair(bitmap, Matrix())
+        selectedBitmapsAndMatrices[pathIndex] =
+            Pair(bitmap, Matrix())
         invalidate()
     }
 
@@ -56,25 +57,22 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
         onPathClickListener = listener
     }
 
-    fun setOnBitmapClickListener(listener: (Int) -> Unit) {
-        onBitmapClickListener = listener
-    }
-
     override fun onDraw(canvas: Canvas) {
-        backgroundBitmap?.let {
+        if (::backgroundBitmap.isInitialized) {
             val rectFBackground = RectF(0f, 0f, width.toFloat(), height.toFloat())
-            canvas.drawBitmap(it, null, rectFBackground, Paint())
+            canvas.drawBitmap(backgroundBitmap, null, rectFBackground, Paint())
         }
 
         scaledPaths.clear()
         pathObjects.forEachIndexed { index, path ->
             val scaledPath = Path(path)
-            val scaleMatrix = Matrix()
+            val matrix = Matrix()
             val scaleX = width / 720f
             val scaleY = height / 1280f
-            scaleMatrix.setScale(scaleX, scaleY)
-            scaledPath.transform(scaleMatrix)
+            matrix.setScale(scaleX, scaleY)
+            scaledPath.transform(matrix)
             scaledPaths.add(scaledPath)
+
             canvas.drawPath(scaledPath, fillPaint)
 
             if (index == selectedPathIndex) {
@@ -100,21 +98,54 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
         val x = event.x
         val y = event.y
 
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            scaledPaths.forEachIndexed { index, path ->
-                if (isPointInPath(path, x, y)) {
-                    if (selectedBitmapsAndMatrices[index].first != null) {
-                        onBitmapClickListener?.invoke(index)
-                    } else {
-                        onPathClickListener?.invoke(index)
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                var pathSelected = false
+                scaledPaths.forEachIndexed { index, path ->
+                    if (isPointInPath(path, x, y)) {
+                        if (selectedPathIndex == index) {
+                            selectedPathIndex = -1
+                        } else {
+                            selectedPathIndex = index
+                        }
+                        pathSelected = true
+                        invalidate()
+
+                        if (selectedBitmapsAndMatrices[index].first != null) {
+                            matrixGestureDetector = selectedBitmapsAndMatrices[index].second?.let {
+                                MatrixGestureDetector(
+                                    it,
+                                    object : MatrixGestureDetector.OnMatrixChangeListener {
+                                        override fun onChange(matrix: Matrix?) {
+                                            selectedBitmapsAndMatrices[index] =
+                                                selectedBitmapsAndMatrices[index].copy(second = matrix!!)
+                                            invalidate()
+                                        }
+                                    })
+                            }
+                            matrixGestureDetector?.onTouchEvent(event)
+                        } else {
+                            onPathClickListener?.invoke(index)
+                        }
+                        return@forEachIndexed
                     }
-                    selectedPathIndex = index
+                }
+
+                if (!pathSelected) {
+                    selectedPathIndex = -1
                     invalidate()
-                    return true
                 }
             }
-            selectedPathIndex = -1
-            invalidate()
+
+            MotionEvent.ACTION_MOVE -> {
+                matrixGestureDetector?.onTouchEvent(event)
+            }
+
+            MotionEvent.ACTION_POINTER_UP -> {}
+
+            MotionEvent.ACTION_UP -> {
+                matrixGestureDetector?.onTouchEvent(event)
+            }
         }
         return true
     }
@@ -126,10 +157,5 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
         region.setPath(path, Region(bounds.left.toInt(), bounds.top.toInt(), bounds.right.toInt(), bounds.bottom.toInt()))
         return region.contains(x.toInt(), y.toInt())
     }
-
-    fun isPathEmpty(pathIndex: Int): Boolean {
-        return selectedBitmapsAndMatrices[pathIndex].first == null
-    }
-
 
 }

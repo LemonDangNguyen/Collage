@@ -3,6 +3,7 @@ package com.example.collageimage
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,27 +18,27 @@ class TemplateActivity : BaseActivity() {
     private lateinit var viewTemplateAdapter: ViewTemplateAdapter
     private val templateViewModel: TemplateViewModel by viewModels()
     private var selectedPathIndex: Int = -1
-    private val selectImageLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val selectedImagePath = result.data?.getStringExtra("selected_image_path")
-            selectedImagePath?.let {
-                val selectedBitmap = BitmapFactory.decodeFile(it)
-                templateViewModel.setSelectedImage(selectedBitmap)
-                if (selectedPathIndex != -1) {
-                    viewTemplateAdapter.setSelectedImage(selectedBitmap, selectedPathIndex)
+
+    // Activity result launcher for SelectImageTemplate
+    private val selectImageLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val selectedImagePath = result.data?.getStringExtra("selected_image_path")
+                selectedImagePath?.let {
+                    val selectedBitmap = BitmapFactory.decodeFile(it)
+                    if (selectedPathIndex != -1) {
+                        templateViewModel.setSelectedImage(selectedBitmap)
+                        viewTemplateAdapter.setSelectedImage(selectedBitmap, selectedPathIndex)
+                    }
                 }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTemplateBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewTemplateAdapter = binding.viewTempalte
-
+        viewTemplateAdapter = binding.viewTemplate
         val imageId = intent.getIntExtra("imageId", -1)
         if (imageId != -1) {
             templateViewModel.loadTemplates()
@@ -48,14 +49,16 @@ class TemplateActivity : BaseActivity() {
                 }
             }
         }
-
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
 
         binding.btnChangeImage.setOnClickListener {
-            val intent = Intent(this, SelectImageTemplate::class.java)
-            selectImageLauncher.launch(intent)
+            if (selectedPathIndex != -1) {
+                openSelectImage(selectedPathIndex)
+            } else {
+                showToast("Vui lòng chọn một hình ảnh trước khi thay đổi!")
+            }
         }
     }
 
@@ -64,13 +67,27 @@ class TemplateActivity : BaseActivity() {
         template.stringPaths.forEachIndexed { index, path ->
             viewTemplateAdapter.setPath(index, path)
         }
+
+
         viewTemplateAdapter.setOnPathClickListener { pathIndex ->
             selectedPathIndex = pathIndex
-            val intent = Intent(this, SelectImageTemplate::class.java).apply {
-                putExtra("selected_path", pathIndex)
+            if (viewTemplateAdapter.isPathEmpty(pathIndex)) {
+                openSelectImage(pathIndex)
             }
-            selectImageLauncher.launch(intent)
         }
+        viewTemplateAdapter.setOnBitmapClickListener { bitmapIndex ->
+            selectedPathIndex = bitmapIndex
+        }
+    }
+
+    private fun openSelectImage(pathIndex: Int) {
+        val intent = Intent(this, SelectImageTemplate::class.java).apply {
+            putExtra("selected_path", pathIndex)
+        }
+        selectImageLauncher.launch(intent)
+    }
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
 

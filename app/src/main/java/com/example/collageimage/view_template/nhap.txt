@@ -1,25 +1,135 @@
+package com.example.collageimage.view_template
 
+import android.content.Context
+import android.graphics.*
+import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.PathParser
+import com.example.collageimage.R
 
-var isEraserMode: Boolean = false
-        set(value) {
-            field = value
-            invalidate()
-        }
+class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
-private fun getPaint(): Paint {
-    val paint = Paint()
-    paint.strokeWidth = penWidth
-    paint.style = Paint.Style.STROKE
-    paint.strokeCap = Paint.Cap.ROUND
-    paint.isAntiAlias = true
+    private var backgroundBitmap: Bitmap? = null
+    private val pathObjects = mutableListOf<Path>()
+    private val scaledPaths = mutableListOf<Path>()
+    private val selectedBitmapsAndMatrices = mutableListOf<Pair<Bitmap?, Matrix?>>()
 
-    if (isEraserMode) { // Sử dụng như thuộc tính
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-        paint.color = Color.TRANSPARENT
-    } else {
-        paint.xfermode = null
-        paint.color = color
+    private var selectedPathIndex: Int = -1
+    private var onPathClickListener: ((Int) -> Unit)? = null
+    private var onBitmapClickListener: ((Int) -> Unit)? = null
+
+    private var matrixGestureDetector: MatrixGestureDetector? = null
+
+    private val fillPaint = Paint().apply {
+        color = ContextCompat.getColor(context, R.color.fill_color)
+        style = Paint.Style.FILL
+        isAntiAlias = true
     }
 
-    return paint
+    private val strokePaint = Paint().apply {
+        color = Color.RED
+        style = Paint.Style.STROKE
+        strokeWidth = 4f
+        isAntiAlias = true
+    }
+
+    fun setBackgroundDrawable(imageResId: Int) {
+        backgroundBitmap = BitmapFactory.decodeResource(context.resources, imageResId)
+        invalidate()
+    }
+
+    fun setPath(index: Int, pathData: String) {
+        val pathObj = PathParser.createPathFromPathData(pathData)
+        pathObjects.add(pathObj)
+        if (index >= selectedBitmapsAndMatrices.size) {
+            selectedBitmapsAndMatrices.add(Pair(null, Matrix()))
+        }
+    }
+    fun setSelectedImage(bitmap: Bitmap, pathIndex: Int) {
+        selectedBitmapsAndMatrices[pathIndex] = Pair(bitmap, Matrix())
+        invalidate()
+    }
+
+    fun setOnPathClickListener(listener: (Int) -> Unit) {
+        onPathClickListener = listener
+    }
+
+    fun setOnBitmapClickListener(listener: (Int) -> Unit) {
+        onBitmapClickListener = listener
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        backgroundBitmap?.let {
+            val rectFBackground = RectF(0f, 0f, width.toFloat(), height.toFloat())
+            canvas.drawBitmap(it, null, rectFBackground, Paint())
+        }
+
+        scaledPaths.clear()
+        pathObjects.forEachIndexed { index, path ->
+            val scaledPath = Path(path)
+            val scaleMatrix = Matrix()
+            val scaleX = width / 720f
+            val scaleY = height / 1280f
+            scaleMatrix.setScale(scaleX, scaleY)
+            scaledPath.transform(scaleMatrix)
+            scaledPaths.add(scaledPath)
+            canvas.drawPath(scaledPath, fillPaint)
+
+            if (index == selectedPathIndex) {
+                canvas.drawPath(scaledPath, strokePaint)
+            }
+
+            selectedBitmapsAndMatrices[index]?.let { (bitmap, matrix) ->
+                bitmap?.let {
+                    val bounds = RectF()
+                    scaledPath.computeBounds(bounds, true)
+                    canvas.save()
+                    canvas.clipPath(scaledPath)
+                    canvas.concat(matrix!!)
+                    canvas.drawBitmap(it, null, bounds, null)
+                    canvas.restore()
+                }
+            }
+        }
+        super.onDraw(canvas)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            scaledPaths.forEachIndexed { index, path ->
+                if (isPointInPath(path, x, y)) {
+                    if (selectedBitmapsAndMatrices[index].first != null) {
+                        onBitmapClickListener?.invoke(index)
+                    } else {
+                        onPathClickListener?.invoke(index)
+                    }
+                    selectedPathIndex = index
+                    invalidate()
+                    return true
+                }
+            }
+            selectedPathIndex = -1
+            invalidate()
+        }
+        return true
+    }
+
+    private fun isPointInPath(path: Path, x: Float, y: Float): Boolean {
+        val region = Region()
+        val bounds = RectF()
+        path.computeBounds(bounds, true)
+        region.setPath(path, Region(bounds.left.toInt(), bounds.top.toInt(), bounds.right.toInt(), bounds.bottom.toInt()))
+        return region.contains(x.toInt(), y.toInt())
+    }
+
+    fun isPathEmpty(pathIndex: Int): Boolean {
+        return selectedBitmapsAndMatrices[pathIndex].first == null
+    }
+
+
 }
