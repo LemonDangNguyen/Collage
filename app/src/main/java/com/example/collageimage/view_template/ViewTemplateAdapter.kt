@@ -3,7 +3,9 @@ package com.example.collageimage.view_template
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.PathParser
@@ -20,8 +22,6 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     private var onPathClickListener: ((Int) -> Unit)? = null
     private var onBitmapClickListener: ((Int) -> Unit)? = null
 
-    private var matrixGestureDetector: MatrixGestureDetector? = null
-
     private val fillPaint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.fill_color)
         style = Paint.Style.FILL
@@ -33,6 +33,16 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
         style = Paint.Style.STROKE
         strokeWidth = 4f
         isAntiAlias = true
+    }
+
+    private val gestureDetector: GestureDetector
+    private val scaleGestureDetector: ScaleGestureDetector
+    private val rotationGestureDetector: RotationGestureDetector
+
+    init {
+        gestureDetector = GestureDetector(context, GestureListener())
+        scaleGestureDetector = ScaleGestureDetector(context, ScaleListener())
+        rotationGestureDetector = RotationGestureDetector(RotationListener())
     }
 
     fun setBackgroundDrawable(imageResId: Int) {
@@ -47,8 +57,18 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
             selectedBitmapsAndMatrices.add(Pair(null, Matrix()))
         }
     }
+
     fun setSelectedImage(bitmap: Bitmap, pathIndex: Int) {
-        selectedBitmapsAndMatrices[pathIndex] = Pair(bitmap, Matrix())
+        if (pathIndex < selectedBitmapsAndMatrices.size) {
+            val currentPair = selectedBitmapsAndMatrices[pathIndex]
+            selectedBitmapsAndMatrices[pathIndex] = Pair(bitmap, currentPair.second ?: Matrix())
+        } else {
+            // Nếu pathIndex vượt quá kích thước hiện tại, mở rộng danh sách
+            while (selectedBitmapsAndMatrices.size <= pathIndex) {
+                selectedBitmapsAndMatrices.add(Pair(null, Matrix()))
+            }
+            selectedBitmapsAndMatrices[pathIndex] = Pair(bitmap, Matrix())
+        }
         invalidate()
     }
 
@@ -81,13 +101,15 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
                 canvas.drawPath(scaledPath, strokePaint)
             }
 
-            selectedBitmapsAndMatrices[index]?.let { (bitmap, matrix) ->
+            selectedBitmapsAndMatrices.getOrNull(index)?.let { (bitmap, matrix) ->
                 bitmap?.let {
                     val bounds = RectF()
                     scaledPath.computeBounds(bounds, true)
                     canvas.save()
                     canvas.clipPath(scaledPath)
-                    canvas.concat(matrix!!)
+                    matrix?.let { m ->
+                        canvas.concat(m)
+                    }
                     canvas.drawBitmap(it, null, bounds, null)
                     canvas.restore()
                 }
@@ -97,6 +119,10 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        gestureDetector.onTouchEvent(event)
+        scaleGestureDetector.onTouchEvent(event)
+        rotationGestureDetector.onTouchEvent(event) // Xử lý xoay
+
         val x = event.x
         val y = event.y
 
@@ -104,11 +130,12 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
             scaledPaths.forEachIndexed { index, path ->
                 if (isPointInPath(path, x, y)) {
                     if (selectedBitmapsAndMatrices[index].first != null) {
+                        selectedPathIndex = index
                         onBitmapClickListener?.invoke(index)
                     } else {
+                        selectedPathIndex = index
                         onPathClickListener?.invoke(index)
                     }
-                    selectedPathIndex = index
                     invalidate()
                     return true
                 }
@@ -128,8 +155,61 @@ class ViewTemplateAdapter(context: Context, attrs: AttributeSet? = null) : View(
     }
 
     fun isPathEmpty(pathIndex: Int): Boolean {
-        return selectedBitmapsAndMatrices[pathIndex].first == null
+        return selectedBitmapsAndMatrices.getOrNull(pathIndex)?.first == null
     }
 
+    inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(e: MotionEvent): Boolean {
+            return true
+        }
 
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+            if (selectedPathIndex != -1) {
+                val pair = selectedBitmapsAndMatrices[selectedPathIndex]
+                pair.second?.postTranslate(-distanceX, -distanceY)
+                invalidate()
+                return true
+            }
+            return false
+        }
+
+    }
+
+    inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        override fun onScale(detector: ScaleGestureDetector): Boolean {
+            if (selectedPathIndex != -1) {
+                val scaleFactor = detector.scaleFactor
+                val pair = selectedBitmapsAndMatrices[selectedPathIndex]
+                pair.second?.postScale(scaleFactor, scaleFactor, detector.focusX, detector.focusY)
+                invalidate()
+                return true
+            }
+            return false
+        }
+    }
+
+    inner class RotationListener : RotationGestureDetector.OnRotationGestureListener {
+        override fun onRotation(rotationDetector: RotationGestureDetector) {
+            if (selectedPathIndex != -1) {
+                val rotationDegrees = rotationDetector.rotationDegrees
+                val pair = selectedBitmapsAndMatrices[selectedPathIndex]
+                if (pair.second != null) {
+                    // Tính trung điểm của Path để xoay quanh đó
+                    val path = scaledPaths[selectedPathIndex]
+                    val bounds = RectF()
+                    path.computeBounds(bounds, true)
+                    val pivotX = bounds.centerX()
+                    val pivotY = bounds.centerY()
+
+                    pair.second?.postRotate(rotationDegrees, pivotX, pivotY)
+                    invalidate()
+                }
+            }
+        }
+    }
 }
