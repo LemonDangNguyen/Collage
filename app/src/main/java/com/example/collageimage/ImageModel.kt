@@ -21,7 +21,7 @@ data class ImageModel(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readByte() != 0.toByte(), // For the 'selected' boolean
+        parcel.readByte() != 0.toByte(),
         parcel.readParcelable(Uri::class.java.classLoader) ?: Uri.EMPTY, // Handle 'uri'
         parcel.readByte() != 0.toByte() // For the 'isCameraItem' boolean
     )
