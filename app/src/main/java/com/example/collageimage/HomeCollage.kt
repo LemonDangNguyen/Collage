@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.draw.viewcustom.model.StickerIcon
 import com.example.collageimage.CustomBg.CustomImageAdapter
 import com.example.collageimage.CustomBg.CustomImageViewModel
 import com.example.collageimage.Gradient.GradientAdapter
@@ -62,6 +64,10 @@ import com.example.selectpic.ddat.UseCasePuzzleLayouts
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
+import com.example.teststicker.Adapter.IconAdapter
+import com.example.teststicker.Adapter.IconCategoryAdapter
+import com.example.teststicker.Adapter.PhotoAdapter
+import com.example.teststicker.view.StickerIconView
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider
@@ -102,6 +108,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     private var currentAdjustMode: AdjustMode = AdjustMode.BRIGHTNESS
     private val mFilterViewAdapter = FilterViewAdapter(this)
     lateinit var mPhotoEditor: PhotoEditor
+    private lateinit var categoryAdapter: IconCategoryAdapter
+    private lateinit var iconAdapter: IconAdapter
+    private val stickerData = mutableMapOf<String, List<String>>()
+    private lateinit var photoAdapter: PhotoAdapter
     val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
@@ -157,7 +167,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         bgFun()
         layoutFrameFunc()
         colorrecylayout()
-        layoutStickerFunc()
+
         layoutFilterandAdjustFunc()
         filterrcl()
         initListener2()
@@ -298,11 +308,11 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
 //            binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeSticker.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
-//            binding.barStickers.root.visibility = View.VISIBLE
-//            binding.linearLayout.visibility = View.GONE
-//            binding.layoutLayout.root.visibility = View.GONE
-//            binding.layoutParentTool.root.visibility = View.GONE
+            binding.barStickers.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.GONE
+            binding.layoutLayout.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.GONE
+            layoutStickerFunc()
         }
         binding.layoutParentTool.changeDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(true)
@@ -313,11 +323,17 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             drawFun()
         }
         binding.layoutParentTool.addImage.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
-//            binding.barAddImage.root.visibility = View.VISIBLE
-//            binding.linearLayout.visibility = View.GONE
-//            binding.layoutLayout.root.visibility = View.GONE
-//            binding.layoutParentTool.root.visibility = View.GONE
+            binding.layoutAddImage.root.visibility = View.VISIBLE
+            binding.layoutParentTool.root.visibility = View.GONE
+            setupRecyclerView2()
+            binding.layoutAddImage.icClose.setOnClickListener {
+                binding.layoutAddImage.root.visibility = View.GONE
+                binding.layoutParentTool.root.visibility = View.VISIBLE
+            }
+            binding.layoutAddImage.btnDoneAddImage.setOnClickListener {
+                binding.layoutAddImage.root.visibility = View.GONE
+                binding.layoutParentTool.root.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -410,8 +426,6 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
                 openColorPickerDialog()
             }
         }
-
-
     }
 
 
@@ -652,8 +666,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     }
 
     private fun layoutStickerFunc() {
+        addSticker()
         binding.barStickers.icClose.setOnClickListener {
             binding.barStickers.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+        }
+        binding.barStickers.btnDoneSticker.setOnClickListener {
+            binding.barStickers.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
         }
     }
 
@@ -982,4 +1002,123 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         binding.drawview.setPenColor(colorInt)
     }
 
+
+    private fun addSticker() {
+        loadStickerData()
+
+        binding.barStickers.icClose.setOnClickListener {
+            binding.barStickers.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+        }
+        binding.barStickers.btnDoneSticker.setOnClickListener {
+            binding.barStickers.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+        }
+
+        categoryAdapter = IconCategoryAdapter(stickerData) { category ->
+            updateStickers(category)
+        }
+        binding.barStickers.rcvStickerCategory.apply {
+            adapter = categoryAdapter
+            layoutManager = LinearLayoutManager(this@HomeCollage, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        iconAdapter = IconAdapter(emptyList())
+        iconAdapter.onStickerClick = { stickerPath ->
+            val inputStream = assets.open(stickerPath)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+
+            val stickerIcon = StickerIcon(
+                x = 0f,
+                y = 0f,
+                rotation = 0f,
+                bitmap = bitmap,
+                scaleX = 1f,
+                scaleY = 1f
+            )
+            val stickerView = StickerIconView(this, null, stickerIcon).apply {
+                setImageBitmap(bitmap)
+            }
+            binding.stickerContainerView.addView(stickerView)
+        }
+        binding.barStickers.rcvStickers.apply {
+            adapter = iconAdapter
+            layoutManager = GridLayoutManager(this@HomeCollage, 4)
+        }
+
+        if (stickerData.isNotEmpty()) {
+            val firstCategory = stickerData.keys.first()
+            updateStickers(firstCategory)
+            categoryAdapter.setSelectedCategory(firstCategory)
+        }
+    }
+
+    private fun loadStickerData() {
+        val assetManager = assets
+        val stickerFolder = "sticker"
+        val folders = assetManager.list(stickerFolder) ?: emptyArray()
+
+        for (folder in folders) {
+            val filePaths = assetManager.list("$stickerFolder/$folder")?.filter {
+                it.endsWith(".webp")
+            }?.map {
+                "$stickerFolder/$folder/$it"
+            } ?: emptyList()
+            stickerData[folder] = filePaths
+        }
+    }
+
+    private fun updateStickers(category: String) {
+        val stickers = stickerData[category] ?: emptyList()
+        iconAdapter.updateData(stickers)
+    }
+    private fun setupRecyclerView2() {
+        val imagePaths = getImagesFromMediaStore(this)
+
+        if (imagePaths.isNotEmpty()) {
+            binding.layoutAddImage.rcvPhotoSrc.layoutManager = GridLayoutManager(this, 3)
+            photoAdapter = PhotoAdapter(this, imagePaths) { photoPath ->
+                val bitmap = BitmapFactory.decodeFile(photoPath)
+                val scaledHeight = 480 * bitmap.height / bitmap.width
+                val scaledWidth = 480
+                val stickerIcon = StickerIcon(
+                    x = 0f,
+                    y = 0f,
+                    rotation = 0f,
+                    bitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false),
+                    scaleX = 1f,
+                    scaleY = 1f
+                )
+                val stickerView = StickerIconView(this, null, stickerIcon).apply {
+                    setImageBitmap(stickerIcon.bitmap)
+                }
+                binding.stickerContainerView.addView(stickerView)
+            }
+
+            binding.layoutAddImage.rcvPhotoSrc.adapter = photoAdapter
+        } else {
+            Toast.makeText(this, "No images found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    private fun getImagesFromMediaStore(context: Context): List<String> {
+        val imagePaths = mutableListOf<String>()
+
+        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+
+        val cursor = context.contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            while (it.moveToNext()) {
+                val imagePath = it.getString(columnIndex)
+                imagePaths.add(imagePath)
+            }
+            imagePaths.reverse()
+        } ?: run {
+            Toast.makeText(context, "No images found", Toast.LENGTH_SHORT).show()
+        }
+        return imagePaths
+    }
 }

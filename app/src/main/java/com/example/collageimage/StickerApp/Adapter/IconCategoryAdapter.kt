@@ -8,10 +8,10 @@ import com.example.collageimage.R
 import com.example.collageimage.databinding.ItemCategoryBinding
 
 
-class StickerCategoryAdapter(
+class IconCategoryAdapter(
     private val categories: Map<String, List<String>>,
     private val onCategoryClick: (String) -> Unit
-) : RecyclerView.Adapter<StickerCategoryAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<IconCategoryAdapter.ViewHolder>() {
 
     private var selectedPosition = 0 // Mặc định chọn vị trí đầu tiên
 
@@ -67,4 +67,6 @@ class StickerCategoryAdapter(
         }
     }
 }
+
+
 

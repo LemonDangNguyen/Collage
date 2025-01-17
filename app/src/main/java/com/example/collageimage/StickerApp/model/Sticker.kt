@@ -1,16 +1,10 @@
-package com.example.collageimage.StickerApp.model
+package com.draw.viewcustom.model
 
 
-import android.graphics.Matrix
 
-enum class StickerType {
-    TEXT, ICON, PHOTO
-}
-
-data class Sticker(
-    val id: Int,
-    var type: StickerType,
-    var content: Any, // Có thể là String, Drawable, hoặc Bitmap
-    var matrix: Matrix = Matrix(),
-    var isFlipped: Boolean = false
+open class Sticker(
+    open val x: Float,           // Tọa độ X
+    open val y: Float,           // Tọa độ Y
+    open val rotation: Float,    // Góc xoay của sticker
+    var isDeleted: Boolean = false // Trạng thái xóa của sticker
 )

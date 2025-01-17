@@ -24,9 +24,11 @@ class ImageAdapter(
         const val VIEW_TYPE_IMAGE = 1
     }
 
-    inner class ImageViewHolder(val binding: ItemImageBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ImageViewHolder(val binding: ItemImageBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
-    inner class CameraViewHolder(val binding: LayoutBtnCameraBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class CameraViewHolder(val binding: LayoutBtnCameraBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
         return if (images[position].isCameraItem) {
@@ -38,7 +40,8 @@ class ImageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_CAMERA) {
-            val binding = LayoutBtnCameraBinding.inflate(LayoutInflater.from(context), parent, false)
+            val binding =
+                LayoutBtnCameraBinding.inflate(LayoutInflater.from(context), parent, false)
             CameraViewHolder(binding)
         } else {
             val binding = ItemImageBinding.inflate(LayoutInflater.from(context), parent, false)
@@ -54,7 +57,10 @@ class ImageAdapter(
                 onCameraClick()
             }
         } else if (holder is ImageViewHolder) {
-            Glide.with(context).load(image.filePath).error(R.drawable.noimage).centerCrop()
+            Glide.with(context)
+                .load(image.filePath)
+//                .error(R.drawable.noimage)
+                .centerCrop()
                 .into(holder.binding.ifv)
 
             if (selectedImagesMap.containsKey(image.id)) {

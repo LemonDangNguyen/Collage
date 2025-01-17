@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collageimage.databinding.ItemStickerBinding
-
-
-class StickerAdapter(
+class IconAdapter(
     private var stickers: List<String>
-) : RecyclerView.Adapter<StickerAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<IconAdapter.ViewHolder>() {
+
+    var onStickerClick: ((String) -> Unit)? = null
 
     class ViewHolder(val binding: ItemStickerBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -23,12 +23,20 @@ class StickerAdapter(
         val context = holder.binding.root.context
         val assetManager = context.assets
 
+        // Hiển thị sticker
         try {
-            val inputStream = assetManager.open(stickerPath)
-            val drawable = Drawable.createFromStream(inputStream, null)
-            holder.binding.ivSticker.setImageDrawable(drawable)
+            assetManager.open(stickerPath).use { inputStream ->
+                val drawable = Drawable.createFromStream(inputStream, null)
+                holder.binding.ivIcon.setImageDrawable(drawable)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+
+        // Lắng nghe click
+        holder.itemView.setOnClickListener {
+            // Gọi callback trả về đường dẫn sticker
+            onStickerClick?.invoke(stickerPath)
         }
     }
 

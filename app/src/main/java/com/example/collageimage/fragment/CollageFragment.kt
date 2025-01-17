@@ -22,6 +22,7 @@ import com.example.collageimage.ImageInMainAdapter
 import com.example.collageimage.R
 import com.example.collageimage.SelectActivity
 import com.example.collageimage.Setting
+import com.example.collageimage.TemplateActivity
 import com.example.collageimage.databinding.FragmentCollageBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,7 +39,6 @@ class CollageFragment : Fragment() {
         R.drawable.bg_in_main_06
     )
 
-    // Danh sách quyền cần yêu cầu
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     } else {
@@ -48,7 +48,6 @@ class CollageFragment : Fragment() {
         )
     }
 
-    // Kết quả yêu cầu quyền
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.all { it.value }) {
@@ -76,6 +75,46 @@ class CollageFragment : Fragment() {
         }
         setupViewPager()
         autoScrollViewPager()
+
+        setuptemplate()
+    }
+
+    private fun setuptemplate() {
+        binding.image1.setOnClickListener {
+            val intent = Intent(requireContext(), TemplateActivity::class.java)
+            intent.putExtra("imageId", 27)
+            startActivity(intent)
+        }
+        binding.image2.setOnClickListener {
+            val intent = Intent(requireContext(), TemplateActivity::class.java)
+            intent.putExtra("imageId", 25)
+            startActivity(intent)
+
+        }
+        binding.image3.setOnClickListener {
+            val intent = Intent(requireContext(), TemplateActivity::class.java)
+            intent.putExtra("imageId", 29)
+            startActivity(intent)
+
+        }
+        binding.image4.setOnClickListener {
+            val intent = Intent(requireContext(), TemplateActivity::class.java)
+            intent.putExtra("imageId", 17)
+            startActivity(intent)
+
+        }
+        binding.image5.setOnClickListener {
+            val intent = Intent(requireContext(), TemplateActivity::class.java)
+            intent.putExtra("imageId", 16)
+            startActivity(intent)
+
+        }
+        binding.image6.setOnClickListener {
+            val intent = Intent(requireContext(), TemplateActivity::class.java)
+            intent.putExtra("imageId", 20)
+            startActivity(intent)
+
+        }
     }
 
     override fun onCreateView(

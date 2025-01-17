@@ -93,6 +93,12 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <FrameLayout
+            android:id="@+id/sticker_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -155,6 +161,14 @@
         <include
             android:id="@+id/bar_drawing"
             layout="@layout/layout_drawing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <include
+            android:id="@+id/layout_add_image"
+            layout="@layout/layout_add_image_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"

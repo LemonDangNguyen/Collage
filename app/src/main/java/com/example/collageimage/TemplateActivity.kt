@@ -1,30 +1,54 @@
 package com.example.collageimage
 
+import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.draw.viewcustom.model.StickerIcon
 import com.example.collageimage.databinding.ActivityTemplateBinding
+import com.example.collageimage.saveImage.SaveFromEditImage
 import com.example.collageimage.view_template.TemplateModel
 import com.example.collageimage.view_template.TemplateViewModel
 import com.example.collageimage.view_template.ViewTemplateAdapter
-import com.example.teststicker.Adapter.StickerAdapter
-import com.example.teststicker.Adapter.StickerCategoryAdapter
+import com.example.teststicker.Adapter.IconAdapter
+import com.example.teststicker.Adapter.IconCategoryAdapter
+import com.example.teststicker.view.StickerIconView
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 
 class TemplateActivity : BaseActivity() {
     private lateinit var binding: ActivityTemplateBinding
     private lateinit var viewTemplateAdapter: ViewTemplateAdapter
     private val templateViewModel: TemplateViewModel by viewModels()
     private var selectedPathIndex: Int = -1
-    private lateinit var categoryAdapter: StickerCategoryAdapter
-    private lateinit var stickerAdapter: StickerAdapter
+    private lateinit var categoryAdapter: IconCategoryAdapter
+    private lateinit var iconAdapter: IconAdapter
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            saveFlParentAsImage()
+        } else {
+            Toast.makeText(this, "Permission denied. Cannot save image.", Toast.LENGTH_SHORT).show()
+        }
+    }
     private val stickerData = mutableMapOf<String, List<String>>()
     private val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -68,9 +92,108 @@ class TemplateActivity : BaseActivity() {
         }
 
         initview()
+
+        binding.btnSave.setOnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+            }
+        }
+    }
+
+    private fun saveFlParentAsImage() {
+        val bitmap = getBitmapFromView(binding.flParent)
+        val saved = saveBitmapToGallery(bitmap)
+        if (saved) {
+            // Lưu ảnh thành công, mở Activity SaveFromEditImage và truyền ảnh
+            val intent = Intent(this, SaveFromEditImage::class.java)
+            // Lưu ảnh vào một tệp tạm thời để truyền
+            val file = File(cacheDir, "saved_image.png")
+            FileOutputStream(file).use { fos ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            }
+
+            // Truyền đường dẫn của tệp ảnh tới Activity mới
+            intent.putExtra("image_path", file.absolutePath)
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
+    private fun getBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    private fun saveBitmapToGallery(bitmap: Bitmap): Boolean {
+        val filename = "IMG_${System.currentTimeMillis()}.png"
+        var fos: OutputStream? = null
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = contentResolver
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/CollageImage")
+                }
+                val imageUri =
+                    resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                if (imageUri != null) {
+                    fos = resolver.openOutputStream(imageUri)
+                }
+            } else {
+                val imagesDir =
+                    android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DCIM)
+                        .toString() + "/CollageImage"
+                val file = java.io.File(imagesDir)
+                if (!file.exists()) {
+                    file.mkdir()
+                }
+                val image = java.io.File(file, filename)
+                fos = java.io.FileOutputStream(image)
+                val values = ContentValues().apply {
+                    put(MediaStore.Images.Media.DATA, image.absolutePath)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+                }
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            }
+
+            fos?.use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                it.flush()
+            }
+            return true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return false
+        }
+    }
 
     private fun setupTemplate(template: TemplateModel) {
         viewTemplateAdapter.setBackgroundDrawable(template.backgroundImageResId)
@@ -104,14 +227,20 @@ class TemplateActivity : BaseActivity() {
 
     private fun initview() {
         addSticker()
+        addText()
+    }
+
+    private fun addText() {
+        binding.btnText.setOnClickListener {
+            Toast.makeText(this, "Comming soon!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun addSticker() {
         loadStickerData()
-
         binding.btnSticker.setOnClickListener {
             binding.barStickers.root.visibility = View.VISIBLE
-            binding.lnBottomBar.visibility = View.GONE
+            binding.lnBottomBar.visibility = View.INVISIBLE
         }
         binding.barStickers.icClose.setOnClickListener {
             binding.barStickers.root.visibility = View.GONE
@@ -121,18 +250,38 @@ class TemplateActivity : BaseActivity() {
             binding.barStickers.root.visibility = View.GONE
             binding.lnBottomBar.visibility = View.VISIBLE
         }
-        categoryAdapter = StickerCategoryAdapter(stickerData) { category ->
+
+        categoryAdapter = IconCategoryAdapter(stickerData) { category ->
             updateStickers(category)
         }
         binding.barStickers.rcvStickerCategory.apply {
             adapter = categoryAdapter
             layoutManager = LinearLayoutManager(this@TemplateActivity, LinearLayoutManager.HORIZONTAL, false)
         }
-        stickerAdapter = StickerAdapter(emptyList())
+
+        iconAdapter = IconAdapter(emptyList())
+        iconAdapter.onStickerClick = { stickerPath ->
+            val inputStream = assets.open(stickerPath)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+
+            val stickerIcon = StickerIcon(
+                x = 0f,
+                y = 0f,
+                rotation = 0f,
+                bitmap = bitmap,
+                scaleX = 1f,
+                scaleY = 1f
+            )
+            val stickerView = StickerIconView(this, null, stickerIcon).apply {
+                setImageBitmap(bitmap)
+            }
+            binding.stickerContainerView.addView(stickerView)
+        }
         binding.barStickers.rcvStickers.apply {
-            adapter = stickerAdapter
+            adapter = iconAdapter
             layoutManager = GridLayoutManager(this@TemplateActivity, 4)
         }
+
         if (stickerData.isNotEmpty()) {
             val firstCategory = stickerData.keys.first()
             updateStickers(firstCategory)
@@ -158,7 +307,7 @@ class TemplateActivity : BaseActivity() {
 
     private fun updateStickers(category: String) {
         val stickers = stickerData[category] ?: emptyList()
-        stickerAdapter.updateData(stickers)
+        iconAdapter.updateData(stickers)
     }
 }
 

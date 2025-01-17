@@ -59,24 +59,4 @@
         app:layout_constraintTop_toBottomOf="@+id/rcv_sticker_category"
         app:spanCount="5" />
 
-<!--    <androidx.appcompat.widget.AppCompatTextView-->
-<!--        android:id="@+id/tv_sticker_error"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/network_error"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/rcv_stickers"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/rcv_stickers"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/rcv_stickers"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/rcv_stickers" />-->
-
-<!--    <ProgressBar-->
-<!--        android:id="@+id/prb_sticker_loading"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:indeterminateTint="@color/color_image_selected"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/rcv_stickers"-->
-<!--        app:layout_constraintEnd_toEndOf="0"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/rcv_stickers"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/rcv_stickers" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
