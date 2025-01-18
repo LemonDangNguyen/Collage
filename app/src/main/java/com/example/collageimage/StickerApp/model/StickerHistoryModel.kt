@@ -1,4 +1,4 @@
-package com.draw.viewcustom.model
+package com.example.collageimage.StickerApp.model
 
 class StickerHistoryModel {
     private val undoStack = mutableListOf<StickerAction>()  // Lịch sử Undo

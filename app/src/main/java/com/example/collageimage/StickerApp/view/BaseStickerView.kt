@@ -1,7 +1,6 @@
 package com.example.collageimage.StickerApp.view
 
 import android.graphics.Rect
-import com.draw.viewcustom.model.Sticker
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -13,6 +12,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import com.example.collageimage.R
+import com.example.collageimage.StickerApp.model.Sticker
 
 import kotlin.math.atan2
 

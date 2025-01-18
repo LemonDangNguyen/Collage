@@ -1,4 +1,4 @@
-package com.draw.viewcustom.model
+package com.example.collageimage.StickerApp.model
 data class StickerText(
     override val x: Float,
     override val y: Float,

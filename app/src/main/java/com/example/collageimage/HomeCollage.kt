@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.draw.viewcustom.model.StickerIcon
 import com.example.collageimage.CustomBg.CustomImageAdapter
 import com.example.collageimage.CustomBg.CustomImageViewModel
 import com.example.collageimage.Gradient.GradientAdapter
@@ -39,6 +38,7 @@ import com.example.collageimage.Gradient.GradientViewModel
 import com.example.collageimage.StickerApp.Adapter.IconAdapter
 import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
 import com.example.collageimage.StickerApp.Adapter.PhotoAdapter
+import com.example.collageimage.StickerApp.model.StickerIcon
 import com.example.collageimage.StickerApp.view.StickerIconView
 import com.example.collageimage.adjust.AdjustMode
 import com.example.collageimage.adjust.ImageAdjustmentViewModel

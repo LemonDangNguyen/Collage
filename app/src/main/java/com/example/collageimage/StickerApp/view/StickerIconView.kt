@@ -7,7 +7,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
-import com.draw.viewcustom.model.StickerIcon
+
+import com.example.collageimage.StickerApp.model.StickerIcon
 
 class StickerIconView @JvmOverloads constructor(
     context: Context,

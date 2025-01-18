@@ -18,9 +18,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.draw.viewcustom.model.StickerIcon
 import com.example.collageimage.StickerApp.Adapter.IconAdapter
 import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
+import com.example.collageimage.StickerApp.model.StickerIcon
 import com.example.collageimage.StickerApp.view.StickerIconView
 import com.example.collageimage.databinding.ActivityTemplateBinding
 import com.example.collageimage.saveImage.SaveFromEditImage

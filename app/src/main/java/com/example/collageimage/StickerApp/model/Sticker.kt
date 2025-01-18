@@ -1,6 +1,4 @@
-package com.draw.viewcustom.model
-
-
+package com.example.collageimage.StickerApp.model
 
 open class Sticker(
     open val x: Float,           // Tọa độ X

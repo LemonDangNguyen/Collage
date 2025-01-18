@@ -4,7 +4,13 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.draw.viewcustom.model.*
+import com.example.collageimage.StickerApp.model.ActionType
+import com.example.collageimage.StickerApp.model.Sticker
+import com.example.collageimage.StickerApp.model.StickerAction
+import com.example.collageimage.StickerApp.model.StickerHistoryModel
+import com.example.collageimage.StickerApp.model.StickerIcon
+import com.example.collageimage.StickerApp.model.StickerPhoto
+import com.example.collageimage.StickerApp.model.StickerText
 
 class StickerViewModel : ViewModel() {
 

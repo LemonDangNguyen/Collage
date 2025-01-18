@@ -1,4 +1,4 @@
-package com.draw.viewcustom.model
+package com.example.collageimage.StickerApp.model
 import android.graphics.Bitmap
 data class StickerIcon(
     override val x: Float,

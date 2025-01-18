@@ -6,8 +6,8 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import com.draw.viewcustom.model.StickerText
 import com.example.collageimage.R
+import com.example.collageimage.StickerApp.model.StickerText
 
 class StickerTextView @JvmOverloads constructor(
     context: Context,

@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.ImageView
-import com.draw.viewcustom.model.StickerPhoto
+import com.example.collageimage.StickerApp.model.StickerPhoto
 
 class StickerPhotoView @JvmOverloads constructor(
     context: Context,
