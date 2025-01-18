@@ -1,8 +1,5 @@
 package com.example.collageimage.StickerApp.viewmodel
 
-import com.example.teststicker.model.ActionType
-import com.example.teststicker.model.StickerAction
-import com.example.teststicker.model.StickerHistoryModel
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

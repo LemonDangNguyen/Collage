@@ -1,7 +1,4 @@
-package com.example.teststicker.model
-
-import com.draw.viewcustom.model.Sticker
-
+package com.draw.viewcustom.model
 
 data class StickerAction(
     val sticker: Sticker,              // Thay đổi từ View sang Sticker

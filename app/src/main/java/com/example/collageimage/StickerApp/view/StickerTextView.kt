@@ -1,5 +1,4 @@
-package com.example.teststicker.view
-
+package com.example.collageimage.StickerApp.view
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet

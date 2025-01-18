@@ -19,14 +19,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.draw.viewcustom.model.StickerIcon
+import com.example.collageimage.StickerApp.Adapter.IconAdapter
+import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
+import com.example.collageimage.StickerApp.view.StickerIconView
 import com.example.collageimage.databinding.ActivityTemplateBinding
 import com.example.collageimage.saveImage.SaveFromEditImage
 import com.example.collageimage.view_template.TemplateModel
 import com.example.collageimage.view_template.TemplateViewModel
 import com.example.collageimage.view_template.ViewTemplateAdapter
-import com.example.teststicker.Adapter.IconAdapter
-import com.example.teststicker.Adapter.IconCategoryAdapter
-import com.example.teststicker.view.StickerIconView
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream

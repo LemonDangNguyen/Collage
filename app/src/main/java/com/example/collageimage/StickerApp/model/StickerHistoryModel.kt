@@ -1,6 +1,5 @@
-package com.example.teststicker.model
+package com.draw.viewcustom.model
 
-// StickerHistoryModel.kt
 class StickerHistoryModel {
     private val undoStack = mutableListOf<StickerAction>()  // Lịch sử Undo
     private val redoStack = mutableListOf<StickerAction>()  // Lịch sử Redo

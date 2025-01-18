@@ -34,6 +34,10 @@ import com.example.collageimage.CustomBg.CustomImageAdapter
 import com.example.collageimage.CustomBg.CustomImageViewModel
 import com.example.collageimage.Gradient.GradientAdapter
 import com.example.collageimage.Gradient.GradientViewModel
+import com.example.collageimage.StickerApp.Adapter.IconAdapter
+import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
+import com.example.collageimage.StickerApp.Adapter.PhotoAdapter
+import com.example.collageimage.StickerApp.view.StickerIconView
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.ColorItem2
@@ -48,10 +52,7 @@ import com.example.collageimage.frame.FrameItem
 import com.example.collageimage.ratio.AspectRatioViewModel
 import com.example.collageimage.ratio.adapter.RatioAdapter
 import com.example.collageimage.saveImage.SaveFromEditImage
-import com.example.teststicker.Adapter.IconAdapter
-import com.example.teststicker.Adapter.IconCategoryAdapter
-import com.example.teststicker.Adapter.PhotoAdapter
-import com.example.teststicker.view.StickerIconView
+
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.File
 import java.io.FileOutputStream

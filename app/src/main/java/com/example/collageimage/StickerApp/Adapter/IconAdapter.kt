@@ -1,4 +1,4 @@
-package com.example.teststicker.Adapter
+package com.example.collageimage.StickerApp.Adapter
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater

@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.8.0"
 kotlin = "1.9.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -13,6 +13,7 @@ puzzlelayout = "1.0.2"
 sdpAndroid = "1.1.1"
 sspAndroid = "1.1.1"
 testng = "6.9.6"
+roomKtx = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,6 +28,7 @@ puzzlelayout = { module = "com.github.hypersoftdev:PuzzleLayout", version.ref = 
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid" }
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "sspAndroid" }
 testng = { group = "org.testng", name = "testng", version.ref = "testng" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

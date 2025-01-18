@@ -1,8 +1,4 @@
 package com.draw.viewcustom.model
-
-import android.view.View
-
-
 data class StickerText(
     override val x: Float,
     override val y: Float,

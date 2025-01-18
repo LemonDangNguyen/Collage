@@ -36,6 +36,10 @@ import com.example.collageimage.CustomBg.CustomImageAdapter
 import com.example.collageimage.CustomBg.CustomImageViewModel
 import com.example.collageimage.Gradient.GradientAdapter
 import com.example.collageimage.Gradient.GradientViewModel
+import com.example.collageimage.StickerApp.Adapter.IconAdapter
+import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
+import com.example.collageimage.StickerApp.Adapter.PhotoAdapter
+import com.example.collageimage.StickerApp.view.StickerIconView
 import com.example.collageimage.adjust.AdjustMode
 import com.example.collageimage.adjust.ImageAdjustmentViewModel
 import com.example.collageimage.adjust.filter.FilterListener
@@ -64,10 +68,6 @@ import com.example.selectpic.ddat.UseCasePuzzleLayouts
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
-import com.example.teststicker.Adapter.IconAdapter
-import com.example.teststicker.Adapter.IconCategoryAdapter
-import com.example.teststicker.Adapter.PhotoAdapter
-import com.example.teststicker.view.StickerIconView
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider

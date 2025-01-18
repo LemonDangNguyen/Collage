@@ -1,4 +1,4 @@
-package com.example.teststicker.view
+package com.example.collageimage.StickerApp.view
 
 import android.graphics.Rect
 import android.content.Context
