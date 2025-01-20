@@ -120,8 +120,7 @@ class StickerIconView @JvmOverloads constructor(
         return true
     }
 
-    // Gọi phương thức lật từ lớp cha và thông báo qua listener
     override fun flipSticker() {
-        super.flipSticker()
+        imageView.scaleX *= -1
     }
 }

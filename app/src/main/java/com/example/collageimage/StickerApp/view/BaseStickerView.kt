@@ -1,5 +1,5 @@
 package com.example.collageimage.StickerApp.view
-
+import com.example.collageimage.R
 import android.graphics.Rect
 import android.content.Context
 import android.graphics.Color
@@ -11,9 +11,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
-import com.example.collageimage.R
 import com.example.collageimage.StickerApp.model.Sticker
-
 import kotlin.math.atan2
 
 abstract class BaseStickerView @JvmOverloads constructor(
@@ -60,18 +58,20 @@ abstract class BaseStickerView @JvmOverloads constructor(
     private fun setupView() {
         borderView = RelativeLayout(context).apply {
             background = createBorderDrawable()
-            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                addRule(CENTER_IN_PARENT, TRUE)
-            }
+            layoutParams =
+                LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                    addRule(CENTER_IN_PARENT, TRUE)
+                }
             isVisible = false
         }
         addView(borderView)
 
         deleteButton = AppCompatImageView(context).apply {
             setImageResource(R.drawable.ic_sticker_delete)
-            layoutParams = LayoutParams(30, 30).apply {
+            layoutParams = LayoutParams(70, 70).apply {
                 addRule(ALIGN_PARENT_TOP, TRUE)
                 addRule(ALIGN_PARENT_END, TRUE)
+                setMargins(-15, -15, -15, -15)
             }
             setOnClickListener { removeSticker() }
         }
@@ -79,9 +79,10 @@ abstract class BaseStickerView @JvmOverloads constructor(
 
         flipButton = AppCompatImageView(context).apply {
             setImageResource(R.drawable.ic_sticker_flip)
-            layoutParams = LayoutParams(30, 30).apply {
+            layoutParams = LayoutParams(60, 60).apply {
                 addRule(ALIGN_PARENT_TOP, TRUE)
                 addRule(CENTER_HORIZONTAL, TRUE)
+                setMargins(0, -27, 0, -15)
             }
             setOnClickListener { flipSticker() }
         }
@@ -89,9 +90,10 @@ abstract class BaseStickerView @JvmOverloads constructor(
 
         transformButton = AppCompatImageView(context).apply {
             setImageResource(R.drawable.ic_sticker_resize)
-            layoutParams = LayoutParams(30, 30).apply {
+            layoutParams = LayoutParams(60, 60).apply {
                 addRule(ALIGN_PARENT_BOTTOM, TRUE)
                 addRule(ALIGN_PARENT_END, TRUE)
+                setMargins(-15, 0, -15, -15)
             }
             setOnTouchListener { _, event -> handleTransform(event) }
         }
@@ -99,14 +101,14 @@ abstract class BaseStickerView @JvmOverloads constructor(
 
         rotateButton = AppCompatImageView(context).apply {
             setImageResource(R.drawable.ic_sticker_rotate)
-            layoutParams = LayoutParams(30, 30).apply {
+            layoutParams = LayoutParams(60, 60).apply {
                 addRule(ALIGN_PARENT_BOTTOM, TRUE)
                 addRule(ALIGN_PARENT_START, TRUE)
+                setMargins(-15, 0, -15, -15)
             }
             setOnTouchListener { _, event -> handleRotate(event) }
         }
         borderView.addView(rotateButton)
-
         updateButtonPositions()
     }
 
@@ -128,7 +130,6 @@ abstract class BaseStickerView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        // Lấy tọa độ chạm
         val touchX = event.x
         val touchY = event.y
         val stickerRect = Rect()
@@ -162,14 +163,6 @@ abstract class BaseStickerView @JvmOverloads constructor(
     }
 
     protected open fun removeSticker() {
-        // Gửi tín hiệu xóa sticker thông qua ViewModel hoặc Activity
-        // Trong MVVM, bạn có thể sử dụng một callback hoặc LiveData để thông báo
-        // Tuy nhiên, để đơn giản, chúng ta có thể gọi trực tiếp một phương thức trong Activity
-        // Ví dụ: (context as? DrawActivity)?.stickerViewModel?.removeSticker(sticker!!)
-        // Nhưng cần đảm bảo an toàn về kiểu dữ liệu
-//        if (context is MainActivity && sticker != null) {
-//            (context as MainActivity).stickerViewModel.removeSticker(sticker!!)
-//        }
         this.visibility = GONE
     }
 
