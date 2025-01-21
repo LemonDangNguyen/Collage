@@ -58,6 +58,7 @@ import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
 import com.example.collageimage.ratio.AspectRatioViewModel
+import com.example.collageimage.ratio.adapter.FontAdapter
 import com.example.collageimage.ratio.adapter.RatioAdapter
 import com.example.collageimage.saveImage.SaveFromEditImage
 import com.example.selectpic.ddat.PuzzleUtils
@@ -112,6 +113,7 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
     private lateinit var iconAdapter: IconAdapter
     private val stickerData = mutableMapOf<String, List<String>>()
     private lateinit var photoAdapter: PhotoAdapter
+    private lateinit var fontAdapter: FontAdapter
     val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
@@ -294,11 +296,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
             binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeText.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
-//            binding.layoutAddText.root.visibility = View.VISIBLE
-//            binding.linearLayout.visibility = View.GONE
-//            binding.layoutLayout.root.visibility = View.GONE
-//            binding.layoutParentTool.root.visibility = View.GONE
+            addText()
+            binding.layoutAddText.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.GONE
+
         }
         binding.layoutParentTool.llChangeFilter.setOnClickListener {
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
@@ -325,14 +326,17 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         binding.layoutParentTool.addImage.setOnClickListener {
             binding.layoutAddImage.root.visibility = View.VISIBLE
             binding.layoutParentTool.root.visibility = View.GONE
+            binding.linearLayout.visibility = View.GONE
             setupRecyclerView2()
             binding.layoutAddImage.icClose.setOnClickListener {
                 binding.layoutAddImage.root.visibility = View.GONE
                 binding.layoutParentTool.root.visibility = View.VISIBLE
+                binding.linearLayout.visibility = View.VISIBLE
             }
             binding.layoutAddImage.btnDoneAddImage.setOnClickListener {
                 binding.layoutAddImage.root.visibility = View.GONE
                 binding.layoutParentTool.root.visibility = View.VISIBLE
+                binding.linearLayout.visibility = View.VISIBLE
             }
         }
     }
@@ -670,10 +674,14 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         binding.barStickers.icClose.setOnClickListener {
             binding.barStickers.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
         }
         binding.barStickers.btnDoneSticker.setOnClickListener {
             binding.barStickers.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
         }
     }
 
@@ -1121,4 +1129,128 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
         }
         return imagePaths
     }
+
+
+    private fun colortextsticker() {
+        colorAdapter = ColorAdapter(colors, this)
+        binding.layoutAddText.rvTextColor.apply {
+            layoutManager =
+                LinearLayoutManager(this@HomeCollage, LinearLayoutManager.HORIZONTAL, false)
+            adapter = colorAdapter
+        }
+    }
+    private fun addText() {
+
+
+        binding.layoutAddText.ivClose.setOnClickListener {
+            binding.layoutAddText.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
+
+
+        }
+        binding.layoutAddText.ivDone.setOnClickListener {
+            binding.layoutAddText.root.visibility = View.GONE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.linearLayout.visibility = View.VISIBLE
+
+        }
+
+        binding.layoutAddText.tvFont.setOnClickListener {
+            updateTextViewStyle2(binding.layoutAddText.tvFont)
+            binding.layoutAddText.llColor.visibility = View.GONE
+            binding.layoutAddText.rvTextColor.visibility = View.GONE
+            binding.layoutAddText.rvFont.visibility = View.VISIBLE
+        }
+
+        binding.layoutAddText.tvColor.setOnClickListener {
+            colortextsticker()
+            updateTextViewStyle2(binding.layoutAddText.tvColor)
+            binding.layoutAddText.llColor.visibility = View.VISIBLE
+            binding.layoutAddText.rvTextColor.visibility = View.VISIBLE
+            binding.layoutAddText.rvFont.visibility = View.GONE
+        }
+
+        val fontList = getFontsFromAssets()
+        binding.layoutAddText.rvFont.layoutManager = GridLayoutManager(this, 2)
+        fontAdapter = FontAdapter(fontList, this) { fontName ->
+            Toast.makeText(this, "Selected font: $fontName", Toast.LENGTH_SHORT).show()
+        }
+        binding.layoutAddText.rvFont.adapter = fontAdapter
+
+        binding.layoutAddText.tvText.setOnClickListener {
+            binding.layoutAddText.tvText.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.layoutAddText.tvText.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimary)
+            binding.layoutAddText.tvLabel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            binding.layoutAddText.tvLabel.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.transparent))
+            binding.layoutAddText.tvBorder.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            binding.layoutAddText.tvBorder.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
+        }
+        binding.layoutAddText.tvLabel.setOnClickListener {
+            binding.layoutAddText.tvLabel.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.layoutAddText.tvLabel.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimary)
+            binding.layoutAddText.tvText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            binding.layoutAddText.tvText.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
+            binding.layoutAddText.tvBorder.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            binding.layoutAddText.tvBorder.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
+        }
+        binding.layoutAddText.tvBorder.setOnClickListener {
+            binding.layoutAddText.tvBorder.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.layoutAddText.tvBorder.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimary)
+
+            binding.layoutAddText.tvText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            binding.layoutAddText.tvText.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
+
+            binding.layoutAddText.tvLabel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            binding.layoutAddText.tvLabel.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
+        }
+
+
+    }
+
+    private fun updateTextViewStyle2(selectedTextView: TextView) {
+        resetTextViewStyles2()
+        selectedTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        selectedTextView.backgroundTintList =
+            ContextCompat.getColorStateList(this, R.color.bg_border_tab)
+    }
+    private fun resetTextViewStyles2() {
+        binding.layoutAddText.tvColor.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.black
+            )
+        )
+        binding.layoutAddText.tvColor.backgroundTintList = ContextCompat.getColorStateList(
+            this,
+            android.R.color.transparent
+        )
+        binding.layoutAddText.tvFont.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.layoutAddText.tvFont.backgroundTintList =
+            ContextCompat.getColorStateList(this, android.R.color.transparent)
+        binding.layoutAddText.tvColor.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.layoutAddText.tvColor.backgroundTintList =
+            ContextCompat.getColorStateList(this, android.R.color.transparent)
+        binding.layoutAddText.tvAddText.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.layoutAddText.tvAddText.backgroundTintList =
+            ContextCompat.getColorStateList(this, android.R.color.transparent)
+    }
+
+
+    private fun getFontsFromAssets(): List<String> {
+        val fontList = mutableListOf<String>()
+        try {
+            val fonts = assets.list("font")
+            if (fonts != null) {
+                fontList.addAll(fonts)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return fontList
+    }
+
+
 }

@@ -111,10 +111,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_22sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_30ssp"
-                android:layout_marginLeft="@dimen/_30ssp"
-                android:layout_marginRight="@dimen/_30ssp"
                 android:background="@drawable/bg_func_color"
                 android:orientation="horizontal"
                 android:padding="@dimen/_1sdp"
@@ -166,14 +164,34 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvTextColor"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clipToOutline="true"
                     android:orientation="horizontal"
-                    android:visibility="visible"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:gravity="center_vertical"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_marginRight="@dimen/_10sdp">
+
+                    <ImageView
+                        android:id="@+id/seleccolor"
+                        android:layout_width="wrap_content"
+                        android:padding="@dimen/_3sdp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_selectbodercolor" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTextColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToOutline="true"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -191,7 +209,6 @@
 
                     <androidx.appcompat.widget.AppCompatSeekBar
                         android:id="@+id/sbText"
-                        style="@style/CustomSeekbar"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

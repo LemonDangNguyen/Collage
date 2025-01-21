@@ -84,7 +84,7 @@ class StickerPhotoView @JvmOverloads constructor(
         return true
     }
 
-    // Xử lý touch event cho việc kéo di chuyển sticker ảnh
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val touchX = event.x
         val touchY = event.y

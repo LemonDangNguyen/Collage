@@ -3,6 +3,7 @@ package com.example.collageimage.color
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.collageimage.databinding.ItemColorBinding
@@ -14,13 +15,22 @@ class ColorAdapter(private val colors: List<ColorItem>, private val listener: On
             binding.root.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
+                    colors.forEach { it.isSelected = false }
+                    colors[position].isSelected = true
                     listener.onColorClick(colors[position])
+                    notifyDataSetChanged()
                 }
             }
         }
 
         fun bind(color: ColorItem) {
             binding.colorView.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color.colorHex))
+
+            if (color.isSelected) {
+                binding.selectedIcon.visibility = View.VISIBLE // Show the selected icon
+            } else {
+                binding.selectedIcon.visibility = View.INVISIBLE // Hide the selected icon
+            }
         }
     }
 
