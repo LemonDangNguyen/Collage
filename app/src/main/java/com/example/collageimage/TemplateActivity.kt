@@ -333,6 +333,11 @@ class TemplateActivity : BaseActivity(), OnColorClickListener {
     private fun addText() {
 
 
+        binding.btnText.setOnClickListener {
+            binding.layoutAddText.root.visibility = View.VISIBLE
+            binding.lnBottomBar.visibility = View.GONE
+        }
+
         binding.layoutAddText.ivClose.setOnClickListener {
             binding.layoutAddText.root.visibility = View.GONE
             binding.lnBottomBar.visibility = View.VISIBLE
