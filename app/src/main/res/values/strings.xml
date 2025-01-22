@@ -68,4 +68,58 @@
     <string name="save_successful">Save Succcessful</string>
     <string name="mess_save_ss">You have saved your image successfully\nEnjoy your time now!</string>
     <string name="back_to_home">Back to home</string>
+    <string name="this_action_can_contain_ads">This action may contain advertising</string>
+    <string name="finish">Press 1 more time to exit</string>
+    <string name="we_will_return_you_to_the_previous_screen">We will return you to the \\nprevious screen?</string>
+    <string name="str_continue">Continute</string>
+    <string name="unknown_error_occurred">An unknown error occurred</string>
+    <string name="no_browser">No Browser</string>
+    <string name="channel_description">This is notify</string>
+    <string name="channel_name">NotiNoti</string>
+    <string name="des_rate_4_5">We like you too</string>
+    <string name="thanks_for_your_feedback">Thanks for your feedback</string>
+    <string name="des_rate_1_2_3">Oh, no!</string>
+    <string name="please_give_us_some_feedback">Please give us some feedback</string>
+    <string name="rate_thanks">Rate in app</string>
+    <string name="language">Language</string>
+    <string name="you_need_pick_a_language">You need pick a language</string>
+
+
+
+
+    //onBoarding
+    <string name="title_onboarding_1">Free Collage and Photo Editing Tool</string>
+    <string name="des_onboarding_1"> </string>
+    <string name="title_onboarding_2">Professional design template</string>
+    <string name="des_onboarding_2"> </string>
+    <string name="title_onboarding_3">Send a message to anyone</string>
+    <string name="des_onboarding_3"> Expert photo filters and smooth \n image blending </string>
+    <string name="title_onboarding_4">Send a message to anyone</string>
+    <string name="des_onboarding_4">Many beautiful fonts, stickers, and \n decorative frames </string>
+
+    //permission
+    <string name="permission">Permission</string>
+    <string name="permission_need">Permission Need</string>
+    <string name="des_permission">To Video Call Allow <b>Base Project</b> Access To Your Camera</string>
+    <string name="go">Go</string>
+    <string name="per_overlay">You need overlay permission to use this app</string>
+    <string name="deny_pers">Permissions is required to use this application</string>
+    <string name="permissions_have_been_granted">Permissions have been granted!</string>
+    <string name="skip">Skip</string>
+    <string name="str_notify">Notification</string>
+    <string name="str_record">Recorder</string>
+    <string name="str_camera">Camera</string>
+    <string name="str_draw">Draw overlay</string>
+    <string name="str_storage">Storage</string>
+    <string name="step_2">Step 3. Camera</string>
+    <string name="step_3">Step 4. Draw overlay</string>
+    <string name="step_4">Step 5. Storage</string>
+    <string name="step_1">Step 2. Recorder</string>
+    <string name="step_0">Step 1. Notification</string>
+    <string name="you_can_select">You can select: </string>
+    <string name="message_per_dialog">Click button Step to grant permission!</string>
+    <string name="message_per_granted">Permission have been granted!</string>
+    <string name="next">Next</string>
+    <string name="start">Start</string>
+
 </resources>

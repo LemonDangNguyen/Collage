@@ -14,8 +14,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.collageimage.BaseActivity
 import com.example.collageimage.MainActivity
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.selectpic.ddat.RepositoryMediaImages
@@ -25,9 +25,8 @@ import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
 
-class SelectActivity : BaseActivity(), OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
+class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding::inflate), OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
 
-    private val binding by lazy { ActivitySelectBinding.inflate(layoutInflater) }
     private val images = mutableListOf<ImageModel>()
     private var selectedImages = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
@@ -70,6 +69,10 @@ class SelectActivity : BaseActivity(), OnAlbumSelectedListener, BottomSheetDialo
 
         setUpListener()
         initObservers()
+    }
+
+    override fun setUp() {
+
     }
 
     private fun setUpListener() {

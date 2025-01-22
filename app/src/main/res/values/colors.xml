@@ -13,4 +13,14 @@
     <color name="fill_color">#7B9474</color>
     <color name="selected_background">#545954</color>
 
+
+    <color name="main_color">#2F80ED</color>
+    <color name="color_DFDFDF">#DFDFDF</color>
+    <color name="color_059DDF">#059DDF</color>
+    <color name="color_0AD6F2">#0AD6F2</color>
+    <color name="color_787F87">#787F87</color>
+    <color name="color_353B41">#353B41</color>
+    <color name="color_828282">#828282</color>
+    <color name="trans">#00000000</color>
+
 </resources>

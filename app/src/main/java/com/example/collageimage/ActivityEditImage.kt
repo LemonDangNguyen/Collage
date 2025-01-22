@@ -38,6 +38,7 @@ import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
 import com.example.collageimage.StickerApp.Adapter.PhotoAdapter
 import com.example.collageimage.StickerApp.model.StickerIcon
 import com.example.collageimage.StickerApp.view.StickerIconView
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.ColorItem2
@@ -61,9 +62,8 @@ import java.io.IOException
 import java.io.OutputStream
 
 
-class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickListener2 {
+class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditImageBinding::inflate), OnColorClickListener, OnColorClickListener2 {
 
-    private val binding by lazy { ActivityEditImageBinding.inflate(layoutInflater) }
     private lateinit var frameAdapter: FrameAdapter
     private val viewModelRatio: AspectRatioViewModel by viewModels()
     private var currentColor: Int = 0xFFFFFFFF.toInt()
@@ -144,6 +144,10 @@ class ActivityEditImage : BaseActivity(), OnColorClickListener, OnColorClickList
                 saveFlParentAsImage()
             }
         }
+    }
+
+    override fun setUp() {
+        TODO("Not yet implemented")
     }
 
     private fun saveFlParentAsImage() {

@@ -24,6 +24,7 @@ import com.example.collageimage.StickerApp.Adapter.IconAdapter
 import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
 import com.example.collageimage.StickerApp.model.StickerIcon
 import com.example.collageimage.StickerApp.view.StickerIconView
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.OnColorClickListener
@@ -39,8 +40,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-class TemplateActivity : BaseActivity(), OnColorClickListener {
-    private lateinit var binding: ActivityTemplateBinding
+class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateBinding::inflate), OnColorClickListener {
+
     private lateinit var viewTemplateAdapter: ViewTemplateAdapter
     private val templateViewModel: TemplateViewModel by viewModels()
     private var selectedPathIndex: Int = -1
@@ -83,7 +84,6 @@ class TemplateActivity : BaseActivity(), OnColorClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityTemplateBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewTemplateAdapter = binding.viewTemplate
         val imageId = intent.getIntExtra("imageId", -1)
@@ -137,6 +137,10 @@ class TemplateActivity : BaseActivity(), OnColorClickListener {
                 saveFlParentAsImage()
             }
         }
+    }
+
+    override fun setUp() {
+
     }
 
     private fun saveFlParentAsImage() {

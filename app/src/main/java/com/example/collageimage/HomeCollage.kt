@@ -46,6 +46,7 @@ import com.example.collageimage.adjust.filter.FilterListener
 import com.example.collageimage.adjust.filter.FilterViewAdapter
 import com.example.collageimage.adjust.filter.PhotoEditor
 import com.example.collageimage.adjust.filter.PhotoFilter
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.ColorItem2
@@ -81,10 +82,10 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
+class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollageBinding::inflate), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
     OnColorClickListener, FilterListener, OnColorClickListener2 {
 
-    private val binding by lazy { ActivityHomeCollageBinding.inflate(layoutInflater) }
+
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val useCaseMediaImageDetail by lazy {
         UseCaseMediaImageDetail(
@@ -201,6 +202,10 @@ class HomeCollage : BaseActivity(), PuzzleView.OnPieceClick, PuzzleView.OnPieceS
                 saveFlParentAsImage()
             }
         }
+    }
+
+    override fun setUp() {
+        TODO("Not yet implemented")
     }
 
     private fun saveFlParentAsImage() {

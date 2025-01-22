@@ -4,13 +4,13 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import com.example.collageimage.BaseActivity
 import com.example.collageimage.MainActivity
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySaveFromEditImageBinding
 
-class SaveFromEditImage : BaseActivity() {
+class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(ActivitySaveFromEditImageBinding::inflate) {
 
-    private val binding by lazy { ActivitySaveFromEditImageBinding.inflate(layoutInflater) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +33,10 @@ class SaveFromEditImage : BaseActivity() {
         binding.btShare.setOnClickListener {
             shareImage(imagePath)
         }
+    }
+
+    override fun setUp() {
+        TODO("Not yet implemented")
     }
 
     private fun shareImage(imagePath: String?) {

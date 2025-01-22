@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectImageEditBinding
 
 
-class ActivitySelectImageEdit : BaseActivity(), OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
-    private val binding by lazy { ActivitySelectImageEditBinding.inflate(layoutInflater) }
+class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(ActivitySelectImageEditBinding::inflate), OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
+
     private val images = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
     private var selectedPathIndex: Int = -1
@@ -24,6 +25,10 @@ class ActivitySelectImageEdit : BaseActivity(), OnAlbumSelectedListener, BottomS
         loadImages()
 
         setUpListener()
+    }
+
+    override fun setUp() {
+        TODO("Not yet implemented")
     }
 
     private fun setUpListener() {

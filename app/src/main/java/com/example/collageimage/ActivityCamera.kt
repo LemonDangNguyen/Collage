@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.applovin.impl.la
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivityCameraBinding
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraView
@@ -13,9 +15,9 @@ import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.controls.Flash
 import java.io.File
 
-class ActivityCamera : BaseActivity() {
+class ActivityCamera : BaseActivity<ActivityCameraBinding>(ActivityCameraBinding::inflate) {
 
-    private val binding by lazy { ActivityCameraBinding.inflate(layoutInflater) }
+
     private lateinit var cameraView: CameraView
     private val photoList = mutableListOf<String>()
     private var maxPhotos = Int.MAX_VALUE
@@ -101,6 +103,10 @@ class ActivityCamera : BaseActivity() {
                 Toast.makeText(this, "No images captured", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun setUp() {
+        TODO("Not yet implemented")
     }
 
     override fun onStart() {

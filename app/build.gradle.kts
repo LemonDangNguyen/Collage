@@ -38,6 +38,18 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+
+    flavorDimensions("default")
+    productFlavors {
+        create("develop") {
+            buildConfigField("Long", "Minimum_Fetch", "5L")
+        }
+
+        create("production") {
+            buildConfigField("Long", "Minimum_Fetch", "3600L")
+        }
     }
 }
 
@@ -49,6 +61,10 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.firebase.common.ktx)
+    implementation(libs.firebase.config.ktx)
+    implementation(libs.app.update.ktx)
+    implementation(libs.review.ktx)
     testImplementation(libs.testng)
 
     // Testing dependencies
@@ -60,10 +76,7 @@ dependencies {
     implementation(libs.puzzlelayout)
 
     // Material design
-    implementation("com.google.android.material:material:1.9.0")
-
-    // Lifecycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
+    implementation("com.google.android.material:material:1.12.0")
 
     // Zoom layout and indicators
     implementation("com.otaliastudios:zoomlayout:1.9.0")
@@ -91,4 +104,10 @@ dependencies {
     // Color picker
     implementation("com.github.yukuku:ambilwarna:2.0.1")
 
+    implementation("com.google.android.gms:play-services-ads:23.2.0")
+    implementation("com.github.devvtn.vtn_ads_libs:ads:1.9.8")
+
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
+    implementation ("android.arch.lifecycle:extensions:1.1.1")
 }

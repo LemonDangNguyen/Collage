@@ -11,15 +11,21 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectImageTemplateBinding
 
-class SelectImageTemplate : BaseActivity(), BottomSheetDialogCamera.OnImagesCapturedListener  {
-    private val binding by lazy { ActivitySelectImageTemplateBinding.inflate(layoutInflater) }
+class SelectImageTemplate :
+    BaseActivity<ActivitySelectImageTemplateBinding>(ActivitySelectImageTemplateBinding::inflate),
+    BottomSheetDialogCamera.OnImagesCapturedListener {
+
     private val images = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-    else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+    else arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    )
 
     private var selectedPathIndex: Int = -1
 
@@ -35,6 +41,10 @@ class SelectImageTemplate : BaseActivity(), BottomSheetDialogCamera.OnImagesCapt
         }
 
         setUpListener()
+    }
+
+    override fun setUp() {
+
     }
 
     private fun setUpListener() {
@@ -54,13 +64,21 @@ class SelectImageTemplate : BaseActivity(), BottomSheetDialogCamera.OnImagesCapt
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
 
-        contentResolver.query(uri, projection, null, null, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
+        contentResolver.query(
+            uri,
+            projection,
+            null,
+            null,
+            "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
+        )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
-            val dateModifiedIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED) // Truy xuất DATE_MODIFIED
+            val dateModifiedIndex =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED) // Truy xuất DATE_MODIFIED
             val nameIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
             val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            val albumIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+            val albumIndex =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
 
             images.clear()
 
@@ -111,6 +129,7 @@ class SelectImageTemplate : BaseActivity(), BottomSheetDialogCamera.OnImagesCapt
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
+
     private fun showCameraBottomSheet() {
         val bottomSheet = BottomSheetDialogCamera.newInstance("ActivitySelectImageEdit")
         bottomSheet.show(supportFragmentManager, "BottomSheetCamera")

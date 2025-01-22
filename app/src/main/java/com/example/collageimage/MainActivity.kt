@@ -7,14 +7,15 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.collageimage.ViewControl.actionAnimation
+import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivityMainBinding
 import com.example.collageimage.fragment.CollageFragment
 import com.example.collageimage.fragment.TemplateFragment
 
-class MainActivity : BaseActivity() {
-
-    val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+    override fun setUp() {
+        TODO("Not yet implemented")
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
