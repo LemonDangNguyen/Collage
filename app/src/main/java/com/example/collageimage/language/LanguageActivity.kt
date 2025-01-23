@@ -115,7 +115,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
                     when (it) {
                         is UiState.Loading -> {}
                         is UiState.Error -> {}
-                        is UiState.Success<*> -> {
+                        is UiState.Success -> {
                             if (it.data.isNotEmpty()) langAdapter.setData(it.data)
                         }
                     }

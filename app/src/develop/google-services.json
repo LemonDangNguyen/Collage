@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1079012104532",
+    "project_id": "app118-b71cf",
+    "storage_bucket": "app118-b71cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079012104532:android:260b84adc79866bbf1d0c1",
+        "android_client_info": {
+          "package_name": "com.example.collageimage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbbFkT8YVrPyAfsXTyA7JuJEYDDb31A5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

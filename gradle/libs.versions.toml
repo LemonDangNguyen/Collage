@@ -1,44 +1,33 @@
 [versions]
+ads = "2.0.1"
 agp = "8.8.0"
 kotlin = "1.9.21"
 coreKtx = "1.15.0"
-junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.5.1"
-appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.9.3"
+activity = "1.10.0"
 constraintlayout = "2.2.0"
 puzzlelayout = "1.0.2"
 sdpAndroid = "1.1.1"
 sspAndroid = "1.1.1"
-testng = "6.9.6"
 roomKtx = "2.6.1"
-firebaseCommonKtx = "21.0.0"
-firebaseConfigKtx = "22.1.0"
-appUpdateKtx = "2.1.0"
-reviewKtx = "2.0.2"
 
 [libraries]
+ads = { module = "com.github.devvtn.vtn_ads_libs:ads", version.ref = "ads" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 puzzlelayout = { module = "com.github.hypersoftdev:PuzzleLayout", version.ref = "puzzlelayout" }
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid" }
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "sspAndroid" }
-testng = { group = "org.testng", name = "testng", version.ref = "testng" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
-firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
-firebase-config-ktx = { group = "com.google.firebase", name = "firebase-config-ktx", version.ref = "firebaseConfigKtx" }
-app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "appUpdateKtx" }
-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "reviewKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.9" }
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version = "2.51.1" }
+google-services = { id = "com.google.gms.google-services", version = "4.3.15" }
+kotlin-kapt = { id = "kotlin-kapt" }
 

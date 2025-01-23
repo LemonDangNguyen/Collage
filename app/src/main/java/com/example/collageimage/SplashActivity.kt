@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySplashBinding
+import com.example.collageimage.language.LanguageActivity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.nlbn.ads.callback.AdCallback
@@ -17,8 +18,6 @@ import com.nmh.base.project.helpers.IS_SHOW_BACK
 import com.nmh.base.project.model.LanguageModel
 import com.nmh.base.project.sharepref.DataLocalManager
 import com.nmh.base.project.utils.AdsConfig
-import com.nmh.base.project.utils.AdsConfig.haveNetworkConnection
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

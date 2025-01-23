@@ -28,6 +28,7 @@ import com.nmh.base.project.sharepref.DataLocalManager
 import com.nmh.base.project.utils.AdsConfig
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.text.Typography.dagger
 
 @AndroidEntryPoint
 class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoardingBinding::inflate) {

@@ -1,15 +1,10 @@
-package com.nmh.base.project.sharepref
+package com.example.collageimage.sharepref
 
 import android.content.Context
 
-class MySharePreferences(context: Context) {
+class MySharePreferences(private val context: Context) {
 
-    private val MY_SHARED_PREFERENCE = "MY_SHARED_PREFERENCE"
-    private val context: Context
-
-    init {
-        this.context = context
-    }
+    private val MY_SHARED_PREFERENCE = context.packageName
 
     fun putBooleanValue(key: String?, value: Boolean) {
         val sharedPreferences = context.getSharedPreferences(MY_SHARED_PREFERENCE, Context.MODE_PRIVATE)

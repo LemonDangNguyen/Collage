@@ -9,7 +9,6 @@ import com.nmh.base.project.model.LanguageModel
 import com.nmh.base.project.sharepref.DataLocalManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.checkerframework.checker.units.qual.s
 import java.util.Locale
 
 object DataLanguage {

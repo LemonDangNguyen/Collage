@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.applovin.impl.la
+
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivityCameraBinding
 import com.otaliastudios.cameraview.CameraListener
