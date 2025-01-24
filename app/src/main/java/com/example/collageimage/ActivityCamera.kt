@@ -106,7 +106,7 @@ class ActivityCamera : BaseActivity<ActivityCameraBinding>(ActivityCameraBinding
     }
 
     override fun setUp() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onStart() {

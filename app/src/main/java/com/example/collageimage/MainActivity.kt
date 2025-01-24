@@ -14,7 +14,7 @@ import com.example.collageimage.fragment.TemplateFragment
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     override fun setUp() {
-        TODO("Not yet implemented")
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

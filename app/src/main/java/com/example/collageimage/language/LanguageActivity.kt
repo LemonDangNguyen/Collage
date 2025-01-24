@@ -37,9 +37,11 @@ import com.nmh.base.project.model.LanguageModel
 import com.nmh.base.project.sharepref.DataLocalManager
 import com.nmh.base.project.utils.AdsConfig
 import com.nmh.base_lib.callback.ICallBackItem
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityLanguageAcyivityBinding::inflate) {
 
     override fun isHideNavigation(): Boolean = true

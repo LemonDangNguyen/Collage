@@ -11,8 +11,9 @@ import com.nlbn.ads.util.AdsApplication
 
 import com.nlbn.ads.util.AppOpenManager
 import com.nmh.base.project.utils.AdsConfig
+import dagger.hilt.android.HiltAndroidApp
 
-
+@HiltAndroidApp
 class NMHApp : AdsApplication() {
 
     companion object {

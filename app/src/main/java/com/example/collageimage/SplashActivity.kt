@@ -4,14 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.view.ViewGroup
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySplashBinding
 import com.example.collageimage.language.LanguageActivity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.nlbn.ads.banner.BannerPlugin
 import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
+import com.nmh.base.project.extensions.invisible
+import com.nmh.base.project.extensions.visible
 
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
 import com.nmh.base.project.helpers.IS_SHOW_BACK
@@ -60,6 +64,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
                         if (!consentHelper.canLoadAndShowAds()) consentHelper.reset()
 
                         consentHelper.obtainConsentAndShow(this@SplashActivity) {
+                            loadBanner()
                             //load trước native language
                             AdsConfig.loadNativeLanguage(this@SplashActivity)
                             AdsConfig.loadNativeLanguageSelect(this@SplashActivity)
@@ -96,5 +101,18 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     private fun startActivity() {
         DataLocalManager.setBoolean(IS_SHOW_BACK, false)
         startIntent(Intent(this, LanguageActivity::class.java), true)
+    }
+
+    private fun loadBanner() {
+        if (haveNetworkConnection() && AdsConfig.isLoadFullAds() && AdsConfig.isLoadFullAds()) {
+            binding.rlBanner.visible()
+            val config = BannerPlugin.Config()
+            val cbFetchInterval = AdsConfig.cbFetchInterval
+            config.defaultRefreshRateSec = cbFetchInterval
+            config.defaultCBFetchIntervalSec = cbFetchInterval
+            config.defaultAdUnitId = getString(R.string.banner_all)
+            config.defaultBannerType = BannerPlugin.BannerType.Adaptive
+            Admob.getInstance().loadBannerPlugin(this, binding.banner, binding.shimmer as ViewGroup, config)
+        } else binding.rlBanner.invisible()
     }
 }
