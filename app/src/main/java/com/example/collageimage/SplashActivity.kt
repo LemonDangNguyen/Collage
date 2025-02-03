@@ -50,8 +50,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
         if (haveNetworkConnection()) {
             CoroutineScope(Dispatchers.IO).launch {
-                val remote = async {
-                    loadRemoteConfig() }
+                val remote = async { loadRemoteConfig() }
                 if (remote.await())
                     withContext(Dispatchers.Main) {
                         interCallback = object : AdCallback() {
@@ -113,8 +112,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             config.defaultCBFetchIntervalSec = cbFetchInterval
             config.defaultAdUnitId = getString(R.string.banner_all)
             config.defaultBannerType = BannerPlugin.BannerType.Adaptive
-            Admob.getInstance()
-                .loadBannerPlugin(this, binding.banner, binding.shimmer as ViewGroup, config)
+            Admob.getInstance().loadBannerPlugin(this, binding.banner, binding.shimmer as ViewGroup, config)
         } else binding.rlBanner.invisible()
     }
 }
