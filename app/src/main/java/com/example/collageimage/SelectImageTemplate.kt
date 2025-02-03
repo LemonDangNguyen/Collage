@@ -16,10 +16,12 @@ import com.example.collageimage.databinding.ActivitySelectImageTemplateBinding
 
 class SelectImageTemplate :
     BaseActivity<ActivitySelectImageTemplateBinding>(ActivitySelectImageTemplateBinding::inflate),
-    BottomSheetDialogCamera.OnImagesCapturedListener {
+    BottomSheetDialogCamera.OnImagesCapturedListener,
+    OnAlbumSelectedListener {
 
     private val images = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
+    private var albumName: String? = null
     private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(
@@ -39,7 +41,10 @@ class SelectImageTemplate :
         } else {
             permissionLauncher.launch(storagePermissions)
         }
-
+        binding.btnAlbum.setOnClickListener {
+            val bottomSheet = SelectAlbumBottomSheet()
+            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+        }
         setUpListener()
     }
 
@@ -63,12 +68,16 @@ class SelectImageTemplate :
             MediaStore.Images.Media.DATA,
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
-
+        val (selection, selectionArgs) = if (albumName == "All Images" || albumName == null) {
+            null to null
+        } else {
+            "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?" to arrayOf(albumName)
+        }
         contentResolver.query(
             uri,
             projection,
-            null,
-            null,
+            selection,
+            selectionArgs,
             "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
         )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
@@ -136,6 +145,13 @@ class SelectImageTemplate :
     }
 
     override fun onImagesCaptured(images: ArrayList<ImageModel>) {
-        TODO("Not yet implemented")
+
+    }
+
+    override fun onAlbumSelected(albumName: String) {
+        this.albumName = albumName
+        images.clear()
+        imageAdapter.notifyDataSetChanged()
+        loadImages()
     }
 }

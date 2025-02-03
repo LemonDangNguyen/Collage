@@ -25,7 +25,8 @@ import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
 
-class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding::inflate), OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
+class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding::inflate),
+    OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
 
     private val images = mutableListOf<ImageModel>()
     private var selectedImages = mutableListOf<ImageModel>()
@@ -35,7 +36,11 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val repositoryMediaImages by lazy { RepositoryMediaImages(mediaStoreMediaImages) }
     private val useCaseMediaImageDetail by lazy { UseCaseMediaImageDetail(repositoryMediaImages) }
-    private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> { ViewModelMediaImageDetailProvider(useCaseMediaImageDetail) }
+    private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> {
+        ViewModelMediaImageDetailProvider(
+            useCaseMediaImageDetail
+        )
+    }
     private val itemClick: ((Uri) -> Unit) = { viewModelMediaImageDetail.imageClick(it) }
     private val adapterEnhanceGalleryDetail by lazy { AdapterMediaImageDetail(itemClick) }
 
@@ -55,7 +60,8 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
             updateSelectedCount()
         }
 
-        val selectedImagesFromIntent = intent.getParcelableArrayListExtra<ImageModel>("IMG_FROM_CAM")
+        val selectedImagesFromIntent =
+            intent.getParcelableArrayListExtra<ImageModel>("IMG_FROM_CAM")
 
         if (selectedImagesFromIntent != null) {
             selectedImages.addAll(selectedImagesFromIntent)
@@ -122,7 +128,8 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
                             selectedImages.add(image)
                             updateSelectedAdapters()
                         } else {
-                            Toast.makeText(this, "Maximum is 9 images only", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Maximum is 9 images only", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 } else {
@@ -139,7 +146,8 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         }
 
         binding.selectedImagesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@SelectActivity, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(this@SelectActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = selectedImagesAdapter
         }
     }
@@ -161,13 +169,21 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
             "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?" to arrayOf(albumName)
         }
 
-        contentResolver.query(uri, projection, selection, selectionArgs, "${MediaStore.Images.Media.DATE_MODIFIED} DESC")?.use { cursor ->
+        contentResolver.query(
+            uri,
+            projection,
+            selection,
+            selectionArgs,
+            "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
+        )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val dateTakenIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
-            val dateModifiedIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED)
+            val dateModifiedIndex =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED)
             val nameIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
             val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            val albumIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+            val albumIndex =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
 
             images.clear()
             while (cursor.moveToNext()) {
@@ -251,7 +267,10 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         val bottomSheet = BottomSheetDialogCamera.newInstance(getCurrentActivityName())
         bottomSheet.setTargetFragment(null, 0)
         bottomSheet.show(supportFragmentManager, "BottomSheetCamera")
-        supportFragmentManager.setFragmentResultListener("cameraRequestKey", this) { requestKey, bundle ->
+        supportFragmentManager.setFragmentResultListener(
+            "cameraRequestKey",
+            this
+        ) { requestKey, bundle ->
             val selectedImagesFromCamera = bundle.getParcelableArrayList<ImageModel>("IMG_FROM_CAM")
             selectedImagesFromCamera?.let {
                 selectedImages.addAll(it)

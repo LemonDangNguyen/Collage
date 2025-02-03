@@ -483,7 +483,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         }
 
         binding.layoutBg.tvBlur.setOnClickListener {
-            updateTextViewStyle(binding.layoutBg.tvBlur)
+           // updateTextViewStyle(binding.layoutBg.tvBlur)
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
         }
     }

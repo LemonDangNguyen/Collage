@@ -457,7 +457,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
         }
 
         binding.layoutBg.tvBlur.setOnClickListener {
-            updateTextViewStyle(binding.layoutBg.tvBlur)
+          //  updateTextViewStyle(binding.layoutBg.tvBlur)
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
         }
     }
@@ -732,12 +732,20 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
 
     private fun setupRecyclerView2() {
-        val imagePaths = getImagesFromMediaStore(this)
+        val imagePaths = getImagesFromMediaStore(this).toMutableList()
+
+        // Thêm một item đặc biệt để hiển thị ảnh từ drawable
+        imagePaths.add(0, "drawable_static_image") // Đánh dấu ảnh đặc biệt
 
         if (imagePaths.isNotEmpty()) {
             binding.layoutAddImage.rcvPhotoSrc.layoutManager = GridLayoutManager(this, 3)
             photoAdapter = PhotoAdapter(this, imagePaths) { photoPath ->
-                val bitmap = BitmapFactory.decodeFile(photoPath)
+                val bitmap: Bitmap = if (photoPath == "drawable_static_image") {
+                    BitmapFactory.decodeResource(resources, R.drawable.ic_take_camera)
+                } else {
+                    BitmapFactory.decodeFile(photoPath)
+                }
+
                 val scaledHeight = 480 * bitmap.height / bitmap.width
                 val scaledWidth = 480
                 val stickerIcon = StickerIcon(
@@ -756,9 +764,10 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
             binding.layoutAddImage.rcvPhotoSrc.adapter = photoAdapter
         } else {
-            Toast.makeText(this, "No images found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Không tìm thấy hình ảnh", Toast.LENGTH_SHORT).show()
         }
     }
+
 
 
     private fun getImagesFromMediaStore(context: Context): List<String> {
