@@ -33,16 +33,16 @@ class NMHApp : AdsApplication() {
         ctx = applicationContext
         w = resources.displayMetrics.widthPixels / 100f
 
-        AppOpenManager.getInstance().setResumeCallback(object : AdCallback(){
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-            }
-
-            override fun onAdClosed() {
-                super.onAdClosed()
-                AdsConfig.lastTimeShowInter = System.currentTimeMillis()
-            }
-        })
+//        AppOpenManager.getInstance().setResumeCallback(object : AdCallback(){
+//            override fun onAdLoaded() {
+//                super.onAdLoaded()
+//            }
+//
+//            override fun onAdClosed() {
+//                super.onAdClosed()
+//                AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+//            }
+//        })
     }
 
     override fun enableAdsResume(): Boolean = true
