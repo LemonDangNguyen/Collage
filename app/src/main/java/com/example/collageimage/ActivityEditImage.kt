@@ -147,7 +147,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
     }
 
     override fun setUp() {
-        TODO("Not yet implemented")
+
     }
 
     private fun saveFlParentAsImage() {

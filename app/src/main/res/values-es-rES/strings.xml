@@ -128,4 +128,12 @@
     <string name="update_now">Actualizar ahora</string>
     <string name="des_update">Por favor, actualiza la app a la nueva versión para seguir usándola</string>
     <string name="title_update">Nueva versión disponible</string>
+
+    <string name="home">INICIO</string>
+    <string name="template">Plantilla</string>
+    <string name="album">Álbum</string>
+    <string name="photo">Foto</string>
+    <string name="selected">Seleccionado</string>
+    <string name="change_image">Cambiar imagen</string>
+
 </resources>

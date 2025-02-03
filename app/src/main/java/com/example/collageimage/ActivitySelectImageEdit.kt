@@ -28,7 +28,7 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
     }
 
     override fun setUp() {
-        TODO("Not yet implemented")
+
     }
 
     private fun setUpListener() {

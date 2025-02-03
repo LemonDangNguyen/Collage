@@ -205,7 +205,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     }
 
     override fun setUp() {
-        TODO("Not yet implemented")
+
     }
 
     private fun saveFlParentAsImage() {

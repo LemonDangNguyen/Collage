@@ -49,7 +49,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="HOME"
+                android:text="@string/home"
                 android:textColor="#78838B"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -79,7 +79,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Template"
+                android:text="@string/template"
                 android:textColor="#78838B"
                 android:textSize="12sp" />
         </LinearLayout>

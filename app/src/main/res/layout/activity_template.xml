@@ -27,7 +27,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="left"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="#8D99A1"
             android:textSize="18sp" />
 
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Template"
+            android:text="@string/template"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -48,7 +48,7 @@
             android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="#3B83FC"
             android:textSize="18sp" />
     </LinearLayout>
@@ -107,7 +107,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Change Image"
+                android:text="@string/change_image"
                 android:textColor="#78838B"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -137,7 +137,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Sticker"
+                android:text="@string/sticker"
                 android:textColor="#78838B"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -165,7 +165,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="Text"
+                android:text="@string/text"
                 android:textColor="#78838B"
                 android:textSize="12sp" />
         </LinearLayout>

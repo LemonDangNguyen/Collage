@@ -28,7 +28,7 @@
             android:focusable="true"
             android:gravity="left"
             android:textSize="18sp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="#8D99A1" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="18sp"
-            android:text="Photo"
+            android:text="@string/photo"
             android:textStyle="bold" />
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_weight="1"
             android:gravity="right"
             android:textSize="18sp"
-            android:text="Album"
+            android:text="@string/album"
             android:textColor="#3B83FC" />
     </LinearLayout>
 
