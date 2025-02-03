@@ -122,7 +122,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                         }
                         3 -> {
                             binding.tvAction.text = getString(R.string.start)
-                            binding.tvTitle.text = getString(R.string.title_onboarding_3)
+                            binding.tvTitle.text = getString(R.string.title_onboarding_4)
                             binding.tvDes.text = getString(R.string.des_onboarding_3)
 
                             if (true /*trong này check điều kiện remote*/) {
