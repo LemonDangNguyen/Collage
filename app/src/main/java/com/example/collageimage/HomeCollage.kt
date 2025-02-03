@@ -56,6 +56,7 @@ import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
 import com.example.collageimage.databinding.DialogExitBinding
+import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
 import com.example.collageimage.ratio.AspectRatioViewModel
@@ -83,6 +84,7 @@ import java.io.IOException
 import java.io.OutputStream
 
 class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollageBinding::inflate), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
+
     OnColorClickListener, FilterListener, OnColorClickListener2 {
 
 
@@ -902,7 +904,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     override fun onPieceSelected(piece: PuzzlePiece?, position: Int) {}
     override fun onBackPressed() {
 
-        val binding2 = DialogExitBinding.inflate(layoutInflater)
+        val binding2 = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog2 = Dialog(this)
         dialog2.setContentView(binding2.root)
         val window = dialog2.window
@@ -917,7 +919,31 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             super.onBackPressed()
         }
         binding2.btnStay.setOnClickListener {
-            dialog2.dismiss()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+            }
         }
         dialog2.show()
     }

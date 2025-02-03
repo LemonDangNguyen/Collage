@@ -134,4 +134,8 @@
     <string name="photo">फ़ोटो</string>
     <string name="selected">चयनित</string>
     <string name="change_image">चित्र बदलें</string>
+    <string name="save_file_before_closing">फ़ाइल बंद करने से पहले फ़ाइल को सहेजें</string>
+    <string name="the_file_will_be_disappear_and_you_can_t_find_this_file_in_any_folders">फ़ाइल स्वचालित रूप से हट जाएगी और आप इसे किसी भी फ़ोल्डर में नहीं ढूंढ पाएंगे</string>
+
+
 </resources>

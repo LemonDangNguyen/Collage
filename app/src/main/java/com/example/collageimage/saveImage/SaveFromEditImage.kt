@@ -36,7 +36,7 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
     }
 
     override fun setUp() {
-        TODO("Not yet implemented")
+
     }
 
     private fun shareImage(imagePath: String?) {

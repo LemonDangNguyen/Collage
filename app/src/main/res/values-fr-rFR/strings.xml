@@ -134,4 +134,7 @@
     <string name="photo">Photo</string>
     <string name="selected">Sélectionné</string>
     <string name="change_image">Changer l\'image</string>
+    <string name="save_file_before_closing">Enregistrer le fichier avant de fermer</string>
+    <string name="the_file_will_be_disappear_and_you_can_t_find_this_file_in_any_folders">Le fichier se supprimera et vous ne pourrez plus le trouver dans n\'importe quelle dossier</string>
+
 </resources>
