@@ -68,10 +68,10 @@ abstract class BaseStickerView @JvmOverloads constructor(
 
         deleteButton = AppCompatImageView(context).apply {
             setImageResource(R.drawable.ic_sticker_delete)
-            layoutParams = LayoutParams(70, 70).apply {
+            layoutParams = LayoutParams(60, 60).apply {
                 addRule(ALIGN_PARENT_TOP, TRUE)
                 addRule(ALIGN_PARENT_END, TRUE)
-                setMargins(-15, -15, -15, -15)
+                setMargins(0, -15, -15, 0)
             }
             setOnClickListener { removeSticker() }
         }
@@ -81,8 +81,8 @@ abstract class BaseStickerView @JvmOverloads constructor(
             setImageResource(R.drawable.ic_sticker_flip)
             layoutParams = LayoutParams(60, 60).apply {
                 addRule(ALIGN_PARENT_TOP, TRUE)
-                addRule(CENTER_HORIZONTAL, TRUE)
-                setMargins(0, -27, 0, -15)
+                addRule(ALIGN_PARENT_START, TRUE)
+                setMargins(-15, -15, 0, 0)
             }
             setOnClickListener { flipSticker() }
         }
@@ -246,7 +246,7 @@ abstract class BaseStickerView @JvmOverloads constructor(
         val buttonSize = 60
         val borderPadding = -15
 
-        deleteButton.layoutParams = LayoutParams(70, 70).apply {
+        deleteButton.layoutParams = LayoutParams(buttonSize, buttonSize).apply {
             addRule(ALIGN_PARENT_TOP, TRUE)
             addRule(ALIGN_PARENT_END, TRUE)
             setMargins(borderPadding, borderPadding, borderPadding, borderPadding)
@@ -254,8 +254,8 @@ abstract class BaseStickerView @JvmOverloads constructor(
 
         flipButton.layoutParams = LayoutParams(buttonSize, buttonSize).apply {
             addRule(ALIGN_PARENT_TOP, TRUE)
-            addRule(CENTER_HORIZONTAL, TRUE)
-            setMargins(0, -27, 0, borderPadding)
+            addRule(ALIGN_PARENT_START, TRUE)
+            setMargins(borderPadding, borderPadding, borderPadding, borderPadding)
         }
 
         transformButton.layoutParams = LayoutParams(buttonSize, buttonSize).apply {

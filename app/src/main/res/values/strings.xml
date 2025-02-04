@@ -140,4 +140,5 @@
 
     <string name="save_file_before_closing">Save file before closing</string>
     <string name="the_file_will_be_disappear_and_you_can_t_find_this_file_in_any_folders">The file will be disappear and you can’t find this file in any folders</string>
+    <string name="txt_loading">Loading</string>
 </resources>

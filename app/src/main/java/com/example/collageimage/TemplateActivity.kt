@@ -1,6 +1,7 @@
 package com.example.collageimage
 
 import android.Manifest
+import android.app.Dialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,10 +9,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,11 +34,13 @@ import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.databinding.ActivityTemplateBinding
+import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
 import com.example.collageimage.ratio.adapter.FontAdapter
 import com.example.collageimage.saveImage.SaveFromEditImage
 import com.example.collageimage.view_template.TemplateModel
 import com.example.collageimage.view_template.TemplateViewModel
 import com.example.collageimage.view_template.ViewTemplateAdapter
+import com.nmh.base.project.extensions.showToast
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -145,22 +152,13 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
 
     private fun saveFlParentAsImage() {
         val bitmap = getBitmapFromView(binding.flParent)
-        val saved = saveBitmapToGallery(bitmap)
-        if (saved) {
-            // Lưu ảnh thành công, mở Activity SaveFromEditImage và truyền ảnh
-            val intent = Intent(this, SaveFromEditImage::class.java)
-            // Lưu ảnh vào một tệp tạm thời để truyền
-            val file = File(cacheDir, "saved_image.png")
-            FileOutputStream(file).use { fos ->
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            }
-
-            // Truyền đường dẫn của tệp ảnh tới Activity mới
-            intent.putExtra("image_path", file.absolutePath)
-            startActivity(intent)
-        } else {
-            Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show()
-        }
+        saveBitmapToGallery(bitmap, onDone = {
+            if (it != "") {
+                val intent = Intent(this, SaveFromEditImage::class.java)
+                intent.putExtra("image_path", it)
+                startActivity(intent)
+            } else showToast("Failed to save image.", Gravity.CENTER)
+        })
     }
 
 
@@ -171,7 +169,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         return bitmap
     }
 
-    private fun saveBitmapToGallery(bitmap: Bitmap): Boolean {
+    private fun saveBitmapToGallery(bitmap: Bitmap, onDone: (String) -> Unit) {
         val filename = "IMG_${System.currentTimeMillis()}.png"
         var fos: OutputStream? = null
         try {
@@ -180,39 +178,41 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                 val contentValues = ContentValues().apply {
                     put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
                     put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/CollageImage")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DCIM}/CollageImage")
                 }
-                val imageUri =
-                    resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-                if (imageUri != null) {
-                    fos = resolver.openOutputStream(imageUri)
+
+                resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.let { uri ->
+                    fos = resolver.openOutputStream(uri)
+                    fos?.use {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                        it.flush()
+                    }
+                    onDone.invoke(uri.toString())
                 }
             } else {
                 val imagesDir =
-                    android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DCIM)
-                        .toString() + "/CollageImage"
-                val file = java.io.File(imagesDir)
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/CollageImage"
+                val file = File(imagesDir)
                 if (!file.exists()) {
                     file.mkdir()
                 }
-                val image = java.io.File(file, filename)
-                fos = java.io.FileOutputStream(image)
+                val image = File(file, filename)
+                fos = FileOutputStream(image)
                 val values = ContentValues().apply {
                     put(MediaStore.Images.Media.DATA, image.absolutePath)
                     put(MediaStore.Images.Media.MIME_TYPE, "image/png")
                     put(MediaStore.Images.Media.DISPLAY_NAME, filename)
                 }
                 contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            }
 
-            fos?.use {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-                it.flush()
+                fos?.use {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                    it.flush()
+                }
+                onDone.invoke(image.path)
             }
-            return true
         } catch (e: IOException) {
             e.printStackTrace()
-            return false
         }
     }
 
@@ -338,8 +338,10 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
 
 
         binding.btnText.setOnClickListener {
-            binding.layoutAddText.root.visibility = View.VISIBLE
-            binding.lnBottomBar.visibility = View.GONE
+
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+//            binding.layoutAddText.root.visibility = View.VISIBLE
+//            binding.lnBottomBar.visibility = View.GONE
         }
 
         binding.layoutAddText.ivClose.setOnClickListener {
@@ -450,6 +452,51 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
     override fun onColorClick(color: ColorItem) {
         val colorInt = Color.parseColor(color.colorHex)
         Toast.makeText(this, "Selected color: $colorInt", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onBackPressed() {
+
+        val binding2 = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
+        val dialog2 = Dialog(this)
+        dialog2.setContentView(binding2.root)
+        val window = dialog2.window
+        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog2.setCanceledOnTouchOutside(true)
+        dialog2.setCancelable(true)
+        binding2.btnExit.setOnClickListener {
+            dialog2.dismiss()
+            finish()
+            super.onBackPressed()
+        }
+        binding2.btnStay.setOnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+            }
+        }
+        dialog2.show()
     }
 }
 

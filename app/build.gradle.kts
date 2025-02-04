@@ -91,6 +91,9 @@ dependencies {
     implementation(libs.sdp.android)
     implementation(libs.ssp.android)
 
+
+    implementation ("com.airbnb.android:lottie:6.0.0")
+
     // CameraX dependencies
     implementation("androidx.camera:camera-core:1.2.2")
     implementation("androidx.camera:camera-camera2:1.2.2")

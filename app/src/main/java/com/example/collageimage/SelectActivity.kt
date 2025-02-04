@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,8 @@ import com.example.collageimage.MainActivity
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectBinding
 import com.example.collageimage.databinding.DialogExitBinding
+import com.example.collageimage.databinding.DialogLoading2Binding
+import com.example.collageimage.databinding.DialogLoadingBinding
 import com.example.selectpic.ddat.RepositoryMediaImages
 import com.example.selectpic.ddat.UseCaseMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
@@ -88,16 +92,27 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
             updateSelectedCount()
             imageAdapter.updateSelection(selectedImages)
         }
+        val dialogLoadingBinding = DialogLoading2Binding.inflate(layoutInflater)
+        val dialog = Dialog(this).apply {
+            setCancelable(false)
+            setContentView(dialogLoadingBinding.root)
+        }
+
         binding.nextSelect.setOnClickListener {
             if (selectedImages.size >= 3) {
-                val intent = Intent(this, HomeCollage::class.java)
-                intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
-                startActivity(intent)
-                finish()
+                dialog.show()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    dialog.dismiss()
+                    val intent = Intent(this, HomeCollage::class.java)
+                    intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
+                    startActivity(intent)
+                    finish()
+                }, 5000)
             } else {
                 Toast.makeText(this, "Please select at least 3 images", Toast.LENGTH_SHORT).show()
             }
         }
+
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }

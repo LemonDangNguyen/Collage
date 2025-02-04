@@ -14,7 +14,9 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -37,7 +39,9 @@ import com.example.collageimage.StickerApp.Adapter.IconAdapter
 import com.example.collageimage.StickerApp.Adapter.IconCategoryAdapter
 import com.example.collageimage.StickerApp.Adapter.PhotoAdapter
 import com.example.collageimage.StickerApp.model.StickerIcon
+import com.example.collageimage.StickerApp.model.StickerPhoto
 import com.example.collageimage.StickerApp.view.StickerIconView
+import com.example.collageimage.StickerApp.view.StickerPhotoView
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
@@ -48,12 +52,14 @@ import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityEditImageBinding
 import com.example.collageimage.databinding.DialogExitBinding
+import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
 import com.example.collageimage.ratio.AspectRatioViewModel
 import com.example.collageimage.ratio.adapter.FontAdapter
 import com.example.collageimage.ratio.adapter.RatioAdapter
 import com.example.collageimage.saveImage.SaveFromEditImage
+import com.nmh.base.project.extensions.showToast
 
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.File
@@ -152,18 +158,13 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
     private fun saveFlParentAsImage() {
         val bitmap = getBitmapFromView(binding.flParent)
-        val saved = saveBitmapToGallery(bitmap)
-        if (saved) {
-            val intent = Intent(this, SaveFromEditImage::class.java)
-            val file = File(cacheDir, "saved_image.png")
-            FileOutputStream(file).use { fos ->
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            }
-            intent.putExtra("image_path", file.absolutePath)
-            startActivity(intent)
-        } else {
-            Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show()
-        }
+        saveBitmapToGallery(bitmap, onDone = {
+            if (it != "") {
+                val intent = Intent(this, SaveFromEditImage::class.java)
+                intent.putExtra("image_path", it)
+                startActivity(intent)
+            } else showToast("Failed to save image.", Gravity.CENTER)
+        })
     }
 
 
@@ -174,7 +175,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
         return bitmap
     }
 
-    private fun saveBitmapToGallery(bitmap: Bitmap): Boolean {
+    private fun saveBitmapToGallery(bitmap: Bitmap, onDone: (String) -> Unit) {
         val filename = "IMG_${System.currentTimeMillis()}.png"
         var fos: OutputStream? = null
         try {
@@ -183,39 +184,41 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
                 val contentValues = ContentValues().apply {
                     put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
                     put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/CollageImage")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DCIM}/CollageImage")
                 }
-                val imageUri =
-                    resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-                if (imageUri != null) {
-                    fos = resolver.openOutputStream(imageUri)
+
+                resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)?.let { uri ->
+                    fos = resolver.openOutputStream(uri)
+                    fos?.use {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                        it.flush()
+                    }
+                    onDone.invoke(uri.toString())
                 }
             } else {
                 val imagesDir =
-                    android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DCIM)
-                        .toString() + "/CollageImage"
-                val file = java.io.File(imagesDir)
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/CollageImage"
+                val file = File(imagesDir)
                 if (!file.exists()) {
                     file.mkdir()
                 }
-                val image = java.io.File(file, filename)
-                fos = java.io.FileOutputStream(image)
+                val image = File(file, filename)
+                fos = FileOutputStream(image)
                 val values = ContentValues().apply {
                     put(MediaStore.Images.Media.DATA, image.absolutePath)
                     put(MediaStore.Images.Media.MIME_TYPE, "image/png")
                     put(MediaStore.Images.Media.DISPLAY_NAME, filename)
                 }
                 contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            }
 
-            fos?.use {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-                it.flush()
+                fos?.use {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                    it.flush()
+                }
+                onDone.invoke(image.path)
             }
-            return true
         } catch (e: IOException) {
             e.printStackTrace()
-            return false
         }
     }
 
@@ -298,9 +301,10 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
             frameFun()
         }
         binding.layoutParentTool.llChangeText.setOnClickListener {
-            addText()
-            binding.layoutAddText.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.GONE
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+//            addText()
+//            binding.layoutAddText.root.visibility = View.VISIBLE
+//            binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeFilter.setOnClickListener {
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
@@ -584,9 +588,11 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
     }
     private fun setupRecyclerView() {
         val frames = (1..20).map { FrameItem("frames/frame_$it.webp") }
+
         frameAdapter = FrameAdapter(frames) { drawable ->
             binding.framebg.background = drawable
         }
+
         binding.layoutFrame.rvFrame.apply {
             layoutManager = GridLayoutManager(this@ActivityEditImage, 5)
             adapter = frameAdapter
@@ -707,68 +713,50 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
         val colorInt = Color.parseColor(color2.colorHex2)
         binding.drawview.setPenColor(colorInt)
     }
-
     override fun onBackPressed() {
-
-        val binding2 = DialogExitBinding.inflate(layoutInflater)
+        val binding2 = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog2 = Dialog(this)
         dialog2.setContentView(binding2.root)
         val window = dialog2.window
         window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(false)
-        dialog2.setCancelable(false)
+        dialog2.setCanceledOnTouchOutside(true)
+        dialog2.setCancelable(true)
         binding2.btnExit.setOnClickListener {
             dialog2.dismiss()
+
             finish()
             super.onBackPressed()
         }
         binding2.btnStay.setOnClickListener {
-            dialog2.dismiss()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+            }
         }
         dialog2.show()
     }
-
-
-
-    private fun setupRecyclerView2() {
-        val imagePaths = getImagesFromMediaStore(this).toMutableList()
-
-        // Thêm một item đặc biệt để hiển thị ảnh từ drawable
-        imagePaths.add(0, "drawable_static_image") // Đánh dấu ảnh đặc biệt
-
-        if (imagePaths.isNotEmpty()) {
-            binding.layoutAddImage.rcvPhotoSrc.layoutManager = GridLayoutManager(this, 3)
-            photoAdapter = PhotoAdapter(this, imagePaths) { photoPath ->
-                val bitmap: Bitmap = if (photoPath == "drawable_static_image") {
-                    BitmapFactory.decodeResource(resources, R.drawable.ic_take_camera)
-                } else {
-                    BitmapFactory.decodeFile(photoPath)
-                }
-
-                val scaledHeight = 480 * bitmap.height / bitmap.width
-                val scaledWidth = 480
-                val stickerIcon = StickerIcon(
-                    x = 0f,
-                    y = 0f,
-                    rotation = 0f,
-                    bitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false),
-                    scaleX = 1f,
-                    scaleY = 1f
-                )
-                val stickerView = StickerIconView(this, null, stickerIcon).apply {
-                    setImageBitmap(stickerIcon.bitmap)
-                }
-                binding.stickerContainerView.addView(stickerView)
-            }
-
-            binding.layoutAddImage.rcvPhotoSrc.adapter = photoAdapter
-        } else {
-            Toast.makeText(this, "Không tìm thấy hình ảnh", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
 
     private fun getImagesFromMediaStore(context: Context): List<String> {
         val imagePaths = mutableListOf<String>()
@@ -897,5 +885,77 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
             e.printStackTrace()
         }
         return fontList
+    }
+
+    private fun setupRecyclerView2() {
+        val listOfPaths: List<String> = getImagesFromMediaStore(this)
+        val imageModels: MutableList<ImageModel> = listOfPaths.mapIndexed { index, path ->
+            ImageModel(
+                id = index.toLong(),
+                dateTaken = System.currentTimeMillis(),
+                fileName = File(path).name,
+                filePath = path,
+                album = "",
+                uri = Uri.EMPTY,
+                isCameraItem = false
+            )
+        }.toMutableList()
+        photoAdapter = PhotoAdapter(
+            context = this,
+            images = imageModels,
+            onItemSelected = { imageModel, isSelected ->
+
+                if (isSelected) {
+                    val photoPath = imageModel.filePath
+                    val bitmap = BitmapFactory.decodeFile(photoPath) ?: return@PhotoAdapter
+
+                    val scaledWidth = 480
+                    val scaledHeight = scaledWidth * bitmap.height / bitmap.width
+
+                    val stickerIcon = StickerPhoto(
+                        x = 0f,
+                        y = 0f,
+                        rotation = 0f,
+                        bitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false),
+                        scaleX = 1f,
+                        scaleY = 1f
+                    )
+                    val stickerView = StickerPhotoView(this, null, stickerIcon).apply {
+                        setImageBitmap(stickerIcon.bitmap)
+                    }
+                    binding.stickerContainerView.addView(stickerView)
+                } else {
+                }
+            },
+            onCameraClick = {
+                val bottomSheet = BottomSheetDialogCameraSticker.newInstance()
+                bottomSheet.onDone = { photoPath ->
+                    val bitmap = BitmapFactory.decodeFile(photoPath)
+                    if (bitmap != null) {
+                        val scaledWidth = 480
+                        val scaledHeight = scaledWidth * bitmap.height / bitmap.width
+                        val stickerIcon = StickerPhoto(
+                            x = 0f,
+                            y = 0f,
+                            rotation = 0f,
+                            bitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false),
+                            scaleX = 1f,
+                            scaleY = 1f
+                        )
+                        val stickerView = StickerPhotoView(this, null, stickerIcon).apply {
+                            setImageBitmap(stickerIcon.bitmap)
+                        }
+
+                        binding.stickerContainerView.addView(stickerView)
+                    }
+
+                }
+                bottomSheet.show(supportFragmentManager, "CameraBottomSheet")
+            }
+        )
+
+        photoAdapter.addCameraItem()
+        binding.layoutAddImage.rcvPhotoSrc.layoutManager = GridLayoutManager(this, 3)
+        binding.layoutAddImage.rcvPhotoSrc.adapter = photoAdapter
     }
 }

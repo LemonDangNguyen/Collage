@@ -1,6 +1,7 @@
 package com.example.collageimage.language
 
 
+
 import com.example.collageimage.NMHApp
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
 import com.nmh.base.project.helpers.FIRST_INSTALL

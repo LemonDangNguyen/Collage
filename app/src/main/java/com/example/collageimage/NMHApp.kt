@@ -45,7 +45,7 @@ class NMHApp : AdsApplication() {
 //        })
     }
 
-    override fun enableAdsResume(): Boolean = true
+    override fun enableAdsResume(): Boolean = false //true
 
     override fun getKeyRemoteIntervalShowInterstitial(): String = ""
 

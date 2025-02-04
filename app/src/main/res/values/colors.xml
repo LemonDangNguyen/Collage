@@ -48,7 +48,7 @@
     <color name="stockeCard">#5E58595A</color>
     <color name="textColor">#ff666666</color>
     <color name="text_exit">#2152FF</color>
-    <color name="white">#ffffff</color>
+    <color name="white">#FAFAFA</color>
     <color name="whiteBlur">#bf9c9c9c</color>
     <color name="white_blur">#bf9c9c9c</color>
     <dimen name="banner_height">50dp</dimen>
