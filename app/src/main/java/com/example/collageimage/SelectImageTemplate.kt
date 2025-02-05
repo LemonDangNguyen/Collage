@@ -90,14 +90,13 @@ class SelectImageTemplate :
                 cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
 
             images.clear()
-
             while (cursor.moveToNext()) {
                 val date = cursor.getLong(dateModifiedIndex) ?: cursor.getLong(dateTakenIndex)
 
                 images.add(
                     ImageModel(
                         id = cursor.getLong(idIndex),
-                        dateTaken = date, // Sử dụng DATE_MODIFIED nếu có, nếu không thì DATE_TAKEN
+                        dateTaken = date,
                         fileName = cursor.getString(nameIndex),
                         filePath = cursor.getString(pathIndex),
                         album = cursor.getString(albumIndex),
@@ -109,6 +108,7 @@ class SelectImageTemplate :
                     )
                 )
             }
+
             imageAdapter = ImageAdapter(this, images, onItemSelected = { image, isSelected ->
                 if (isSelected) {
                     val intent = Intent(this, TemplateActivity::class.java).apply {
@@ -121,6 +121,8 @@ class SelectImageTemplate :
 
             binding.allImagesRecyclerView.layoutManager = GridLayoutManager(this, 3)
             binding.allImagesRecyclerView.adapter = imageAdapter
+            imageAdapter.addCameraItem()
+            imageAdapter.notifyDataSetChanged()
         } ?: run {
             Toast.makeText(this, "Failed to load images", Toast.LENGTH_SHORT).show()
         }
@@ -140,12 +142,19 @@ class SelectImageTemplate :
         }
 
     private fun showCameraBottomSheet() {
-        val bottomSheet = BottomSheetDialogCamera.newInstance("ActivitySelectImageEdit")
+        val bottomSheet = BottomSheetDialogCamera.newInstance("SelectImageTemplate")
         bottomSheet.show(supportFragmentManager, "BottomSheetCamera")
     }
 
     override fun onImagesCaptured(images: ArrayList<ImageModel>) {
-
+        if (images.isNotEmpty()) {
+            val image = images[0]
+            val intent = Intent().apply {
+                putExtra("selected_image_path", image.filePath)
+            }
+            setResult(RESULT_OK, intent)
+        }
+        finish()
     }
 
     override fun onAlbumSelected(albumName: String) {

@@ -162,10 +162,11 @@ class BottomSheetDialogCamera : BottomSheetDialogFragment() {
         }
     }
 
+
     private fun onDoneClicked() {
         if (photoList.isNotEmpty()) {
             if (sourceActivity == "ActivitySelectImageEdit") {
-                // Phần hiện tại không thay đổi
+                // Xử lý khi sourceActivity là ActivitySelectImageEdit (không thay đổi)
                 val intent = Intent(requireContext(), ActivityEditImage::class.java)
                 val selectedImage = photoList[0]
                 val selectedImages = listOf(
@@ -179,12 +180,11 @@ class BottomSheetDialogCamera : BottomSheetDialogFragment() {
                         isCameraItem = true
                     )
                 )
-
                 intent.putParcelableArrayListExtra("IMG_FROM_CAM", ArrayList(selectedImages))
                 startActivity(intent)
                 dismiss()
             } else if (sourceActivity == "SelectActivity") {
-                // Trường hợp khi sourceActivity là SelectActivity
+                // Trường hợp sourceActivity là SelectActivity
                 val selectedImages = photoList.map {
                     ImageModel(
                         id = System.currentTimeMillis(),
@@ -196,8 +196,23 @@ class BottomSheetDialogCamera : BottomSheetDialogFragment() {
                         isCameraItem = true
                     )
                 }
-
-                // Gọi callback để truyền dữ liệu trở lại SelectActivity
+                listener?.onImagesCaptured(ArrayList(selectedImages))
+                dismiss()
+            } else if (sourceActivity == "SelectImageTemplate") {
+                // Sửa nhánh này: thay vì khởi chạy TemplateActivity trực tiếp,
+                // trả về dữ liệu cho activity gọi (SelectImageTemplate)
+                val selectedImage = photoList[0]
+                val selectedImages = listOf(
+                    ImageModel(
+                        id = System.currentTimeMillis(),
+                        dateTaken = System.currentTimeMillis(),
+                        fileName = File(selectedImage).name,
+                        filePath = selectedImage,
+                        album = "Camera",
+                        uri = Uri.parse("file://$selectedImage"),
+                        isCameraItem = true
+                    )
+                )
                 listener?.onImagesCaptured(ArrayList(selectedImages))
                 dismiss()
             } else {
@@ -222,6 +237,9 @@ class BottomSheetDialogCamera : BottomSheetDialogFragment() {
             Toast.makeText(requireContext(), "No images captured", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
 
     companion object {
         fun newInstance(sourceActivity: String?): BottomSheetDialogCamera {

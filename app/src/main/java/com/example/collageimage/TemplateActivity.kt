@@ -240,6 +240,8 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         }
         selectImageLauncher.launch(intent)
     }
+
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -434,7 +436,6 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         binding.layoutAddText.tvAddText.backgroundTintList =
             ContextCompat.getColorStateList(this, android.R.color.transparent)
     }
-
 
     private fun getFontsFromAssets(): List<String> {
         val fontList = mutableListOf<String>()

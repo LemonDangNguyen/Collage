@@ -69,9 +69,9 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
                 type = "image/*"
                 putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name))
                 putExtra(Intent.EXTRA_STREAM, uri)
-                var shareMessage = context.getString(R.string.app_name)
-                shareMessage += "\nhttps://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-                putExtra(Intent.EXTRA_TEXT, shareMessage)
+//                var shareMessage = context.getString(R.string.app_name)
+//                shareMessage += "\nhttps://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+//                putExtra(Intent.EXTRA_TEXT, shareMessage)
             }
             context.startActivity(Intent.createChooser(shareIntent, "Share Image"))
             AppOpenManager.getInstance().disableAppResumeWithActivity(context::class.java)
