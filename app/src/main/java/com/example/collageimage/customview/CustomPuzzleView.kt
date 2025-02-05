@@ -21,7 +21,7 @@ class CustomPuzzleView @JvmOverloads constructor(
     }
 
     private var backgroundDrawable: Drawable? = null
-    private var colorFilter: ColorFilter? = null // Thêm colorFilter
+    private var colorFilter: ColorFilter? = null // Thêm colorFilterád
 
     override fun onDraw(canvas: Canvas) {
         // Áp dụng colorFilter nếu có cho backgroundDrawable

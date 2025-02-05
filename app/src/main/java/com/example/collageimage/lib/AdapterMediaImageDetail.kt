@@ -3,6 +3,7 @@ package com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapt
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ class AdapterMediaImageDetail(private val itemClick: (imageUri: Uri) -> Unit) : 
 
         holder.binding.root.setOnClickListener {
             itemClick.invoke(currentItem.uri)
+
         }
     }
 

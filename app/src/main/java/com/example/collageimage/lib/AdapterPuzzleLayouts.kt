@@ -49,7 +49,6 @@ class AdapterPuzzleLayouts(private val itemClick: (puzzleLayout: PuzzleLayout, t
         holder.binding.puzzle.needDrawLine = true
         holder.binding.puzzle.needDrawOuterLine = true
         holder.binding.puzzle.isTouchEnable = false
-
         holder.binding.puzzle.setPuzzleLayout(currentItem)
     }
 

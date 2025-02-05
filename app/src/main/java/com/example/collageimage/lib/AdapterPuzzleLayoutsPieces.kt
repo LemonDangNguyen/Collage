@@ -1,4 +1,4 @@
-package com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter
+package com.example.collageimage.lib
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -8,10 +8,9 @@ import com.example.collageimage.databinding.ItemPuzzleLayoutsPieceBinding
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.layouts.slant.NumberSlantLayout
 import com.hypersoft.pzlayout.layouts.straight.NumberStraightLayout
-import com.hypersoft.pzlayout.view.PuzzleView
 
 class AdapterPuzzleLayoutsPieces(
-    private val itemClick: (puzzleLayout: PuzzleLayout, theme: Int) -> Unit
+    private val itemClick: (puzzleLayout: PuzzleLayout, theme: Int) -> Unit,
 ) : RecyclerView.Adapter<AdapterPuzzleLayoutsPieces.CustomViewHolder>() {
 
 

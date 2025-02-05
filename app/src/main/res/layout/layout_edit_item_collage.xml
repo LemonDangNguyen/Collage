@@ -37,6 +37,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginRight="@dimen/_10sdp">
@@ -51,10 +52,9 @@
 
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/sbAlpha"
-            style="@style/CustomSeekbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
             android:layout_weight="1"
             android:max="100"
             android:min="1"
@@ -69,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font_regular"
-            android:text="100"
             android:textColor="@color/smoke"
             android:textSize="@dimen/_8ssp"
             app:layout_constraintBottom_toBottomOf="@+id/ivAlpha"
@@ -77,13 +76,179 @@
             app:layout_constraintTop_toTopOf="@+id/ivAlpha" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvEditTool"
+    <HorizontalScrollView
+        android:id="@+id/pieceButtons"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/rcvListPuzzleLayouts">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="@dimen/_5sdp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pswap"
+                style="@style/SelectableItemBackground"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/swappiece"
+                android:gravity="center"
+                android:text="@string/pswap"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pchange"
+                style="@style/SelectableItemBackground"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/changepiece"
+                android:gravity="center"
+                android:text="@string/replace"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/protate"
+                style="@style/SelectableItemBackground"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:drawableTop="@drawable/rotatepiece"
+                android:gravity="center"
+                android:text="@string/protate"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pcrop"
+                style="@style/SelectableItemBackground"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/crop"
+                android:gravity="center"
+                android:text="@string/crop"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pfilter"
+                style="@style/SelectableItemBackground"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/pfilter"
+                android:gravity="center"
+                android:text="@string/filter"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pflip"
+                style="@style/SelectableItemBackground"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/flippiece"
+                android:gravity="center"
+                android:text="@string/vertical"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pmirror"
+                style="@style/SelectableItemBackground"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:drawableTop="@drawable/mirrorpiece"
+                android:gravity="center"
+                android:text="@string/horizontal"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10sdp" />
+
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pzoomplus"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="@dimen/_50sdp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_10sdp"-->
+<!--                android:drawableTop="@drawable/zoom_piece_plus"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pzoomplus"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_10sdp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pzoomminus"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="@dimen/_50sdp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_10sdp"-->
+<!--                android:drawableTop="@drawable/zoom_piece_minus"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pzoomplus"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_10sdp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pleft"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="@dimen/_50sdp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_10sdp"-->
+<!--                android:drawableTop="@drawable/leftpiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pleft"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_10sdp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pright"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="@dimen/_50sdp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_10sdp"-->
+<!--                android:drawableTop="@drawable/rightpiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pright"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_10sdp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pup"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="@dimen/_50sdp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_10sdp"-->
+<!--                android:drawableTop="@drawable/uppiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pup"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_10sdp" />-->
+
+<!--            <com.google.android.material.textview.MaterialTextView-->
+<!--                android:id="@+id/pdown"-->
+<!--                style="@style/SelectableItemBackground"-->
+<!--                android:layout_width="@dimen/_50sdp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_10sdp"-->
+<!--                android:drawableTop="@drawable/downpiece"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pdown"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_10sdp" />-->
+
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 </LinearLayout>

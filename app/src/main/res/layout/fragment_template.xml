@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     tools:context=".fragment.TemplateFragment">
 
-    <!-- Phần tiêu đề và nút cài đặt -->
     <LinearLayout
         android:id="@+id/title_and_setting_group"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="10dp"

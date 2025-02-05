@@ -2,6 +2,8 @@ package com.example.collageimage
 
 import android.content.ContentUris
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -11,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.collageimage.R
 import java.io.File
 
@@ -34,16 +38,11 @@ class SelectedImagesAdapter(
     override fun onBindViewHolder(holder: SelectedImageViewHolder, position: Int) {
         val image = selectedImages[position]
 
-        // Sử dụng điều kiện kiểm tra phiên bản Android để lấy Uri phù hợp
-        val imageUri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            getImageUriFromFilePath(image.filePath)
-        } else {
-            Uri.fromFile(File(image.filePath))
-        }
+        val imageUri: String = if (!image.filePath.contains(context.packageName))
+            getImageUriFromFilePath(image.filePath).toString()
+        else image.filePath
 
-        Glide.with(context)
-            .load(imageUri)
-            .into(holder.imageView)
+        loadImage(imageUri, onDone = { holder.imageView.setImageBitmap(it) })
 
         holder.deleteButton.setOnClickListener {
             onRemoveImage(image)
@@ -51,6 +50,23 @@ class SelectedImagesAdapter(
     }
 
     override fun getItemCount(): Int = selectedImages.size
+
+    private fun loadImage(strUri: String, onDone: (Bitmap) -> Unit) {
+        Glide.with(context)
+            .asBitmap()
+            .load(strUri)
+            .centerCrop()
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    val bm = Bitmap.createScaledBitmap(resource, 320, 320 * resource.height / resource.width, true)
+                    onDone.invoke(bm)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+            })
+    }
 
     fun updateData(newSelectedImages: List<ImageModel>) {
         selectedImages = newSelectedImages.toMutableList()

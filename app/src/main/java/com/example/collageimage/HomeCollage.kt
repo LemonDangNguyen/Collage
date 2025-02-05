@@ -27,6 +27,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,7 +61,6 @@ import com.example.collageimage.color.ColorPenAdapter
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
-import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
@@ -76,7 +76,7 @@ import com.example.selectpic.ddat.UseCasePuzzleLayouts
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
-import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.adapter.AdapterPuzzleLayoutsPieces
+import com.example.collageimage.lib.AdapterPuzzleLayoutsPieces
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
@@ -157,7 +157,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
     private val viewModelRatio: AspectRatioViewModel by viewModels()
-    private lateinit var colorAdapterpen: ColorPenAdapter
+    private var colorAdapterpen: ColorPenAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -178,7 +178,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         bgFun()
         layoutFrameFunc()
         colorrecylayout()
-
+        itemOnlayout()
         layoutFilterandAdjustFunc()
         filterrcl()
         initListener2()
@@ -212,10 +212,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         }
     }
 
-    override fun setUp() {
-
-    }
-
+    override fun setUp() {}
     private fun saveFlParentAsImage() {
         val bitmap = getBitmapFromView(binding.flParent)
         saveBitmapToGallery(bitmap, onDone = {
@@ -226,8 +223,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             } else showToast("Failed to save image.", Gravity.CENTER)
         })
     }
-
-
     private fun getBitmapFromView(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -281,6 +276,20 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             e.printStackTrace()
         }
     }
+
+    private fun itemOnlayout() {
+        binding.puzzleView.setOnPieceClickListener(object : PuzzleView.OnPieceClick {
+            override fun onPieceClick() {
+                Toast.makeText(this@HomeCollage, "Một mảnh ghép đã được nhấn vào!", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onSwapGetPositions(pos1: Int, pos2: Int) {
+                Toast.makeText(this@HomeCollage, "Hai mảnh được hoán đổi vị trí: $pos1 với $pos2", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
 
     private fun btntParentBottom() {
         binding.layoutParentTool.llChangeLayout.setOnClickListener {
@@ -437,8 +446,8 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
                 openColorPickerDialog()
             }
         }
-    }
 
+    }
 
     private fun bgFun() {
         currentColorMode = ColorMode.BACKGROUND
@@ -458,7 +467,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.linearLayout.visibility = View.VISIBLE
         }
 
-        // Xử lý click cho từng TextView
         binding.layoutBg.tvColor.setOnClickListener {
             updateTextViewStyle(binding.layoutBg.tvColor)
             binding.layoutBg.rvGradient.visibility = View.GONE
@@ -779,7 +787,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
 
     private val itemClick: ((PuzzleLayout, theme: Int) -> Unit) = { _, theme ->
         viewModelPuzzleLayouts.getPuzzleLayout(1, mList.size, theme)
-        // bật sửa y
+
     }
 
     private fun initObservers() {
@@ -819,11 +827,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     }
 
     private fun setupListeners() = binding.apply {
-//        listOf(pmirror to ::mirror, pflip to ::flip, protate to ::rotate,
-//            pzoomplus to ::zoomPlus, pzoomminus to ::zoomMinus,
-//            pleft to ::left, pright to ::right, pup to ::up, pdown to ::down).forEach { (view, action) ->
-//            view.setOnClickListener { action() }
-//        }
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
@@ -869,6 +872,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private fun mirror() = handlePuzzleAction { binding.puzzleView.mirrorPiece() }
     private fun flip() = handlePuzzleAction { binding.puzzleView.flipPiece() }
     private fun rotate() = handlePuzzleAction { binding.puzzleView.rotatePiece() }
+    //private fun alpha() = handlePuzzleAction { binding.puzzleView.alphaPiece() }
     private fun zoomPlus() = handlePuzzleAction { binding.puzzleView.zoomInPiece() }
     private fun zoomMinus() = handlePuzzleAction { binding.puzzleView.zoomOutPiece() }
     private fun left() = handlePuzzleAction { binding.puzzleView.moveLeft() }
@@ -895,10 +899,30 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             Toast.makeText(this, R.string.selectsingleimage, Toast.LENGTH_SHORT).show()
         }
     }
+//11
+    override fun onPieceClick() {
+        binding.layoutEditImage.root.visibility = View.VISIBLE
+        binding.layoutEditImage.ivDone.setOnClickListener {
+            binding.layoutEditImage.root.visibility = View.GONE
+        }
+        binding.layoutEditImage.ivClose.setOnClickListener {
+            binding.layoutEditImage.root.visibility = View.GONE
+        }
 
-    override fun onPieceClick() {}
+    binding.layoutEditImage.pmirror.setOnClickListener { mirror() }
+    binding.layoutEditImage.pflip.setOnClickListener { flip() }
+    binding.layoutEditImage.protate.setOnClickListener { rotate() }
+//    binding.layoutEditImage.pzoomplus.setOnClickListener { zoomPlus() }
+//    binding.layoutEditImage.pzoomminus.setOnClickListener { zoomMinus() }
+//    binding.layoutEditImage.pleft.setOnClickListener { left() }
+//    binding.layoutEditImage.pright.setOnClickListener { right() }
+//    binding.layoutEditImage.pup.setOnClickListener { up() }
+//    binding.layoutEditImage.pdown.setOnClickListener { down() }
+    }
     override fun onSwapGetPositions(pos1: Int, pos2: Int) {}
-    override fun onPieceSelected(piece: PuzzlePiece?, position: Int) {}
+    override fun onPieceSelected(piece: PuzzlePiece?, position: Int) {
+        //showToast("ehe", Gravity.CENTER)
+    }
     override fun onBackPressed() {
         val binding2 = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog2 = Dialog(this)

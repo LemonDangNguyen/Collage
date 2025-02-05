@@ -1,0 +1,20 @@
+ham nay co the dieuchinh alpha cua ca template
+
+fun alphaPiece(alphaValue: Float) {
+    val clampedAlpha = alphaValue.coerceIn(0.0f, 1.0f)
+
+    // Tạo ColorMatrix để điều chỉnh alpha
+    val colorMatrix = ColorMatrix().apply {
+        setScale(1f, 1f, 1f, clampedAlpha) // Chỉ thay đổi kênh alpha (A)
+    }
+    val colorFilter = ColorMatrixColorFilter(colorMatrix)
+
+    getPuzzlePieces().forEach { piece ->
+        piece?.let {
+            val drawable = it.getDrawable()
+            drawable?.colorFilter = colorFilter // Áp dụng ColorMatrixColorFilter
+        }
+    }
+
+    invalidate() // Cập nhật lại giao diện
+}

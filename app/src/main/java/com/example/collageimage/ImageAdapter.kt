@@ -66,7 +66,9 @@ class ImageAdapter(
                 .load(imageUri)
                 .error(R.drawable.noimage)
                 .centerCrop()
+                .placeholder(R.drawable.noimage)
                 .into(holder.binding.ifv)
+
 
             if (selectedImagesMap.containsKey(image.id)) {
                 holder.binding.selectionOrder.text = selectedImagesMap[image.id].toString()
