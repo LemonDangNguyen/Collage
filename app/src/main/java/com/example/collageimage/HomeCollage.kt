@@ -88,6 +88,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.util.Collections.swap
 
 class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollageBinding::inflate), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
 
@@ -178,11 +179,10 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         bgFun()
         layoutFrameFunc()
         colorrecylayout()
-        itemOnlayout()
         layoutFilterandAdjustFunc()
         filterrcl()
         initListener2()
-
+        binding.puzzleView.setLineSize(10)
         binding.tvSave.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 when {
@@ -277,17 +277,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         }
     }
 
-    private fun itemOnlayout() {
-        binding.puzzleView.setOnPieceClickListener(object : PuzzleView.OnPieceClick {
-            override fun onPieceClick() {
-                Toast.makeText(this@HomeCollage, "Một mảnh ghép đã được nhấn vào!", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onSwapGetPositions(pos1: Int, pos2: Int) {
-                Toast.makeText(this@HomeCollage, "Hai mảnh được hoán đổi vị trí: $pos1 với $pos2", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
 
 
 
@@ -872,6 +861,10 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private fun mirror() = handlePuzzleAction { binding.puzzleView.mirrorPiece() }
     private fun flip() = handlePuzzleAction { binding.puzzleView.flipPiece() }
     private fun rotate() = handlePuzzleAction { binding.puzzleView.rotatePiece() }
+    private fun swap() = handlePuzzleAction {
+        showToast("select other image", Gravity.CENTER)
+        binding.puzzleView.enableSwapMode(true)
+    }
     //private fun alpha() = handlePuzzleAction { binding.puzzleView.alphaPiece() }
     private fun zoomPlus() = handlePuzzleAction { binding.puzzleView.zoomInPiece() }
     private fun zoomMinus() = handlePuzzleAction { binding.puzzleView.zoomOutPiece() }
@@ -901,6 +894,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     }
 //11
     override fun onPieceClick() {
+
         binding.layoutEditImage.root.visibility = View.VISIBLE
         binding.layoutEditImage.ivDone.setOnClickListener {
             binding.layoutEditImage.root.visibility = View.GONE
@@ -909,19 +903,16 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.layoutEditImage.root.visibility = View.GONE
         }
 
-    binding.layoutEditImage.pmirror.setOnClickListener { mirror() }
-    binding.layoutEditImage.pflip.setOnClickListener { flip() }
-    binding.layoutEditImage.protate.setOnClickListener { rotate() }
-//    binding.layoutEditImage.pzoomplus.setOnClickListener { zoomPlus() }
-//    binding.layoutEditImage.pzoomminus.setOnClickListener { zoomMinus() }
-//    binding.layoutEditImage.pleft.setOnClickListener { left() }
-//    binding.layoutEditImage.pright.setOnClickListener { right() }
-//    binding.layoutEditImage.pup.setOnClickListener { up() }
-//    binding.layoutEditImage.pdown.setOnClickListener { down() }
+        binding.layoutEditImage.pmirror.setOnClickListener { mirror() }
+        binding.layoutEditImage.pflip.setOnClickListener { flip() }
+        binding.layoutEditImage.protate.setOnClickListener { rotate() }
+        binding.layoutEditImage.pswap.setOnClickListener{
+            swap()
+        }
     }
     override fun onSwapGetPositions(pos1: Int, pos2: Int) {}
     override fun onPieceSelected(piece: PuzzlePiece?, position: Int) {
-        //showToast("ehe", Gravity.CENTER)
+
     }
     override fun onBackPressed() {
         val binding2 = DialogSaveBeforeClosingBinding.inflate(layoutInflater)

@@ -35,7 +35,7 @@ class AdapterPuzzleLayoutsPieces(
 
 
         holder.binding.puzzle.apply {
-            setSelectedLineColor(Color.RED)
+            setSelectedLineColor(Color.parseColor("#ff287a"))
             when (position) {
                 selectedPosition -> setLineColor(Color.parseColor("#3B83FC"))
                 else -> setLineColor(Color.DKGRAY)

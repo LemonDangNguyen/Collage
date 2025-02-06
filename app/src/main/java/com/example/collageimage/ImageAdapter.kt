@@ -64,9 +64,9 @@ class ImageAdapter(
             val imageUri = getImageUriFromFilePath(image.filePath)
             Glide.with(context)
                 .load(imageUri)
-                .error(R.drawable.noimage)
+              //  .error(R.drawable.noimage)
                 .centerCrop()
-                .placeholder(R.drawable.noimage)
+              //  .placeholder(R.drawable.noimage)
                 .into(holder.binding.ifv)
 
 

@@ -5,6 +5,7 @@ import com.example.collageimage.MainActivity
 import com.example.collageimage.R
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivityOnBoardingBinding
+import com.example.collageimage.permission.PermissionActivity
 import com.nmh.base.project.adapter.DepthPageTransformer
 import com.nmh.base.project.extensions.setOnUnDoubleClickListener
 import com.nmh.base.project.helpers.FIRST_INSTALL
@@ -74,7 +75,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
 
     private fun startActivity() {
         if (DataLocalManager.getBoolean(FIRST_INSTALL, true))
-            startIntent(MainActivity::class.java.name, true)
+            startIntent(PermissionActivity::class.java.name, true)
         else startIntent(MainActivity::class.java.name, true)
     }
 }

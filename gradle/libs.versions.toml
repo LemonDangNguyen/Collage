@@ -10,6 +10,7 @@ puzzlelayout = "1.0.2"
 sdpAndroid = "1.1.1"
 sspAndroid = "1.1.1"
 roomKtx = "2.6.1"
+appcompat = "1.7.0"
 
 [libraries]
 ads = { module = "com.github.devvtn.vtn_ads_libs:ads", version.ref = "ads" }
@@ -22,6 +23,7 @@ puzzlelayout = { module = "com.github.hypersoftdev:PuzzleLayout", version.ref = 
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid" }
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "sspAndroid" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
