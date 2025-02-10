@@ -16,8 +16,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
+import com.example.collageimage.extensions.modifyOrientation
 import com.nmh.base_lib.callback.ICallBackItem
-import com.nmh.base.project.extensions.modifyOrientation
+
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileDescriptor

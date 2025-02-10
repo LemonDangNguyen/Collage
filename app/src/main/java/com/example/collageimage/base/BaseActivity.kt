@@ -37,14 +37,17 @@ import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
-import com.nmh.base.project.extensions.changeLanguage
-import com.nmh.base.project.extensions.createBackground
-import com.nmh.base.project.extensions.gone
-import com.nmh.base.project.extensions.setAnimExit
-import com.nmh.base.project.extensions.setOnUnDoubleClickListener
-import com.nmh.base.project.extensions.setStatusBarTransparent
-import com.nmh.base.project.extensions.setUpDialog
-import com.nmh.base.project.extensions.visible
+import com.example.collageimage.extensions.changeLanguage
+import com.example.collageimage.extensions.createBackground
+import com.example.collageimage.extensions.gone
+
+import com.example.collageimage.extensions.setAnimExit
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
+
+import com.example.collageimage.extensions.setStatusBarTransparent
+import com.example.collageimage.extensions.setUpDialog
+import com.example.collageimage.extensions.visible
+
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
 import com.nmh.base.project.helpers.TAG
 import com.nmh.base.project.sharepref.DataLocalManager

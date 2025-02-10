@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.collageimage.R
 import com.example.collageimage.databinding.ItemLanguageBinding
+import com.example.collageimage.extensions.createBackground
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
 
-import com.nmh.base.project.extensions.createBackground
-import com.nmh.base.project.extensions.setOnUnDoubleClickListener
+
 import com.nmh.base.project.model.LanguageModel
 import com.nmh.base_lib.callback.ICallBackItem
 import dagger.hilt.android.qualifiers.ActivityContext

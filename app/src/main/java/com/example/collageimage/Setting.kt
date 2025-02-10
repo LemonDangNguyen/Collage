@@ -6,15 +6,15 @@ import android.os.Bundle
 
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySettingBinding
+import com.example.collageimage.extensions.gone
 import com.example.collageimage.language.LanguageActivity
 import com.nlbn.ads.util.AppOpenManager
-import com.nmh.base.project.extensions.gone
 import com.nmh.base.project.helpers.IS_SHOW_BACK
 import com.nmh.base.project.sharepref.DataLocalManager
 import com.nmh.base.project.utils.ActionUtils
-import com.nmh.base.project.utils.ActionUtils.rateApp
 import com.nmh.base.project.utils.UtilsRate
 import com.nmh.base_lib.callback.ICallBackCheck
+
 
 class Setting : BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
 

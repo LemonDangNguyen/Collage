@@ -21,9 +21,6 @@ class PhotoAdapter(
     private val onItemSelected: (ImageModel, Boolean) -> Unit,
     private val onCameraClick: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    // Lưu lại trạng thái chọn hay chưa chọn của ảnh,
-    // nếu cần dùng (tuỳ logic bạn muốn).
     private val selectedImagesMap = mutableMapOf<Long, Int>()
 
     companion object {
@@ -66,36 +63,26 @@ class PhotoAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val image = images[position]
         if (holder is CameraViewHolder) {
-            // Xử lý click vào item camera
             holder.binding.ivcfCamera.setOnClickListener {
                 onCameraClick()
             }
         } else if (holder is ImageViewHolder) {
-            // Lấy Uri từ filePath
             val imageUri = getImageUriFromFilePath(image.filePath)
-            // Load ảnh với Glide
             Glide.with(context)
                 .load(imageUri)
                 .error(R.drawable.noimage)
                 .centerCrop()
                 .into(holder.binding.ifv)
-
-            // Xử lý click vào ảnh
             holder.binding.ifv.setOnClickListener {
                 val isSelected = !selectedImagesMap.containsKey(image.id)
                 onItemSelected(image, isSelected)
 
-                // Nếu cần đánh dấu ảnh được chọn, bạn có thể lưu vào map hoặc đổi background
-                // selectedImagesMap[image.id] = position
             }
         }
     }
 
     override fun getItemCount(): Int = images.size
 
-    /**
-     * Thêm một item camera vào đầu danh sách
-     */
     fun addCameraItem() {
         val cameraItem = ImageModel(
             id = -1L,
@@ -110,12 +97,8 @@ class PhotoAdapter(
         notifyItemInserted(0)
     }
 
-    /**
-     * Chuyển từ đường dẫn file sang Uri (phục vụ việc load ảnh bằng Glide)
-     */
     private fun getImageUriFromFilePath(filePath: String): Uri {
         if (filePath.isEmpty()) {
-            // Trường hợp filePath rỗng (ví dụ: camera item) thì trả về Uri.EMPTY
             return Uri.EMPTY
         }
         val file = File(filePath)

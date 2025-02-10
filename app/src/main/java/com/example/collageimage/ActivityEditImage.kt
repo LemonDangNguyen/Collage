@@ -3,6 +3,7 @@ package com.example.collageimage
 import android.app.Dialog
 import android.content.ContentValues
 import android.Manifest
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,6 +17,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +53,6 @@ import com.example.collageimage.color.ColorPenAdapter
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityEditImageBinding
-import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
@@ -59,7 +60,7 @@ import com.example.collageimage.ratio.AspectRatioViewModel
 import com.example.collageimage.ratio.adapter.FontAdapter
 import com.example.collageimage.ratio.adapter.RatioAdapter
 import com.example.collageimage.saveImage.SaveFromEditImage
-import com.nmh.base.project.extensions.showToast
+import com.example.collageimage.extensions.showToast
 
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.File
@@ -240,9 +241,25 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
     }
 
     private fun displayImage(imagePath: String) {
-        val imageUri = Uri.parse(imagePath)
-        binding.edtimgView.setImageURI(imageUri)
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val selection = MediaStore.Images.Media.DATA + "=?"
+        val selectionArgs = arrayOf(imagePath)
+        val cursor = contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection, selection, selectionArgs, null
+        )
+
+        if (cursor != null && cursor.moveToFirst()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+            val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            cursor.close()
+
+            binding.edtimgView.setImageURI(imageUri)
+        } else {
+            Log.e("DEBUG", "Không tìm thấy ảnh")
+        }
     }
+
 
     private fun nitview() {
         btntParentBottom()
@@ -780,8 +797,6 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
 
     private fun addText() {
-
-
         binding.layoutAddText.ivClose.setOnClickListener {
             binding.layoutAddText.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.VISIBLE

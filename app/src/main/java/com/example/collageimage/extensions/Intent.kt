@@ -1,5 +1,4 @@
-package com.nmh.base.project.extensions
-
+package com.example.collageimage.extensions
 import android.content.Intent
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle

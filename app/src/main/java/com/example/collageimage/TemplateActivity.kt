@@ -40,7 +40,7 @@ import com.example.collageimage.saveImage.SaveFromEditImage
 import com.example.collageimage.view_template.TemplateModel
 import com.example.collageimage.view_template.TemplateViewModel
 import com.example.collageimage.view_template.ViewTemplateAdapter
-import com.nmh.base.project.extensions.showToast
+import com.example.collageimage.extensions.showToast
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream

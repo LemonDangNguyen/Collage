@@ -25,17 +25,15 @@ class StickerPhotoView @JvmOverloads constructor(
         post { updateBorderSize() }
     }
 
-    // Cập nhật resource
     fun setImageBitmap(bitmap: Bitmap) {
         imageView.setImageBitmap(bitmap)
         updateBorderSize()
     }
 
-    // Cập nhật kích thước viền bao quanh dựa trên kích thước
     override fun updateBorderSize() {
         val imageViewWidth = (imageView.width * imageView.scaleX).toInt()
         val imageViewHeight = (imageView.height * imageView.scaleY).toInt()
-        val padding = 25 // Padding cho viền
+        val padding = 25
 
         if (imageViewWidth > 0 && imageViewHeight > 0) {
             borderView.layoutParams = LayoutParams(
@@ -49,7 +47,6 @@ class StickerPhotoView @JvmOverloads constructor(
         }
     }
 
-    // Xử lý sự kiện thay đổi kích thước
     override fun handleTransform(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {

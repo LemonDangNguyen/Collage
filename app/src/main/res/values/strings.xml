@@ -70,7 +70,7 @@
     <string name="this_action_can_contain_ads">This action may contain advertising</string>
     <string name="finish">Press 1 more time to exit</string>
     <string name="we_will_return_you_to_the_previous_screen">We will return you to the \\nprevious screen?</string>
-    <string name="str_continue">Continute</string>
+    <string name="str_continue">Continue</string>
     <string name="unknown_error_occurred">An unknown error occurred</string>
     <string name="no_browser">No Browser</string>
     <string name="channel_description">This is notify</string>
@@ -96,8 +96,8 @@
 
     //permission
     <string name="permission">Permission</string>
-    <string name="permission_need">Permission Need</string>
-    <string name="des_permission">To Video Call Allow <b>Base Project</b> Access To Your Camera</string>
+    <string name="permission_need">Permission</string>
+    <string name="des_permission"><b>Photo Collage</b> requires permission to use the (device’s camera and storage)</string>
     <string name="go">Go</string>
     <string name="per_overlay">You need overlay permission to use this app</string>
     <string name="deny_pers">Permissions is required to use this application</string>
@@ -108,11 +108,8 @@
     <string name="str_camera">Camera</string>
     <string name="str_draw">Draw overlay</string>
     <string name="str_storage">Storage</string>
-    <string name="step_2">Step 3. Camera</string>
-    <string name="step_3">Step 4. Draw overlay</string>
-    <string name="step_4">Step 5. Storage</string>
-    <string name="step_1">Step 2. Recorder</string>
-    <string name="step_0">Step 1. Notification</string>
+    <string name="step_2">Step 1. Camera</string>
+    <string name="step_4">Step 2. Storage</string>
     <string name="you_can_select">You can select: </string>
     <string name="message_per_dialog">Click button Step to grant permission!</string>
     <string name="message_per_granted">Permission have been granted!</string>
@@ -144,4 +141,5 @@
     <string name="crop">Crop</string>
     <string name="vertical">Vertical</string>
     <string name="horizontal">Horizontal</string>
+    <string name="click_to_step_by_step_for_require_permission">Click to step by step for require permission</string>
 </resources>

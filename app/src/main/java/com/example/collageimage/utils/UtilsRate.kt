@@ -7,11 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.collageimage.NMHApp
 import com.example.collageimage.R
 import com.example.collageimage.databinding.DialogRateBinding
+import com.example.collageimage.extensions.setUpDialog
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.nmh.base_lib.callback.ICallBackCheck
-import com.nmh.base.project.extensions.setUpDialog
-import com.nmh.base.project.extensions.showToast
+
+import com.example.collageimage.extensions.showToast
 import com.nmh.base.project.helpers.IS_RATED
 import com.nmh.base.project.sharepref.DataLocalManager
 import com.nmh.base.project.utils.ActionUtils.sendFeedback

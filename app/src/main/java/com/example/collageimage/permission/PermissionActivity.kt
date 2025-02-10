@@ -1,8 +1,6 @@
 package com.example.collageimage.permission
 
 import android.Manifest
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,9 +9,9 @@ import com.example.collageimage.R
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivityPermissionBinding
 import com.nmh.base_lib.callback.StatusResultSwitch
-import com.nmh.base.project.extensions.openSettingPermission
-import com.nmh.base.project.extensions.setOnUnDoubleClickListener
-import com.nmh.base.project.extensions.visible
+import com.example.collageimage.extensions.openSettingPermission
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
+
 import com.nmh.base.project.helpers.FIRST_INSTALL
 import com.nmh.base.project.sharepref.DataLocalManager
 

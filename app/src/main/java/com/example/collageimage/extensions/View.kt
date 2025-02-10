@@ -1,5 +1,4 @@
-package com.nmh.base.project.extensions
-
+package com.example.collageimage.extensions
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.GradientDrawable

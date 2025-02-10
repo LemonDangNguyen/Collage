@@ -5,9 +5,9 @@ import com.example.collageimage.MainActivity
 import com.example.collageimage.R
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivityOnBoardingBinding
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.permission.PermissionActivity
 import com.nmh.base.project.adapter.DepthPageTransformer
-import com.nmh.base.project.extensions.setOnUnDoubleClickListener
 import com.nmh.base.project.helpers.FIRST_INSTALL
 import com.nmh.base.project.model.OnBoardingModel
 import com.nmh.base.project.sharepref.DataLocalManager

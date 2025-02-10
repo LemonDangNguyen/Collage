@@ -1,5 +1,4 @@
-package com.nmh.base.project.extensions
-
+package com.example.collageimage.extensions
 import android.content.Context
 import android.util.TypedValue
 import android.widget.EditText

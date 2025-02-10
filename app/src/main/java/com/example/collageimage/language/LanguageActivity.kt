@@ -1,10 +1,8 @@
 package com.example.collageimage.language
 
-import android.os.Bundle
 import android.view.Gravity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -13,11 +11,13 @@ import com.example.collageimage.R
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.base.UiState
 import com.example.collageimage.databinding.ActivityLanguageAcyivityBinding
+import com.example.collageimage.extensions.invisible
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.onboarding.OnBoardingActivity
-import com.nmh.base.project.extensions.invisible
-import com.nmh.base.project.extensions.setOnUnDoubleClickListener
-import com.nmh.base.project.extensions.showToast
-import com.nmh.base.project.extensions.visible
+
+import com.example.collageimage.extensions.showToast
+import com.example.collageimage.extensions.visible
+
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
 import com.nmh.base.project.helpers.IS_SHOW_BACK
 import com.nmh.base.project.model.LanguageModel

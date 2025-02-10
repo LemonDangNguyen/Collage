@@ -1,4 +1,4 @@
-package com.nmh.base.project.extensions
+package com.example.collageimage.extensions
 
 import android.annotation.SuppressLint
 import android.content.Context

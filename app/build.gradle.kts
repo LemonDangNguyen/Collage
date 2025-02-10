@@ -159,4 +159,6 @@ dependencies {
     implementation ("com.google.ads.mediation:pangle:5.5.0.7.0")
     implementation  ("com.unity3d.ads:unity-ads:4.9.1")
     implementation  ("com.google.ads.mediation:unity:4.9.1.0")
+
+    implementation ("com.karumi:dexter:6.2.3")
 }

@@ -1,4 +1,4 @@
-package com.nmh.base.project.extensions
+package com.example.collageimage.extensions
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

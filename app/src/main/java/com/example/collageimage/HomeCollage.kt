@@ -27,7 +27,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -82,13 +81,12 @@ import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.utils.PuzzlePiece
 import com.hypersoft.pzlayout.view.PuzzleView
-import com.nmh.base.project.extensions.showToast
+import com.example.collageimage.extensions.showToast
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.util.Collections.swap
 
 class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollageBinding::inflate), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
 
