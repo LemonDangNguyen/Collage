@@ -37,29 +37,31 @@
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <TextView
+                android:id="@+id/btn_exit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:id="@+id/btn_exit"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="@string/exit"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
                 android:paddingVertical="12dp"
-                android:src="@drawable/bg_btn_yes"
-                android:textAllCaps="true"
-                android:textColor="#282828"
+                android:background="@drawable/bg_button_disable"
                 android:textSize="16sp" />
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+            <TextView
                 android:id="@+id/btn_stay"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingVertical="12dp"
-                android:src="@drawable/bg_btn_no"
-                android:textAllCaps="true"
+                android:text="@string/stay"
+                android:textStyle="bold"
+                android:background="@drawable/bg_button_enable"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>

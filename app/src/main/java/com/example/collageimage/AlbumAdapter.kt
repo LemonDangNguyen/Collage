@@ -1,17 +1,16 @@
 package com.example.collageimage
 
+import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.collageimage.databinding.ItemAlbumBinding
 import java.io.File
 
 class AlbumAdapter(
@@ -20,33 +19,32 @@ class AlbumAdapter(
     private val onItemClick: (AlbumModel) -> Unit
 ) : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
 
-    inner class AlbumViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val albumImageView: ImageView = view.findViewById(R.id.img_album)
-        val albumNameTextView: TextView = view.findViewById(R.id.album_name)
-        val numberOfImagesTextView: TextView = view.findViewById(R.id.number_images)
+    inner class AlbumViewHolder(private val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
+        fun bind(album: AlbumModel) {
+            val imageUri = getImageUriFromFilePath(album.coverImagePath)
+
+            Glide.with(context)
+                .load(imageUri)
+                .placeholder(R.drawable.noimage)
+                .into(binding.imgAlbum)
+
+            binding.albumName.text = album.name
+            binding.numberImages.text = "${album.numberOfImages} ${binding.root.context.getString(R.string.image_count)}"
+            itemView.setOnClickListener {
+                onItemClick(album)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)
-        return AlbumViewHolder(view)
+        val binding = ItemAlbumBinding.inflate(LayoutInflater.from(context), parent, false)
+        return AlbumViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         val album = albumList[position]
-        // Lấy Uri của ảnh bìa dựa trên file path với điều kiện phiên bản Android
-        val imageUri = getImageUriFromFilePath(album.coverImagePath)
-
-        Glide.with(context)
-            .load(imageUri)
-            .placeholder(R.drawable.noimage)
-            .into(holder.albumImageView)
-
-        holder.albumNameTextView.text = album.name
-        holder.numberOfImagesTextView.text = "${album.numberOfImages} images"
-
-        holder.itemView.setOnClickListener {
-            onItemClick(album)
-        }
+        holder.bind(album)
     }
 
     override fun getItemCount(): Int = albumList.size

@@ -43,81 +43,43 @@
         app:layout_constraintStart_toEndOf="@id/btn"
         app:layout_constraintTop_toTopOf="@id/ivExit" />
 
-    <HorizontalScrollView
+
+    <LinearLayout
         android:id="@+id/scroll"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:scrollbars="none"
+        android:layout_width="wrap_content"
+        android:padding="@dimen/_3sdp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivExit">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvCamera"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingEnd="@dimen/_8sdp">
+            android:layout_height="@dimen/_34sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:fontFamily="@font/notosans_regular"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:text="@string/step_2"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/tvNotify"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="@dimen/_34sdp"-->
-<!--                android:layout_marginStart="@dimen/_8sdp"-->
-<!--                android:fontFamily="@font/notosans_regular"-->
-<!--                android:gravity="center"-->
-<!--                android:paddingHorizontal="@dimen/_8sdp"-->
-<!--                android:text="@string/step_0"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/_11ssp" />-->
+        <TextView
+            android:id="@+id/tvStorage"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_34sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:fontFamily="@font/notosans_regular"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:text="@string/step_4"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
+    </LinearLayout>
 
-<!--            <TextView-->
-<!--                android:id="@+id/tvRecord"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="@dimen/_34sdp"-->
-<!--                android:layout_marginStart="@dimen/_8sdp"-->
-<!--                android:fontFamily="@font/notosans_regular"-->
-<!--                android:gravity="center"-->
-<!--                android:paddingHorizontal="@dimen/_8sdp"-->
-<!--                android:text="@string/step_1"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/_11ssp" />-->
-
-            <TextView
-                android:id="@+id/tvCamera"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_34sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:fontFamily="@font/notosans_regular"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:text="@string/step_2"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
-
-<!--            <TextView-->
-<!--                android:id="@+id/tvDraw"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="@dimen/_34sdp"-->
-<!--                android:layout_marginStart="@dimen/_8sdp"-->
-<!--                android:fontFamily="@font/notosans_regular"-->
-<!--                android:gravity="center"-->
-<!--                android:paddingHorizontal="@dimen/_8sdp"-->
-<!--                android:text="@string/step_3"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/_11ssp" />-->
-
-            <TextView
-                android:id="@+id/tvStorage"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_34sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:fontFamily="@font/notosans_regular"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:text="@string/step_4"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
-        </LinearLayout>
-    </HorizontalScrollView>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv"

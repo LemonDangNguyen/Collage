@@ -61,9 +61,7 @@
         <activity
             android:name=".ActivityEditImage"
             android:exported="false" />
-        <activity
-            android:name=".ActivityCamera"
-            android:exported="false" />
+
         <activity
             android:name=".SelectImageTemplate"
             android:exported="false" />

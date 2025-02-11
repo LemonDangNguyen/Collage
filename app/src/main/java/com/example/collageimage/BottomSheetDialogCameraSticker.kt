@@ -2,6 +2,7 @@ package com.example.collageimage
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.Toast
 import com.example.collageimage.databinding.BottomSheetDialogCameraBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.nmh.base.project.utils.Utils.showToast
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraView
 import com.otaliastudios.cameraview.PictureResult
@@ -48,8 +50,8 @@ class BottomSheetDialogCameraSticker : BottomSheetDialogFragment() {
                         binding.tvTotalImage.text = "1"
                         binding.tvTotalImage.visibility = View.VISIBLE
                         binding.ivDone.visibility = View.VISIBLE
-                        binding.ivCapture.visibility = View.GONE // Ẩn nút chụp sau khi chụp
-                        Toast.makeText(context, "Bạn chỉ có thể chụp 1 ảnh", Toast.LENGTH_SHORT).show()
+                        binding.ivCapture.visibility = View.GONE
+                        showToast(requireContext(),getString(R.string.take_only_pic), Gravity.CENTER);
                     }
                 }
             }
@@ -92,7 +94,7 @@ class BottomSheetDialogCameraSticker : BottomSheetDialogFragment() {
     }
     private fun takePicture() {
         if (photoPath != null) {
-            Toast.makeText(requireContext(), "Bạn chỉ có thể chụp 1 ảnh", Toast.LENGTH_SHORT).show()
+            showToast(requireContext(),getString(R.string.take_only_pic), Gravity.CENTER);
             return
         }
         cameraView.takePictureSnapshot()

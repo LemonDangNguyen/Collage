@@ -256,7 +256,6 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
             binding.edtimgView.setImageURI(imageUri)
         } else {
-            Log.e("DEBUG", "Không tìm thấy ảnh")
         }
     }
 
@@ -318,13 +317,13 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
             frameFun()
         }
         binding.layoutParentTool.llChangeText.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.commingsoon), Gravity.CENTER);
 //            addText()
 //            binding.layoutAddText.root.visibility = View.VISIBLE
 //            binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeFilter.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.commingsoon), Gravity.CENTER);
             //      binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeSticker.setOnClickListener {
@@ -479,7 +478,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
         binding.layoutBg.tvBlur.setOnClickListener {
           //  updateTextViewStyle(binding.layoutBg.tvBlur)
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.commingsoon), Gravity.CENTER);
         }
     }
 

@@ -5,13 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.collageimage.databinding.BottomSheetDialogCameraBinding
+import com.example.collageimage.extensions.showToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.nmh.base.project.utils.Utils.showToast
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraView
 import com.otaliastudios.cameraview.PictureResult
@@ -129,11 +132,7 @@ class BottomSheetDialogCamera : BottomSheetDialogFragment() {
 
     private fun takePicture() {
         if (photoList.size >= maxPhotos) {
-            Toast.makeText(
-                requireContext(),
-                "Đã đạt giới hạn $maxPhotos ảnh",
-                Toast.LENGTH_SHORT
-            ).show()
+            showToast(requireContext(),"${getString(R.string.maximunpic )} $maxPhotos" , Gravity.CENTER)
             return
         }
         cameraView.takePictureSnapshot()
@@ -234,7 +233,7 @@ class BottomSheetDialogCamera : BottomSheetDialogFragment() {
                 dismiss()
             }
         } else {
-            Toast.makeText(requireContext(), "No images captured", Toast.LENGTH_SHORT).show()
+            showToast(requireContext(),getString(R.string.capture_no), Gravity.CENTER)
         }
     }
 

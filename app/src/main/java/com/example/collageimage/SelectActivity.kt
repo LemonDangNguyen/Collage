@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -22,6 +23,7 @@ import com.example.collageimage.databinding.ActivitySelectBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogLoading2Binding
 import com.example.collageimage.databinding.DialogLoadingBinding
+import com.example.collageimage.extensions.showToast
 import com.example.selectpic.ddat.RepositoryMediaImages
 import com.example.selectpic.ddat.UseCaseMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
@@ -109,7 +111,9 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
                     finish()
                 }, 5000)
             } else {
-                Toast.makeText(this, "Please select at least 3 images", Toast.LENGTH_SHORT).show()
+                showToast(getString(R.string.select_at_least_3_images), Gravity.CENTER);
+
+
             }
         }
 

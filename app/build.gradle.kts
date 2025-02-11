@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+import java.util.Date
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +21,12 @@ android {
         targetSdk = 34
         versionCode = 100
         versionName = "1.0.0"
+
+        //setProperty("archivesBaseName", "CollageImage-$versionName")
+
+        val formattedDate = SimpleDateFormat("MMM.dd.yyyy").format(Date())
+
+        setProperty("archivesBaseName", "CollageImage-${versionName}(${versionCode})_${formattedDate}")
     }
 
     buildTypes {
@@ -66,6 +74,7 @@ android {
         correctErrorTypes = true
     }
 }
+
 
 dependencies {
     // Core dependencies

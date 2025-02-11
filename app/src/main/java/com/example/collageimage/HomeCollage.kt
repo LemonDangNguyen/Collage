@@ -860,7 +860,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private fun flip() = handlePuzzleAction { binding.puzzleView.flipPiece() }
     private fun rotate() = handlePuzzleAction { binding.puzzleView.rotatePiece() }
     private fun swap() = handlePuzzleAction {
-        showToast("select other image", Gravity.CENTER)
+        showToast(getString(R.string.select_other_img), Gravity.CENTER)
         binding.puzzleView.enableSwapMode(true)
     }
     //private fun alpha() = handlePuzzleAction { binding.puzzleView.alphaPiece() }

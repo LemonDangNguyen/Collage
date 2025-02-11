@@ -11,9 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -53,16 +51,6 @@ class CollageFragment : Fragment() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
     }
-
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions.all { it.value }) {
-                navigateToTargetActivity()
-            } else {
-                Toast.makeText(requireContext(), "Permissions are required to proceed", Toast.LENGTH_SHORT).show()
-            }
-        }
-
     private var targetActivity: Class<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,42 +82,61 @@ class CollageFragment : Fragment() {
 
     private fun setuptemplate() {
         binding.image1.setOnClickListener {
-            val intent = Intent(requireContext(), TemplateActivity::class.java)
-            intent.putExtra("imageId", 27)
-            startActivity(intent)
+            targetActivity = TemplateActivity::class.java
+            checkAndRequestPermissions2(27)
         }
         binding.image2.setOnClickListener {
-            val intent = Intent(requireContext(), TemplateActivity::class.java)
-            intent.putExtra("imageId", 25)
-            startActivity(intent)
-
+            targetActivity = TemplateActivity::class.java
+            checkAndRequestPermissions2(25)
         }
         binding.image3.setOnClickListener {
-            val intent = Intent(requireContext(), TemplateActivity::class.java)
-            intent.putExtra("imageId", 29)
-            startActivity(intent)
-
+            targetActivity = TemplateActivity::class.java
+            checkAndRequestPermissions2(29)
         }
         binding.image4.setOnClickListener {
-            val intent = Intent(requireContext(), TemplateActivity::class.java)
-            intent.putExtra("imageId", 17)
-            startActivity(intent)
-
+            targetActivity = TemplateActivity::class.java
+            checkAndRequestPermissions2(17)
         }
         binding.image5.setOnClickListener {
-            val intent = Intent(requireContext(), TemplateActivity::class.java)
-            intent.putExtra("imageId", 16)
-            startActivity(intent)
-
+            targetActivity = TemplateActivity::class.java
+            checkAndRequestPermissions2(16)
         }
         binding.image6.setOnClickListener {
-            val intent = Intent(requireContext(), TemplateActivity::class.java)
-            intent.putExtra("imageId", 20)
-            startActivity(intent)
-
+            targetActivity = TemplateActivity::class.java
+            checkAndRequestPermissions2(20)
+        }
+    }
+    private fun checkAndRequestPermissions2(imageId: Int) {
+        if (hasStoragePermissions()) {
+            navigateToTemplateActivity(imageId)
+        } else {
+            showPermissionBottomSheet(imageId)
         }
     }
 
+    private fun showPermissionBottomSheet(imageId: Int) {
+        bottomSheet = PermissionSheet(requireContext()).apply {
+            isDone = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (status) {
+                        navigateToTemplateActivity(imageId)
+                        cancel()
+                    } else {
+                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            isDismiss = object : ICallBackCheck {
+                override fun check(status: Boolean) {}
+            }
+        }
+        bottomSheet.showDialog()
+    }
+    private fun navigateToTemplateActivity(imageId: Int) {
+        val intent = Intent(requireContext(), TemplateActivity::class.java)
+        intent.putExtra("imageId", imageId)
+        startActivity(intent)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
