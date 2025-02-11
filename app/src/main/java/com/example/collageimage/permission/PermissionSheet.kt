@@ -31,9 +31,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import com.nlbn.ads.util.AppOpenManager
 import com.nmh.base_lib.callback.ICallBackCheck
+import dagger.hilt.android.qualifiers.ActivityContext
+import javax.inject.Inject
 
-class PermissionSheet(private val context: Context): BottomSheetDialog(context, R.style.SheetDialog) {
-
+class PermissionSheet @Inject constructor(@ActivityContext private val context: Context): BottomSheetDialog(context, R.style.SheetDialog) {
     private var binding = BottomSheetDialogPermissionBinding.inflate(LayoutInflater.from(context))
 
     var isDone: ICallBackCheck? = null

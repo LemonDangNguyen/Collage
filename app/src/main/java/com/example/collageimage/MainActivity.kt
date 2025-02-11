@@ -11,9 +11,7 @@ import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivityMainBinding
 import com.example.collageimage.fragment.CollageFragment
 import com.example.collageimage.fragment.TemplateFragment
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     override fun setUp() {
 

@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Setting">
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -35,7 +36,8 @@
             android:layout_marginLeft="20dp"
             android:gravity="center"
             android:textSize="20sp"
-            android:text="Setting"
+            android:text="@string/setting"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
     </LinearLayout>

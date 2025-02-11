@@ -891,23 +891,37 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         }
     }
 //11
-    override fun onPieceClick() {
+override fun onPieceClick() {
 
+    if (binding.layoutEditImage.root.visibility == View.VISIBLE) {
+        binding.layoutEditImage.root.visibility = View.GONE
+    } else {
         binding.layoutEditImage.root.visibility = View.VISIBLE
-        binding.layoutEditImage.ivDone.setOnClickListener {
-            binding.layoutEditImage.root.visibility = View.GONE
-        }
-        binding.layoutEditImage.ivClose.setOnClickListener {
-            binding.layoutEditImage.root.visibility = View.GONE
-        }
-
-        binding.layoutEditImage.pmirror.setOnClickListener { mirror() }
-        binding.layoutEditImage.pflip.setOnClickListener { flip() }
-        binding.layoutEditImage.protate.setOnClickListener { rotate() }
-        binding.layoutEditImage.pswap.setOnClickListener{
-            swap()
-        }
     }
+    binding.layoutEditImage.ivDone.setOnClickListener {
+        binding.layoutEditImage.root.visibility = View.GONE
+    }
+    binding.layoutEditImage.ivClose.setOnClickListener {
+        binding.layoutEditImage.root.visibility = View.GONE
+    }
+
+    binding.layoutEditImage.pmirror.setOnClickListener { mirror() }
+    binding.layoutEditImage.pflip.setOnClickListener { flip() }
+    binding.layoutEditImage.protate.setOnClickListener { rotate() }
+    binding.layoutEditImage.pswap.setOnClickListener{
+        swap()
+    }
+    binding.layoutEditImage.pchange.setOnClickListener {
+        showToast("Comming Soon!", Gravity.CENTER)
+    }
+    binding.layoutEditImage.pcrop.setOnClickListener {
+        showToast("Comming Soon!", Gravity.CENTER)
+    }
+    binding.layoutEditImage.pfilter.setOnClickListener {
+        showToast("Comming Soon!", Gravity.CENTER)
+    }
+}
+
     override fun onSwapGetPositions(pos1: Int, pos2: Int) {}
     override fun onPieceSelected(piece: PuzzlePiece?, position: Int) {
 

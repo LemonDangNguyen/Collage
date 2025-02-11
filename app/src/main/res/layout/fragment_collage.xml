@@ -161,6 +161,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:padding="10dp"
+                android:textColor="@color/black"
                 android:text="@string/popular_template"
                 android:textSize="20sp"
                 android:textStyle="bold" />

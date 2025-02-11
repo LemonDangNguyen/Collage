@@ -19,15 +19,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.example.collageimage.ActivitySelectImageEdit
 import com.example.collageimage.ImageInMainAdapter
+import com.example.collageimage.MainActivity
 import com.example.collageimage.R
 import com.example.collageimage.SelectActivity
 import com.example.collageimage.Setting
 import com.example.collageimage.TemplateActivity
 import com.example.collageimage.databinding.FragmentCollageBinding
+import com.example.collageimage.permission.PermissionSheet
+import com.nlbn.ads.util.AppOpenManager
+import com.nmh.base_lib.callback.ICallBackCheck
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CollageFragment : Fragment() {
+
+    private lateinit var bottomSheet: PermissionSheet
 
     private val binding by lazy { FragmentCollageBinding.inflate(layoutInflater) }
     private val imageList = listOf(
@@ -77,6 +83,13 @@ class CollageFragment : Fragment() {
         autoScrollViewPager()
 
         setuptemplate()
+    }
+    override fun onResume() {
+        super.onResume()
+        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
+        if (::bottomSheet.isInitialized) {
+            bottomSheet.checkPer()
+        }
     }
 
     private fun setuptemplate() {
@@ -128,9 +141,30 @@ class CollageFragment : Fragment() {
         if (hasStoragePermissions()) {
             navigateToTargetActivity()
         } else {
-            permissionLauncher.launch(storagePermissions)
+            showPermissionBottomSheet()
         }
     }
+    private fun showPermissionBottomSheet() {
+         bottomSheet = PermissionSheet(requireContext()).apply {
+            isDone = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (status) {
+                        navigateToTargetActivity()
+                        cancel()
+                    } else {
+                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            isDismiss = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                }
+            }
+        }
+        bottomSheet.showDialog()
+    }
+
+
 
     private fun hasStoragePermissions(): Boolean {
         return storagePermissions.all {

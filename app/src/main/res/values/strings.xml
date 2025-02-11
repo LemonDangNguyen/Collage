@@ -142,4 +142,5 @@
     <string name="vertical">Vertical</string>
     <string name="horizontal">Horizontal</string>
     <string name="click_to_step_by_step_for_require_permission">Click to step by step for require permission</string>
+    <string name="setting">Setting</string>
 </resources>
