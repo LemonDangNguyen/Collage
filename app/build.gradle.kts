@@ -25,7 +25,6 @@ android {
         //setProperty("archivesBaseName", "CollageImage-$versionName")
 
         val formattedDate = SimpleDateFormat("MMM.dd.yyyy").format(Date())
-
         setProperty("archivesBaseName", "CollageImage-${versionName}(${versionCode})_${formattedDate}")
     }
 
