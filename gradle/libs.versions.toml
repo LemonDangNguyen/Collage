@@ -1,5 +1,5 @@
 [versions]
-ads = "2.0.1"
+ads = "2.0.3"
 agp = "8.8.0"
 kotlin = "1.9.21"
 coreKtx = "1.13.0"

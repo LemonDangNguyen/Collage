@@ -137,23 +137,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
 
-    //service
-    // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
 
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-messaging-ktx")
 
-    // Add the dependencies for the Remote Config
-    implementation("com.google.firebase:firebase-config-ktx")
-
-    implementation("com.google.android.play:review:2.0.1")
-    implementation("com.google.android.play:app-update:2.1.0")
-
-    implementation("com.google.android.gms:play-services-ads:23.2.0")
-
-    implementation(libs.ads)
 
     implementation("com.facebook.android:facebook-android-sdk:18.0.0")
     implementation("com.google.ads.mediation:facebook:6.18.0.0")
@@ -169,4 +154,40 @@ dependencies {
     implementation  ("com.google.ads.mediation:unity:4.9.1.0")
 
     implementation ("com.karumi:dexter:6.2.3")
+
+    // shimmer
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
+    //service
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
+
+    // Add the dependencies for the Crashlytics and Analytics libraries
+    // When using the BoM, you don")t specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation ("com.google.firebase:firebase-messaging-ktx")
+
+    // Add the dependencies for the Remote Config
+    implementation("com.google.firebase:firebase-config-ktx")
+
+    implementation ("com.google.android.play:review:2.0.1")
+    implementation ("com.google.android.play:app-update:2.1.0")
+
+    // ads
+    implementation("com.google.android.gms:play-services-ads:23.2.0")
+    implementation("com.github.devvtn.vtn_ads_libs:ads:1.9.8") // update lên phiên bản mới nhất
+
+    implementation("com.facebook.android:facebook-android-sdk:17.0.0")
+    implementation("com.google.ads.mediation:facebook:6.18.0.0")
+    implementation("com.facebook.infer.annotation:infer-annotation:0.18.0")
+    implementation("com.google.guava:guava:27.0.1-android")
+
+    implementation ("com.google.ads.mediation:vungle:7.0.0.1")
+    implementation ("com.google.ads.mediation:ironsource:7.5.2.0")
+    implementation ("com.google.ads.mediation:applovin:11.11.3.0")
+    implementation ("com.google.ads.mediation:mintegral:16.5.41.0")
+    implementation ("com.google.ads.mediation:pangle:5.5.0.7.0")
+    implementation ("com.unity3d.ads:unity-ads:4.9.1")
+    implementation ("com.google.ads.mediation:unity:4.9.1.0")
 }

@@ -17,6 +17,7 @@
         app:riv_corner_radius="@dimen/_13sdp" />
 
     <ImageView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_34sdp"
@@ -26,6 +27,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivLogo" />
+
+
+    <com.example.collageimage.customview.CustomLoadingSplash
+        android:id="@+id/vLoading"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/tvAds"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent=".65" />
     <TextView
         android:id="@+id/tvAds"
         android:layout_width="wrap_content"
@@ -35,16 +47,31 @@
         android:text="@string/this_action_can_contain_ads"
         android:textColor="@color/black"
         android:textSize="@dimen/_10ssp"
-        app:layout_constraintBottom_toTopOf="@id/vLoading"
+        app:layout_constraintBottom_toTopOf="@id/rlBanner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-    <com.example.collageimage.customview.CustomLoadingSplash
-        android:id="@+id/vLoading"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent=".65" />
+    <RelativeLayout
+        android:id="@+id/rlBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:background="@color/color_DFDFDF" />
+
+        <FrameLayout
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view">
+
+            <include
+                android:id="@+id/shimmer"
+                layout="@layout/layout_banner" />
+        </FrameLayout>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

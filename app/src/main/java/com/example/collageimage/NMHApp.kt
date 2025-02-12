@@ -1,16 +1,14 @@
 package com.example.collageimage
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
+import com.example.collageimage.utils.AdsConfig
 import com.nmh.base.project.sharepref.DataLocalManager
 import com.google.firebase.FirebaseApp
 import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.util.Adjust
 import com.nlbn.ads.util.AdsApplication
-
 import com.nlbn.ads.util.AppOpenManager
-import com.nmh.base.project.utils.AdsConfig
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -33,19 +31,19 @@ class NMHApp : AdsApplication() {
         ctx = applicationContext
         w = resources.displayMetrics.widthPixels / 100f
 
-//        AppOpenManager.getInstance().setResumeCallback(object : AdCallback(){
-//            override fun onAdLoaded() {
-//                super.onAdLoaded()
-//            }
-//
-//            override fun onAdClosed() {
-//                super.onAdClosed()
-//                AdsConfig.lastTimeShowInter = System.currentTimeMillis()
-//            }
-//        })
+        AppOpenManager.getInstance().setResumeCallback(object : AdCallback(){
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+                AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+            }
+        })
     }
 
-    override fun enableAdsResume(): Boolean = false //true
+    override fun enableAdsResume(): Boolean = true
 
     override fun getKeyRemoteIntervalShowInterstitial(): String = ""
 

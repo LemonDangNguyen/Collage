@@ -51,7 +51,7 @@ import com.example.collageimage.extensions.visible
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
 import com.nmh.base.project.helpers.TAG
 import com.nmh.base.project.sharepref.DataLocalManager
-import com.nmh.base.project.utils.AdsConfig
+import com.example.collageimage.utils.AdsConfig
 import com.nmh.base_lib.callback.ICallBackCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.nmh.base.project.utils
+package com.example.collageimage.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -10,11 +10,11 @@ import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
-
-
 object AdsConfig {
 
     var lastTimeShowInter = 0L
+
+    var isLoadBannerSPlash = false
 
     var nativeHome: NativeAd? = null
     var nativeExitApp: NativeAd? = null
