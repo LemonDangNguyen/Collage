@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -18,6 +19,7 @@ import com.example.collageimage.databinding.DialogExitAppBinding
 import com.example.collageimage.fragment.CollageFragment
 import com.example.collageimage.fragment.TemplateFragment
 import com.example.collageimage.permission.PermissionSheet
+import com.example.collageimage.utils.AdsConfig
 import com.nlbn.ads.util.AppOpenManager
 import com.nmh.base_lib.callback.ICallBackCheck
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +30,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     lateinit var bottomSheet: PermissionSheet
 
     override fun setUp() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showDialogExit(object : ICallBackCheck {
+                    override fun check(isCheck: Boolean) {
+                    }
+                })
+            }
+        })
+        AdsConfig.loadNativeExitApp(this@MainActivity)
+        AdsConfig.loadNativeAll(this@MainActivity)
+        AdsConfig.loadInterHome(this@MainActivity)
+        AdsConfig.loadInterBack(this@MainActivity)
 
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,28 +94,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
         bottomSheet.showDialog()
     }
-    override fun onBackPressed() {
 
-        val binding2 = DialogExitAppBinding.inflate(layoutInflater)
-        val dialog2 = Dialog(this)
-        dialog2.setContentView(binding2.root)
-        val window = dialog2.window
-        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(false)
-        dialog2.setCancelable(false)
-
-        binding2.tvExit.setOnClickListener {
-            this.finish()
-            super.onBackPressed()
-
-        }
-
-        binding2.tvStay.setOnClickListener {
-            dialog2.dismiss()
-        }
-        dialog2.show()
-    }
     private fun selectBottomNavBar(position: Int) {
         binding.lnBottomBar.actionAnimation()
         when (position) {

@@ -383,9 +383,9 @@ abstract class BaseActivity<B : ViewBinding>(
         isShowDialogBack = true
 
         bindingDialog.root.layoutParams.width = (95.55f * w).toInt()
-//            bindingDialog.root.layoutParams.height = (50.55f * w).toInt()
+            bindingDialog.root.layoutParams.height = (50.55f * w).toInt()
 
-       // showNativeExit(bindingDialog)
+        showNativeExit(bindingDialog)
 
         bindingDialog.tvStay.setOnUnDoubleClickListener {
             dialog.cancel()
@@ -394,44 +394,44 @@ abstract class BaseActivity<B : ViewBinding>(
         bindingDialog.tvExit.setOnUnDoubleClickListener { finish() }
     }
 
-//    private fun showNativeExit(bindingDialog: DialogExitAppBinding) {
-//        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
-//            && AdsConfig.isLoadFullAds() /*thêm remote config*/) {
-//            bindingDialog.layoutNative.visible()
-//            AdsConfig.nativeExitApp?.let {
-//                pushViewAdsExit(bindingDialog, it)
-//            } ?: run {
-//                Admob.getInstance().loadNativeAd(this, getString(R.string.native_exit),
-//                    object : NativeCallback() {
-//                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
-//                            AdsConfig.nativeExitApp = nativeAd
-//                            pushViewAdsExit(bindingDialog, nativeAd)
-//                        }
-//
-//                        override fun onAdFailedToLoad() {
-//                            bindingDialog.frAds.removeAllViews()
-//                        }
-//
-//                        override fun onAdImpression() {
-//                            super.onAdImpression()
-//                            AdsConfig.nativeExitApp = null
-//                        }
-//                    }
-//                )
-//            }
-//        } else bindingDialog.layoutNative.gone()
-//    }
-//
-//    private fun pushViewAdsExit(bindingDialog: DialogExitAppBinding, nativeAd: NativeAd) {
-//        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
-//
-//        if (!AdsConfig.isLoadFullAds())
-//            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
-//        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
-//
-//        bindingDialog.layoutNative.visible()
-//        bindingDialog.frAds.removeAllViews()
-//        bindingDialog.frAds.addView(adView.root)
-//        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
-//    }
+    private fun showNativeExit(bindingDialog: DialogExitAppBinding) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.isLoadFullAds() /*thêm remote config*/) {
+            bindingDialog.layoutNative.visible()
+            AdsConfig.nativeExitApp?.let {
+                pushViewAdsExit(bindingDialog, it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_exit),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            AdsConfig.nativeExitApp = nativeAd
+                            pushViewAdsExit(bindingDialog, nativeAd)
+                        }
+
+                        override fun onAdFailedToLoad() {
+                            bindingDialog.frAds.removeAllViews()
+                        }
+
+                        override fun onAdImpression() {
+                            super.onAdImpression()
+                            AdsConfig.nativeExitApp = null
+                        }
+                    }
+                )
+            }
+        } else bindingDialog.layoutNative.gone()
+    }
+
+    private fun pushViewAdsExit(bindingDialog: DialogExitAppBinding, nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
+        bindingDialog.layoutNative.visible()
+        bindingDialog.frAds.removeAllViews()
+        bindingDialog.frAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+    }
 }

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:background="@drawable/bg_dialog"
+    android:background="@drawable/boder_dialog"
     android:paddingVertical="@dimen/_8sdp">
 
     <TextView
@@ -71,20 +70,20 @@
         app:layout_constraintStart_toEndOf="@id/tvExit"
         app:layout_constraintTop_toBottomOf="@id/tvOutOfJuice" />
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/layout_native"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginHorizontal="@dimen/_5sdp"-->
-<!--        android:layout_marginTop="@dimen/_8sdp"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/tvExit">-->
+    <FrameLayout
+        android:id="@+id/layout_native"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintTop_toBottomOf="@id/tvExit">
 
-<!--        <FrameLayout-->
-<!--            android:id="@+id/frAds"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
+        <FrameLayout
+            android:id="@+id/frAds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-<!--            <include layout="@layout/native_bot_horizontal_media_left_loading" />-->
-<!--        </FrameLayout>-->
-<!--    </FrameLayout>-->
+            <include layout="@layout/native_bot_horizontal_media_left_loading" />
+        </FrameLayout>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
