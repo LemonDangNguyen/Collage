@@ -26,6 +26,7 @@ import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBindi
 import com.example.collageimage.databinding.DialogBackToHomeBinding
 import com.example.collageimage.databinding.DialogExitAppBinding
 import com.example.collageimage.databinding.DialogLoadingBinding
+import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
 import com.example.collageimage.databinding.DialogUpdateAppBinding
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -333,7 +334,7 @@ abstract class BaseActivity<B : ViewBinding>(
         bindingDialog.tvContinue.setOnUnDoubleClickListener { finish() }
     }
 
-    private fun showNativeBack(bindingDialog: DialogBackToHomeBinding) {
+    fun showNativeBack(bindingDialog: DialogBackToHomeBinding) {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.isLoadFullAds() /* thêm điều kiện remote nữa*/) {
             bindingDialog.layoutNative.visible()
@@ -383,7 +384,6 @@ abstract class BaseActivity<B : ViewBinding>(
         isShowDialogBack = true
 
         bindingDialog.root.layoutParams.width = (95.55f * w).toInt()
-            bindingDialog.root.layoutParams.height = (50.55f * w).toInt()
 
         showNativeExit(bindingDialog)
 

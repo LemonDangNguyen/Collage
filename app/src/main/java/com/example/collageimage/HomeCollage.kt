@@ -25,8 +25,10 @@ import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,6 +63,8 @@ import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
 import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
+import com.example.collageimage.extensions.setUpDialog
 import com.example.collageimage.frame.FrameAdapter
 import com.example.collageimage.frame.FrameItem
 import com.example.collageimage.ratio.AspectRatioViewModel
@@ -82,6 +86,11 @@ import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.utils.PuzzlePiece
 import com.hypersoft.pzlayout.view.PuzzleView
 import com.example.collageimage.extensions.showToast
+import com.example.collageimage.utils.AdsConfig
+import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.util.Admob
+import com.nlbn.ads.util.ConsentHelper
+import com.nmh.base_lib.callback.ICallBackCheck
 import yuku.ambilwarna.AmbilWarnaDialog
 import java.io.File
 import java.io.FileOutputStream
@@ -89,9 +98,7 @@ import java.io.IOException
 import java.io.OutputStream
 
 class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollageBinding::inflate), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
-
     OnColorClickListener, FilterListener, OnColorClickListener2 {
-
 
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val useCaseMediaImageDetail by lazy {
@@ -151,74 +158,22 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private lateinit var colorAdapter: ColorAdapter
     private lateinit var frameAdapter: FrameAdapter
 
-
     private var currentColor: Int = 0xFFFFFFFF.toInt()
     private var mList: List<ImageModel> = mutableListOf()
     private val adapterPuzzleLayoutsPieces by lazy { AdapterPuzzleLayoutsPieces(itemClick) }
     private val viewModelRatio: AspectRatioViewModel by viewModels()
     private var colorAdapterpen: ColorPenAdapter? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        val selectedImages: ArrayList<ImageModel>? =
-            intent.getParcelableArrayListExtra("SELECTED_IMAGES")
-        selectedImages?.let {
-            mList = it
-            fetchLayouts(it)
-            checkImageSizeAndSetLayouts(it)
-        } ?: Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
-        setupListeners()
-        initObservers()
-        initRecyclerView()
-        initListener()
-        btntParentBottom()
-        layoutToolFunc()
-        bgFun()
-        layoutFrameFunc()
-        colorrecylayout()
-        layoutFilterandAdjustFunc()
-        filterrcl()
-        initListener2()
-        binding.puzzleView.setLineSize(10)
-        binding.tvSave.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        saveFlParentAsImage()
-                    }
-
-                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
-                        Toast.makeText(
-                            this,
-                            "Permission needed to save images.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-
-                    else -> {
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-                }
-            } else {
-                saveFlParentAsImage()
-            }
-        }
-    }
-
-    override fun setUp() {}
     private fun saveFlParentAsImage() {
         val bitmap = getBitmapFromView(binding.flParent)
         saveBitmapToGallery(bitmap, onDone = {
             if (it != "") {
                 val intent = Intent(this, SaveFromEditImage::class.java)
                 intent.putExtra("image_path", it)
-                startActivity(intent)
-            } else showToast("Failed to save image.", Gravity.CENTER)
+                showInterSave(intent)  // Gọi hàm với intent
+            } else {
+                showToast("Failed to save image.", Gravity.CENTER)
+            }
         })
     }
     private fun getBitmapFromView(view: View): Bitmap {
@@ -274,9 +229,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             e.printStackTrace()
         }
     }
-
-
-
 
     private fun btntParentBottom() {
         binding.layoutParentTool.llChangeLayout.setOnClickListener {
@@ -511,7 +463,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         binding.layoutBg.tvBlur.backgroundTintList =
             ContextCompat.getColorStateList(this, android.R.color.transparent)
     }
-
 
     private fun layoutFrameFunc() {
         binding.layoutFrame.ivRefresh.setOnClickListener {
@@ -814,9 +765,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     }
 
     private fun setupListeners() = binding.apply {
-        binding.btnBack.setOnClickListener {
-            onBackPressed()
-        }
+
     }
 
     private fun loadPhotoFromRes(list: PuzzleLayout) {
@@ -926,50 +875,6 @@ override fun onPieceClick() {
     override fun onPieceSelected(piece: PuzzlePiece?, position: Int) {
 
     }
-    override fun onBackPressed() {
-        val binding2 = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
-        val dialog2 = Dialog(this)
-        dialog2.setContentView(binding2.root)
-        val window = dialog2.window
-        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(true)
-        dialog2.setCancelable(true)
-        binding2.btnExit.setOnClickListener {
-            dialog2.dismiss()
-            finish()
-            super.onBackPressed()
-        }
-        binding2.btnStay.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        saveFlParentAsImage()
-                    }
-
-                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
-                        Toast.makeText(
-                            this,
-                            "Permission needed to save images.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-
-                    else -> {
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-                }
-            } else {
-                saveFlParentAsImage()
-            }
-        }
-        dialog2.show()
-    }
-
 
     private fun setRatio() {
         val ratios = listOf(
@@ -1345,5 +1250,148 @@ override fun onPieceClick() {
             e.printStackTrace()
         }
         return fontList
+    }
+
+
+    override fun setUp() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showDialogBackCollage()
+            }
+        })
+        val selectedImages: ArrayList<ImageModel>? =
+            intent.getParcelableArrayListExtra("SELECTED_IMAGES")
+        selectedImages?.let {
+            mList = it
+            fetchLayouts(it)
+            checkImageSizeAndSetLayouts(it)
+        } ?: Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
+
+        initObservers()
+        initRecyclerView()
+        initListener()
+        btntParentBottom()
+        layoutToolFunc()
+        bgFun()
+        layoutFrameFunc()
+        colorrecylayout()
+        layoutFilterandAdjustFunc()
+        filterrcl()
+        initListener2()
+        binding.puzzleView.setLineSize(10)
+        binding.tvSave.setOnUnDoubleClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+            }
+        }
+        binding.btnBack.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
+    }
+
+    private fun showDialogBackCollage() {
+        val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
+
+        val dialog = AlertDialog.Builder(this@HomeCollage, R.style.SheetDialog).create()
+        dialog.setUpDialog(bindingDialog.root, false)
+
+        bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
+
+        bindingDialog.btnExit.setOnClickListener {
+            dialog.dismiss()
+            showInterBack()
+        }
+        bindingDialog.btnStay.setOnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+            }
+        }
+    }
+
+    private fun showInterBack() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            Admob.getInstance().showInterAds(this@HomeCollage, AdsConfig.interBack, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+
+                    finish()
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interBack = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterBack(this@HomeCollage)
+                }
+            })
+        } else {finish()
+
+        }
+    }
+
+    private fun showInterSave(intent: Intent) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            Admob.getInstance().showInterAds(this@HomeCollage, AdsConfig.interSave, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+                    startActivity(intent)
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interSave = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterSave(this@HomeCollage)
+                }
+            })
+        } else {
+            startActivity(intent)
+        }
     }
 }

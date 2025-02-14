@@ -14,22 +14,34 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.collageimage.MainActivity
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectBinding
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogLoading2Binding
 import com.example.collageimage.databinding.DialogLoadingBinding
+import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.showToast
+import com.example.collageimage.extensions.visible
+import com.example.collageimage.utils.AdsConfig
 import com.example.selectpic.ddat.RepositoryMediaImages
 import com.example.selectpic.ddat.UseCaseMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
+import com.google.android.gms.ads.nativead.NativeAd
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
+import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.callback.NativeCallback
+import com.nlbn.ads.util.Admob
+import com.nlbn.ads.util.ConsentHelper
+import com.nmh.base_lib.callback.ICallBackCheck
 
 class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding::inflate),
     OnAlbumSelectedListener, BottomSheetDialogCamera.OnImagesCapturedListener {
@@ -52,12 +64,14 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
 
     private var albumName: String? = null
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun setUp() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showInterBack()
+            }
+        })
 
-        // Khởi tạo SelectedImagesAdapter
+        binding.btnBack.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
         selectedImagesAdapter = SelectedImagesAdapter(this, selectedImages) { imageToRemove ->
             selectedImages.remove(imageToRemove)
             selectedImagesAdapter.notifyDataSetChanged()
@@ -78,13 +92,40 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
 
         setupRecyclerViews()
         loadImages()
-
         setUpListener()
         initObservers()
+        showNative()
     }
 
-    override fun setUp() {
+    private fun showInterBack() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            Admob.getInstance().showInterAds(this@SelectActivity, AdsConfig.interBack, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
 
+                    finish()
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interBack = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterBack(this@SelectActivity)
+                }
+            })
+        } else {
+            /*nếu không có kịch bản native_back thì finish() luôn*/
+            /*ẩn tất cả các ads đang có trên màn hình(banner, native) để show dialog*/
+            binding.rlNative.gone()
+            showDialogBack(object : ICallBackCheck {
+                override fun check(isCheck: Boolean) {
+                    /*hiện tất cả các ads đang có trên màn hình(banner, native) khi dialog ẩn đi*/
+                    binding.rlNative.visible()
+                }
+            })
+        }
     }
 
     private fun setUpListener() {
@@ -95,10 +136,17 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
             imageAdapter.updateSelection(selectedImages)
         }
         val dialogLoadingBinding = DialogLoading2Binding.inflate(layoutInflater)
+
         val dialog = Dialog(this).apply {
             setCancelable(false)
             setContentView(dialogLoadingBinding.root)
+            window?.let { window ->
+                val params = window.attributes
+                params.width = (93.33f * w).toInt()
+                window.attributes = params
+            }
         }
+
 
         binding.nextSelect.setOnClickListener {
             if (selectedImages.size >= 3) {
@@ -249,32 +297,6 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         binding.textViewCountItem.text = selectedImages.size.toString()
     }
 
-    override fun onBackPressed() {
-        val binding2 = DialogExitBinding.inflate(layoutInflater)
-        val dialog2 = Dialog(this)
-        dialog2.setContentView(binding2.root)
-        val window = dialog2.window
-        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(false)
-        dialog2.setCancelable(false)
-
-        binding2.btnExit.setOnClickListener {
-            dialog2.dismiss()
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-            super.onBackPressed()
-        }
-
-        binding2.btnStay.setOnClickListener {
-            dialog2.dismiss()
-        }
-
-        dialog2.show()
-    }
-
     override fun onAlbumSelected(albumName: String) {
         this.albumName = albumName
         images.clear()
@@ -309,12 +331,44 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         }
     }
 
-
     override fun onImagesCaptured(images: ArrayList<ImageModel>) {
         selectedImages.addAll(images)
         selectedImagesAdapter.notifyDataSetChanged()
         imageAdapter.updateSelection(selectedImages)
         updateSelectedAdapters()
         updateSelectedCount()
+    }
+
+    private fun showNative() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+            binding.rlNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
+
+                        override fun onAdFailedToLoad() {
+                            binding.frNativeAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else binding.rlNative.gone()
+    }
+
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
+        binding.frNativeAds.removeAllViews()
+        binding.frNativeAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
     }
 }

@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +23,12 @@ import com.example.collageimage.Setting
 import com.example.collageimage.TemplateActivity
 import com.example.collageimage.databinding.FragmentCollageBinding
 import com.example.collageimage.permission.PermissionSheet
+import com.example.collageimage.utils.AdsConfig
+import com.example.collageimage.utils.AdsConfig.haveNetworkConnection
+import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.AppOpenManager
+import com.nlbn.ads.util.ConsentHelper
 import com.nmh.base_lib.callback.ICallBackCheck
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -57,16 +61,19 @@ class CollageFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         binding.btnSetting.setOnClickListener {
-            navigateToSettings()
+            showInterHome(Setting::class.java.name)
         }
+
         binding.btnPhotoCollage.setOnClickListener {
             targetActivity = SelectActivity::class.java
-            checkAndRequestPermissions()
+            checkAndRequestPermissionsForHome(targetActivity?.name)
         }
+
         binding.btnEditImage.setOnClickListener {
             targetActivity = ActivitySelectImageEdit::class.java
-            checkAndRequestPermissions()
+            checkAndRequestPermissionsForHome(targetActivity?.name)
         }
+
         setupViewPager()
         autoScrollViewPager()
 
@@ -82,33 +89,30 @@ class CollageFragment : Fragment() {
 
     private fun setuptemplate() {
         binding.image1.setOnClickListener {
-            targetActivity = TemplateActivity::class.java
-            checkAndRequestPermissions2(27)
+            showInterHomeTemplate(TemplateActivity::class.java.name, 27)
         }
         binding.image2.setOnClickListener {
-            targetActivity = TemplateActivity::class.java
-            checkAndRequestPermissions2(25)
+            showInterHomeTemplate(TemplateActivity::class.java.name, 25)
         }
         binding.image3.setOnClickListener {
-            targetActivity = TemplateActivity::class.java
-            checkAndRequestPermissions2(29)
+            showInterHomeTemplate(TemplateActivity::class.java.name, 29)
         }
         binding.image4.setOnClickListener {
-            targetActivity = TemplateActivity::class.java
-            checkAndRequestPermissions2(17)
+            showInterHomeTemplate(TemplateActivity::class.java.name, 17)
         }
         binding.image5.setOnClickListener {
-            targetActivity = TemplateActivity::class.java
-            checkAndRequestPermissions2(16)
+            showInterHomeTemplate(TemplateActivity::class.java.name, 16)
         }
         binding.image6.setOnClickListener {
-            targetActivity = TemplateActivity::class.java
-            checkAndRequestPermissions2(20)
+            showInterHomeTemplate(TemplateActivity::class.java.name, 20)
         }
     }
+
+
     private fun checkAndRequestPermissions2(imageId: Int) {
         if (hasStoragePermissions()) {
-            navigateToTemplateActivity(imageId)
+            //navigateToTemplateActivity(imageId)
+            showInterHomeTemplate(TemplateActivity::class.java.name, imageId)
         } else {
             showPermissionBottomSheet(imageId)
         }
@@ -119,7 +123,7 @@ class CollageFragment : Fragment() {
             isDone = object : ICallBackCheck {
                 override fun check(status: Boolean) {
                     if (status) {
-                        navigateToTemplateActivity(imageId)
+                        navigateToTemplateActivity(TemplateActivity::class.java.name, imageId)
                         cancel()
                     } else {
                         Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
@@ -131,11 +135,6 @@ class CollageFragment : Fragment() {
             }
         }
         bottomSheet.showDialog()
-    }
-    private fun navigateToTemplateActivity(imageId: Int) {
-        val intent = Intent(requireContext(), TemplateActivity::class.java)
-        intent.putExtra("imageId", imageId)
-        startActivity(intent)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -233,4 +232,93 @@ class CollageFragment : Fragment() {
         smoothScroller.targetPosition = item
         recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
     }
+
+
+    private fun showInterHomeTemplate(className: String, imageId: Int) {
+        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireContext()).canRequestAds()
+            && AdsConfig.interHome != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds()) {
+
+            Admob.getInstance().showInterAds(requireContext(), AdsConfig.interHome, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+                    // Sau khi quảng cáo đóng, chuyển đến TemplateActivity với imageId tương ứng
+                    navigateToTemplateActivity(className, imageId)
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interHome = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterHome(requireContext())
+                }
+            })
+        } else {
+            // Nếu không có quảng cáo, chuyển đến TemplateActivity ngay lập tức
+            navigateToTemplateActivity(className, imageId)
+        }
+    }
+
+    private fun navigateToTemplateActivity(className: String, imageId: Int) {
+        val intent = Intent(requireContext(), Class.forName(className))
+        intent.putExtra("imageId", imageId)
+        startActivity(intent)
+    }
+
+
+
+    private fun showInterHome(className: String) {
+        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireContext()).canRequestAds()
+            && AdsConfig.interHome != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */){
+            Admob.getInstance().showInterAds(requireContext(), AdsConfig.interHome, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+
+                    startActivity(className)
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interHome = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterHome(requireContext())
+                }
+            })
+        } else startActivity(className)
+    }
+
+    private fun startActivity(className: String) {
+        startActivity(Intent(requireContext(), Class.forName(className)))
+    }
+    private fun checkAndRequestPermissionsForHome(className: String?) {
+        if (hasStoragePermissions()) {
+            // Nếu đã có quyền, hiển thị quảng cáo rồi chuyển đến activity cần thiết
+            showInterHome(className.orEmpty())
+        } else {
+            // Nếu không có quyền, hiển thị bảng yêu cầu quyền
+            showPermissionBottomSheetForHome(className.orEmpty())
+        }
+    }
+
+    private fun showPermissionBottomSheetForHome(className: String) {
+        bottomSheet = PermissionSheet(requireContext()).apply {
+            isDone = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (status) {
+                        // Nếu người dùng cấp quyền, hiển thị quảng cáo và chuyển đến màn hình
+                        showInterHome(className)
+                        cancel()
+                    } else {
+                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            isDismiss = object : ICallBackCheck {
+                override fun check(status: Boolean) {}
+            }
+        }
+        bottomSheet.showDialog()
+    }
+
 }

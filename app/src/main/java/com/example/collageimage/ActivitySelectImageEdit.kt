@@ -11,11 +11,23 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectImageEditBinding
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogLoading2Binding
+import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
+import com.example.collageimage.extensions.visible
+import com.example.collageimage.utils.AdsConfig
+import com.google.android.gms.ads.nativead.NativeAd
+import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.callback.NativeCallback
+import com.nlbn.ads.util.Admob
+import com.nlbn.ads.util.ConsentHelper
+import com.nmh.base_lib.callback.ICallBackCheck
 
 class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(ActivitySelectImageEditBinding::inflate),
     OnAlbumSelectedListener,
@@ -29,9 +41,18 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
     private lateinit var dialogLoadingBinding: DialogLoading2Binding
     private lateinit var dialogLoading: Dialog
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+
+    override fun setUp() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showInterBack()
+            }
+        })
+
+        showNative()
+
+        binding.btnBack.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
+
         selectedPathIndex = intent.getIntExtra("selected_path", -1)
 
         dialogLoadingBinding = DialogLoading2Binding.inflate(layoutInflater)
@@ -42,9 +63,36 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
         loadImages()
         setUpListener()
     }
+    private fun showInterBack() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            Admob.getInstance().showInterAds(this@ActivitySelectImageEdit, AdsConfig.interBack, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
 
-    override fun setUp() {}
+                    finish()
+                }
 
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interBack = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterBack(this@ActivitySelectImageEdit)
+                }
+            })
+        } else {
+            /*nếu không có kịch bản native_back thì finish() luôn*/
+            /*ẩn tất cả các ads đang có trên màn hình(banner, native) để show dialog*/
+            binding.rlNative.gone()
+            showDialogBack(object : ICallBackCheck {
+                override fun check(isCheck: Boolean) {
+                    /*hiện tất cả các ads đang có trên màn hình(banner, native) khi dialog ẩn đi*/
+                    binding.rlNative.visible()
+                }
+            })
+        }
+    }
     private fun setUpListener() {
         binding.btnBack.setOnClickListener {
             onBackPressed()
@@ -163,29 +211,36 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
         }
     }
 
-    override fun onBackPressed() {
-        val binding2 = DialogExitBinding.inflate(layoutInflater)
-        val dialog2 = Dialog(this)
-        dialog2.setContentView(binding2.root)
-        val window = dialog2.window
-        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(false)
-        dialog2.setCancelable(false)
+    private fun showNative() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+            binding.rlNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
 
-        binding2.btnExit.setOnClickListener {
-            dialog2.dismiss()
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-            super.onBackPressed()
-        }
+                        override fun onAdFailedToLoad() {
+                            binding.frNativeAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else binding.rlNative.gone()
+    }
 
-        binding2.btnStay.setOnClickListener {
-            dialog2.dismiss()
-        }
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
 
-        dialog2.show()
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
+        binding.frNativeAds.removeAllViews()
+        binding.frNativeAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
     }
 }

@@ -15,6 +15,7 @@
     <string name="inter_intro" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
     <string name="inter_back" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
     <string name="inter_home" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="inter_save" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
     <string name="native_keep_user" translatable="false">ca-app-pub-3940256099942544/2247696110</string>
     <string name="native_survey_user" translatable="false">ca-app-pub-3940256099942544/2247696110</string>

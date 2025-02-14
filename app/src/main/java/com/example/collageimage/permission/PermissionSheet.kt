@@ -15,12 +15,17 @@ import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import com.example.collageimage.NMHApp
 import com.example.collageimage.R
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.BottomSheetDialogPermissionBinding
 import com.example.collageimage.extensions.checkAllPerGrand
 import com.example.collageimage.extensions.checkPer
+import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.openSettingPermission
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.showToast
+import com.example.collageimage.extensions.visible
+import com.example.collageimage.utils.AdsConfig
+import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -29,7 +34,10 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
+import com.nlbn.ads.callback.NativeCallback
+import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.AppOpenManager
+import com.nlbn.ads.util.ConsentHelper
 import com.nmh.base_lib.callback.ICallBackCheck
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
@@ -39,7 +47,7 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
 
     var isDone: ICallBackCheck? = null
     var isDismiss: ICallBackCheck? = null
-
+    private var nativeAds: NativeAd? = null
 
     private val storagePer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
@@ -82,7 +90,7 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
             setCheck(true)
             isEnabled = false
         }
-
+        loadNative()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -202,5 +210,51 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
     }
 
     fun checkPerDialog(): Boolean = context.checkAllPerGrand()
+    fun loadNative() {
+        try {
+            if (AdsConfig.haveNetworkConnection(context) /*thêm điều kiện remote*/
+                && ConsentHelper.getInstance(context).canRequestAds()) {
+                binding.rlNative.visible()
+                nativeAds?.let {
+                    pushViewAds(it)
+                } ?: run {
+                    Admob.getInstance().loadNativeAd(
+                        context,
+                        context.getString(R.string.native_permission_in_app),
+                        object : NativeCallback() {
+                            override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                                nativeAds = nativeAd
+                                pushViewAds(nativeAd)
+                            }
 
+                            override fun onAdFailedToLoad() {
+                                binding.frNativeAds.removeAllViews()
+                            }
+
+                            override fun onAdImpression() {
+                                super.onAdImpression()
+                                nativeAds = null
+                            }
+                        }
+                    )
+                }
+            } else binding.rlNative.gone()
+        } catch (e: Exception) {
+            binding.rlNative.gone()
+            e.printStackTrace()
+        }
+    }
+
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        if (AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+
+        binding.rlNative.visible()
+        binding.frNativeAds.removeAllViews()
+        binding.frNativeAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+    }
 }

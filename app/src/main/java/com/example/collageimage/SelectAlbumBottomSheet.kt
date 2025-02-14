@@ -14,9 +14,18 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.FragmentSelectAlbumBinding
+import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.visible
+import com.example.collageimage.utils.AdsConfig
+import com.example.collageimage.utils.AdsConfig.haveNetworkConnection
+import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.nlbn.ads.callback.NativeCallback
+import com.nlbn.ads.util.Admob
+import com.nlbn.ads.util.ConsentHelper
 
 class SelectAlbumBottomSheet : BottomSheetDialogFragment() {
 
@@ -87,7 +96,7 @@ class SelectAlbumBottomSheet : BottomSheetDialogFragment() {
         } else {
             permissionLauncher.launch(storagePermissions)
         }
-
+        showNative()
         binding.btnBack.setOnClickListener {
             dismiss()
         }
@@ -169,5 +178,37 @@ class SelectAlbumBottomSheet : BottomSheetDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showNative() {
+        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireContext()).canRequestAds() /*thêm điều kiện remote*/) {
+            binding.rlNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(requireContext(), getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
+
+                        override fun onAdFailedToLoad() {
+                            binding.frNativeAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else binding.rlNative.gone()
+    }
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
+        binding.frNativeAds.removeAllViews()
+        binding.frNativeAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
     }
 }

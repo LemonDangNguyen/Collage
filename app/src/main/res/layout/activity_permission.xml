@@ -112,22 +112,22 @@
                     android:layout_marginEnd="@dimen/_16sdp" />
             </RelativeLayout>
 
-<!--            <FrameLayout-->
-<!--                android:id="@+id/layout_native"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginHorizontal="@dimen/_16sdp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent">-->
+            <FrameLayout
+                android:id="@+id/layout_native"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-<!--                <FrameLayout-->
-<!--                    android:id="@+id/frNativeAds"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="@dimen/_8sdp">-->
+                <FrameLayout
+                    android:id="@+id/frNativeAds"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp">
 
-<!--                    <include layout="@layout/native_top_full_asd_loading" />-->
-<!--                </FrameLayout>-->
-<!--            </FrameLayout>-->
+                    <include layout="@layout/native_top_full_asd_loading" />
+                </FrameLayout>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/tvGo"

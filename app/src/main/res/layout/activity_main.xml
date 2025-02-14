@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_top_radius_32dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@+id/banner">
 
         <LinearLayout
             android:id="@+id/btn_collage"
@@ -86,4 +86,15 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include
+            android:id="@+id/shimmer"
+            layout="@layout/layout_banner" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

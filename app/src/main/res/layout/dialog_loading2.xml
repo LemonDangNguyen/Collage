@@ -8,7 +8,7 @@
     android:layout_marginHorizontal="@dimen/_10sdp"
     android:layout_marginLeft="@dimen/_10sdp"
     android:layout_marginRight="@dimen/_10sdp"
-    android:background="@drawable/bg_dialog"
+    android:background="@drawable/boder_dialog"
     android:gravity="center"
     android:orientation="vertical"
     android:tag="layout/dialog_loading_0">
@@ -36,23 +36,21 @@
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/loading" />
 
+    <FrameLayout
+        android:id="@+id/layout_native"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintTop_toBottomOf="@id/tvContinue">
 
+        <FrameLayout
+            android:id="@+id/frAds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/frNative"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginHorizontal="@dimen/_5sdp"-->
-<!--        android:layout_marginLeft="@dimen/_5sdp"-->
-<!--        android:layout_marginRight="@dimen/_5sdp"-->
-<!--        android:layout_marginBottom="5dp"-->
-<!--        android:orientation="vertical"-->
-<!--        android:tag="binding_1"-->
-<!--        android:visibility="visible"-->
-<!--        app:layout_constraintBottom_toBottomOf="0">-->
+            <include layout="@layout/native_bot_horizontal_media_left_loading" />
+        </FrameLayout>
+    </FrameLayout>
 
-<!--        <include-->
-<!--            android:id="@+id/shimmer_ads"-->
-<!--            layout="@layout/ads_shimmer_native_gallery" />-->
-<!--    </FrameLayout>-->
 </LinearLayout>

@@ -19,8 +19,16 @@ import com.example.collageimage.MainActivity
 import com.example.collageimage.R
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySaveFromEditImageBinding
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
+import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.visible
+import com.example.collageimage.utils.AdsConfig
+import com.google.android.gms.ads.nativead.NativeAd
+import com.nlbn.ads.callback.NativeCallback
+import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.AppOpenManager
+import com.nlbn.ads.util.ConsentHelper
 
 class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(ActivitySaveFromEditImageBinding::inflate) {
 
@@ -54,7 +62,7 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
     }
 
     override fun setUp() {
-
+        showNative()
     }
     override fun onBackPressed() {
         val intent = Intent(this, MainActivity::class.java)
@@ -78,5 +86,39 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+
+    private fun showNative() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+            binding.rlNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
+
+                        override fun onAdFailedToLoad() {
+                            binding.frNativeAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else binding.rlNative.gone()
+    }
+
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
+        binding.frNativeAds.removeAllViews()
+        binding.frNativeAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
     }
 }

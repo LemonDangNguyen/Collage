@@ -14,6 +14,37 @@ object AdsConfig {
 
     var lastTimeShowInter = 0L
 
+    var is_load_native_language = true
+    var is_load_native_language_select = true
+    var is_load_native_intro1 = true
+    var is_load_native_intro2 = true
+    var is_load_native_intro3 = true
+    var is_load_native_intro4 = true
+    var is_load_inter_intro = true
+    var is_load_native_permission = true
+    var is_load_native_permission_storage = true
+    var is_load_native_permission_camera = true
+    var is_load_native_permission_notification = true
+    var is_load_banner_all = true
+    var is_load_native_popup_permission = true
+    var is_load_native_home = true
+    var is_load_inter_home = true
+    var is_load_native_item_template1 = true
+    var is_load_native_item_template2 = true
+    var is_load_native_item_template3 = true
+    var is_load_inter_item_template = true
+    var is_load_inter_save = true
+    var is_load_inter_back = true
+    var is_load_native_exit = true
+    var is_load_native_back = true
+    var is_load_native_save = true
+    var is_load_native_loading = true
+    var is_load_native_select_albums = true
+    var is_load_native_select_image = true
+    var is_load_native_successfully          = true
+    var is_load_native_setting = true
+    var is_load_native_language_setting = true
+
     var isLoadBannerSPlash = false
 
     var nativeHome: NativeAd? = null
@@ -28,6 +59,7 @@ object AdsConfig {
 
     var interBack: InterstitialAd? = null
     var interHome: InterstitialAd? = null
+    var interSave: InterstitialAd? = null
 
     var cbFetchInterval = 15
     var interval_show_interstitial = 15
@@ -68,6 +100,25 @@ object AdsConfig {
                 })
         }
     }
+
+    fun loadInterSave(context: Context) {
+        if (ConsentHelper.getInstance(context).canRequestAds() && interSave == null
+            && haveNetworkConnection(context) /* thêm điều kiện remote */) {
+            Admob.getInstance().loadInterAds(context, context.getString(R.string.inter_back),
+                object : AdCallback() {
+                    override fun onInterstitialLoad(interstitialAd: InterstitialAd?) {
+                        super.onInterstitialLoad(interstitialAd)
+                        interSave = interstitialAd
+                    }
+
+                    override fun onAdFailedToLoad(p0: LoadAdError?) {
+                        super.onAdFailedToLoad(p0)
+                        interSave = null
+                    }
+                })
+        }
+    }
+
 
     fun loadNativeHome(context: Context) {
         if (haveNetworkConnection(context) && ConsentHelper.getInstance(context).canRequestAds()

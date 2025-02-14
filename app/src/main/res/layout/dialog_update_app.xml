@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/_242sdp"
     android:layout_height="@dimen/_266sdp"
-    android:background="@drawable/img_bg_dialog_update">
+    android:background="@drawable/boder_dialog">
 
     <TextView
         android:id="@+id/tvUpdate"
