@@ -134,7 +134,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
                     AdsConfig.is_load_native_loading = remoteConfig.getBoolean("is_load_native_loading")
                     AdsConfig.is_load_native_select_albums = remoteConfig.getBoolean("is_load_native_select_albums")
                     AdsConfig.is_load_native_select_image = remoteConfig.getBoolean("is_load_native_select_image")
-                    AdsConfig.is_load_native_successfully          = remoteConfig.getBoolean("is_load_native_successfully         ")
+                    AdsConfig.is_load_native_successfully = remoteConfig.getBoolean("is_load_native_successfully")
                     AdsConfig.is_load_native_setting = remoteConfig.getBoolean("is_load_native_setting")
                     AdsConfig.is_load_native_language_setting = remoteConfig.getBoolean("is_load_native_language_setting")
                     AdsConfig.interval_show_interstitial = remoteConfig.getLong("interval_show_interstitial").toInt()

@@ -18,6 +18,7 @@ import com.example.collageimage.databinding.ActivitySelectImageEditBinding
 import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogLoading2Binding
+import com.example.collageimage.dialog.DialogLoading
 import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.visible
@@ -37,7 +38,7 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
     private lateinit var imageAdapter: ImageAdapter
     private var selectedPathIndex: Int = -1
     private var albumName: String? = null
-
+    private lateinit var loadingdialog: DialogLoading
     private lateinit var dialogLoadingBinding: DialogLoading2Binding
     private lateinit var dialogLoading: Dialog
 
@@ -163,16 +164,19 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
                 images,
                 onItemSelected = { image, isSelected ->
                     if (isSelected) {
-                        dialogLoading.show()
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            val intent = Intent(this, ActivityEditImage::class.java).apply {
-                                putExtra("selected_image_path", image.filePath)
+                        //loading dialog hể
+                        loadingdialog = DialogLoading(this).apply {
+                            interCallback = object : AdCallback() {
+                                override fun onNextAction() {
+                                    super.onNextAction()
+                                    val intent = Intent(this@ActivitySelectImageEdit, ActivityEditImage::class.java)
+                                    intent.putExtra("selected_image_path", image.filePath)
+                                    startActivity(intent)
+                                    finish()
+                                }
                             }
-                            startActivity(intent)
-                            finish()
-                            dialogLoading.dismiss()
-                        }, 5000)
+                        }
+                        loadingdialog.show()
                     }
                 },
                 onCameraClick = {

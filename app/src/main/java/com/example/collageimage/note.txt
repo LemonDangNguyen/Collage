@@ -18,3 +18,10 @@ fun alphaPiece(alphaValue: Float) {
 
     invalidate() // Cập nhật lại giao diện
 }
+
+
+
+
+
+
+interCallback?.onNextAction()

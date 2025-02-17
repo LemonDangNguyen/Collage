@@ -25,6 +25,7 @@ import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBindi
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogLoading2Binding
 import com.example.collageimage.databinding.DialogLoadingBinding
+import com.example.collageimage.dialog.DialogLoading
 import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.showToast
@@ -50,7 +51,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     private var selectedImages = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var selectedImagesAdapter: SelectedImagesAdapter
-
+    private lateinit var loadingdialog: DialogLoading
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val repositoryMediaImages by lazy { RepositoryMediaImages(mediaStoreMediaImages) }
     private val useCaseMediaImageDetail by lazy { UseCaseMediaImageDetail(repositoryMediaImages) }
@@ -104,7 +105,6 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
             Admob.getInstance().showInterAds(this@SelectActivity, AdsConfig.interBack, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
-
                     finish()
                 }
 
@@ -135,35 +135,28 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
             updateSelectedCount()
             imageAdapter.updateSelection(selectedImages)
         }
-        val dialogLoadingBinding = DialogLoading2Binding.inflate(layoutInflater)
-
-        val dialog = Dialog(this).apply {
-            setCancelable(false)
-            setContentView(dialogLoadingBinding.root)
-            window?.let { window ->
-                val params = window.attributes
-                params.width = (93.33f * w).toInt()
-                window.attributes = params
-            }
-        }
-
-
-        binding.nextSelect.setOnClickListener {
+// next
+        binding.nextSelect.setOnUnDoubleClickListener {
             if (selectedImages.size >= 3) {
-                dialog.show()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    dialog.dismiss()
-                    val intent = Intent(this, HomeCollage::class.java)
-                    intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
-                    startActivity(intent)
-                    finish()
-                }, 5000)
+                loadingdialog = DialogLoading(this).apply {
+                    interCallback = object : AdCallback() {
+                        override fun onNextAction() {
+                            super.onNextAction()
+                            val intent = Intent(this@SelectActivity, HomeCollage::class.java)
+                            intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                }
+                loadingdialog.show()
+
             } else {
-                showToast(getString(R.string.select_at_least_3_images), Gravity.CENTER);
-
-
+                showToast(getString(R.string.select_at_least_3_images), Gravity.CENTER)
             }
         }
+
+
 
         binding.btnBack.setOnClickListener {
             onBackPressed()
@@ -362,11 +355,9 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
 
     private fun pushViewAds(nativeAd: NativeAd) {
         val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
-
         if (!AdsConfig.isLoadFullAds())
             adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
         else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
-
         binding.frNativeAds.removeAllViews()
         binding.frNativeAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)

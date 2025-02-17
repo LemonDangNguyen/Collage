@@ -33,8 +33,8 @@
         app:layout_constraintBottom_toTopOf="@id/tvAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:selectedDotColor="@color/main_color" />
-
+        app:selectedDotColor="@color/main_color"
+        app:dotsClickable="false" />
     <TextView
         android:id="@+id/tvAction"
         android:layout_width="wrap_content"

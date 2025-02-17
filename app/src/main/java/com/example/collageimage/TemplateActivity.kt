@@ -19,8 +19,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,13 +36,25 @@ import com.example.collageimage.color.ColorAdapter
 import com.example.collageimage.color.ColorItem
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.databinding.ActivityTemplateBinding
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
+import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.setUpDialog
 import com.example.collageimage.ratio.adapter.FontAdapter
 import com.example.collageimage.saveImage.SaveFromEditImage
 import com.example.collageimage.view_template.TemplateModel
 import com.example.collageimage.view_template.TemplateViewModel
 import com.example.collageimage.view_template.ViewTemplateAdapter
 import com.example.collageimage.extensions.showToast
+import com.example.collageimage.extensions.visible
+import com.example.collageimage.utils.AdsConfig
+import com.example.collageimage.utils.AdsConfig.cbFetchInterval
+import com.google.android.gms.ads.nativead.NativeAd
+import com.nlbn.ads.banner.BannerPlugin
+import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.callback.NativeCallback
+import com.nlbn.ads.util.Admob
+import com.nlbn.ads.util.ConsentHelper
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -89,9 +103,16 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         ColorItem("#E8F403"), ColorItem("#F403D4")
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+
+
+    override fun setUp() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showDialogBackSave()
+            }
+        })
+        AdsConfig.loadInterSave(this@TemplateActivity)
+        loadBanner()
         viewTemplateAdapter = binding.viewTemplate
         val imageId = intent.getIntExtra("imageId", -1)
         if (imageId != -1) {
@@ -144,10 +165,6 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                 saveFlParentAsImage()
             }
         }
-    }
-
-    override fun setUp() {
-
     }
 
     private fun saveFlParentAsImage() {
@@ -455,22 +472,40 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         Toast.makeText(this, "Selected color: $colorInt", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onBackPressed() {
+    private fun loadBanner() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()) {
+            val config = BannerPlugin.Config()
+            config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
+            config.defaultCBFetchIntervalSec = cbFetchInterval
 
-        val binding2 = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
-        val dialog2 = Dialog(this)
-        dialog2.setContentView(binding2.root)
-        val window = dialog2.window
-        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog2.setCanceledOnTouchOutside(true)
-        dialog2.setCancelable(true)
-        binding2.btnExit.setOnClickListener {
-            dialog2.dismiss()
-            finish()
-            super.onBackPressed()
+            if (true /*thêm biến check remote, thường là switch_banner_collapse*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.CollapsibleBottom
+            } else if (true /*thêm biến check remote, thường là banner_all*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.Adaptive
+            } else {
+                binding.banner.gone()
+                return
+            }
+            Admob.getInstance().loadBannerPlugin(this, findViewById(R.id.banner), findViewById(R.id.shimmer), config)
+        } else binding.banner.gone()
+    }
+
+
+    private fun showDialogBackSave() {
+
+        val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
+        val dialog = AlertDialog.Builder(this@TemplateActivity, R.style.SheetDialog).create()
+        dialog.setUpDialog(bindingDialog.root, true)
+        bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
+        showNativedialog(bindingDialog)
+
+        bindingDialog.btnExit.setOnClickListener {
+            dialog.dismiss()
+            showInterBack()
         }
-        binding2.btnStay.setOnClickListener {
+        bindingDialog.btnStay.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 when {
                     ContextCompat.checkSelfPermission(
@@ -494,10 +529,94 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                     }
                 }
             } else {
-                saveFlParentAsImage()
+                val bitmap = getBitmapFromView(binding.flParent)
+                saveBitmapToGallery(bitmap, onDone = {
+                    if (it != "") {
+                        val intent = Intent(this, SaveFromEditImage::class.java)
+                        intent.putExtra("image_path", it)
+                        showInterSave(intent)
+                    } else {
+                        showToast("Failed to save image.", Gravity.CENTER)
+                    }
+                })
             }
         }
-        dialog2.show()
     }
+    private fun showInterBack() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            Admob.getInstance().showInterAds(this@TemplateActivity, AdsConfig.interBack, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+
+                    finish()
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interBack = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterBack(this@TemplateActivity)
+                }
+            })
+        } else {finish()
+
+        }
+    }
+
+    private fun showInterSave(intent: Intent) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            Admob.getInstance().showInterAds(this@TemplateActivity, AdsConfig.interSave, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+                    startActivity(intent)
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interSave = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterSave(this@TemplateActivity)
+                }
+            })
+        } else {
+            startActivity(intent)
+        }
+    }
+    private fun showNativedialog(bindingDialog: DialogSaveBeforeClosingBinding) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+            bindingDialog.layoutNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAdsdialog(bindingDialog, it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAdsdialog(bindingDialog, nativeAd)
+                        }
+
+                        override fun onAdFailedToLoad() {
+                            bindingDialog.frAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else  bindingDialog.layoutNative.gone()
+    }
+    private fun pushViewAdsdialog(bindingDialog: DialogSaveBeforeClosingBinding, nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
+        bindingDialog.frAds.removeAllViews()
+        bindingDialog.frAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+    }
+
 }
 

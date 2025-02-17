@@ -103,14 +103,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ctlBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="binding_1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintBottom_toTopOf="@+id/banner">
 
         <include
             android:id="@+id/layoutParentTool"
@@ -177,5 +174,15 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <FrameLayout
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent">
 
+        <include
+            android:id="@+id/shimmer"
+            layout="@layout/layout_banner" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

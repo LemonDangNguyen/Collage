@@ -1,11 +1,9 @@
 package com.example.collageimage.image_template
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.collageimage.R
+import com.example.collageimage.databinding.ItemTemplateBinding
 
 class ImageTemplateAdapter : RecyclerView.Adapter<ImageTemplateAdapter.ImageViewHolder>() {
     private var imageList: List<ImagetemplateModel> = listOf()
@@ -15,21 +13,24 @@ class ImageTemplateAdapter : RecyclerView.Adapter<ImageTemplateAdapter.ImageView
         imageList = newImageList
         notifyDataSetChanged()
     }
-    inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.image_view)
+
+    inner class ImageViewHolder(private val binding: ItemTemplateBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ImagetemplateModel) {
+            binding.imageView.setImageResource(item.imageResId)
+            binding.root.setOnClickListener {
+                onItemClickListener?.invoke(item.id)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_template, parent, false)
-        return ImageViewHolder(view)
+        val binding = ItemTemplateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ImageViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val item = imageList[position]
-        holder.imageView.setImageResource(item.imageResId)
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.invoke(item.id)
-        }
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int {

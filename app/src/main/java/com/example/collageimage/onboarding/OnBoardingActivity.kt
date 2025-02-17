@@ -68,7 +68,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
             add(OnBoardingModel(getString(R.string.title_onboarding_1), "", R.drawable.img_on_boarding_1))
             add(OnBoardingModel(getString(R.string.title_onboarding_2), "", R.drawable.img_on_boarding_2))
             add(OnBoardingModel(getString(R.string.title_onboarding_3), "", R.drawable.img_on_boarding_3))
-            add(OnBoardingModel(getString(R.string.title_onboarding_3), "", R.drawable.img_on_boarding_3))
+            add(OnBoardingModel(getString(R.string.title_onboarding_3), "", R.drawable.img_on_boarding_4))
         })
 
 

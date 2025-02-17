@@ -62,7 +62,9 @@ import com.example.collageimage.color.ColorPenAdapter
 import com.example.collageimage.color.OnColorClickListener
 import com.example.collageimage.color.OnColorClickListener2
 import com.example.collageimage.databinding.ActivityHomeCollageBinding
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
+import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.setUpDialog
 import com.example.collageimage.frame.FrameAdapter
@@ -86,8 +88,13 @@ import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.utils.PuzzlePiece
 import com.hypersoft.pzlayout.view.PuzzleView
 import com.example.collageimage.extensions.showToast
+import com.example.collageimage.extensions.visible
 import com.example.collageimage.utils.AdsConfig
+import com.example.collageimage.utils.AdsConfig.cbFetchInterval
+import com.google.android.gms.ads.nativead.NativeAd
+import com.nlbn.ads.banner.BannerPlugin
 import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
 import com.nmh.base_lib.callback.ICallBackCheck
@@ -145,6 +152,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         ColorItem2("#FFE500"), ColorItem2("#FFB800"), ColorItem2("#FF1F00"), ColorItem2("#64332C"),
         ColorItem2("#736A69"), ColorItem2("#425C58"), ColorItem2("#010101"), ColorItem2("#F403D4")
     )
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -164,18 +172,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private val viewModelRatio: AspectRatioViewModel by viewModels()
     private var colorAdapterpen: ColorPenAdapter? = null
 
-    private fun saveFlParentAsImage() {
-        val bitmap = getBitmapFromView(binding.flParent)
-        saveBitmapToGallery(bitmap, onDone = {
-            if (it != "") {
-                val intent = Intent(this, SaveFromEditImage::class.java)
-                intent.putExtra("image_path", it)
-                showInterSave(intent)  // Gọi hàm với intent
-            } else {
-                showToast("Failed to save image.", Gravity.CENTER)
-            }
-        })
-    }
+
     private fun getBitmapFromView(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -764,10 +761,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         post { loadPhotoFromRes(list) }
     }
 
-    private fun setupListeners() = binding.apply {
-
-    }
-
     private fun loadPhotoFromRes(list: PuzzleLayout) {
         val count = minOf(mList.size, list.areaCount)
         val pieces = mutableListOf<Bitmap>()
@@ -1261,12 +1254,13 @@ override fun onPieceClick() {
         })
         val selectedImages: ArrayList<ImageModel>? =
             intent.getParcelableArrayListExtra("SELECTED_IMAGES")
+        AdsConfig.loadInterSave(this@HomeCollage)
         selectedImages?.let {
             mList = it
             fetchLayouts(it)
             checkImageSizeAndSetLayouts(it)
         } ?: Toast.makeText(this, "No images selected", Toast.LENGTH_SHORT).show()
-
+        loadBanner()
         initObservers()
         initRecyclerView()
         initListener()
@@ -1310,12 +1304,12 @@ override fun onPieceClick() {
     }
 
     private fun showDialogBackCollage() {
+
         val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
-
         val dialog = AlertDialog.Builder(this@HomeCollage, R.style.SheetDialog).create()
-        dialog.setUpDialog(bindingDialog.root, false)
-
+        dialog.setUpDialog(bindingDialog.root, true)
         bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
+        showNativedialog(bindingDialog)
 
         bindingDialog.btnExit.setOnClickListener {
             dialog.dismiss()
@@ -1345,11 +1339,64 @@ override fun onPieceClick() {
                     }
                 }
             } else {
-                saveFlParentAsImage()
+                val bitmap = getBitmapFromView(binding.flParent)
+                saveBitmapToGallery(bitmap, onDone = {
+                    if (it != "") {
+                        val intent = Intent(this, SaveFromEditImage::class.java)
+                        intent.putExtra("image_path", it)
+                        showInterSave(intent)
+                    } else {
+                        showToast("Failed to save image.", Gravity.CENTER)
+                    }
+                })
             }
         }
     }
 
+    private fun showNativedialog(bindingDialog: DialogSaveBeforeClosingBinding) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+            bindingDialog.layoutNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAdsdialog(bindingDialog, it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAdsdialog(bindingDialog, nativeAd)
+                        }
+
+                        override fun onAdFailedToLoad() {
+                            bindingDialog.frAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else  bindingDialog.layoutNative.gone()
+    }
+    private fun pushViewAdsdialog(bindingDialog: DialogSaveBeforeClosingBinding, nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
+        bindingDialog.frAds.removeAllViews()
+        bindingDialog.frAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+    }
+
+    private fun saveFlParentAsImage() {
+        val bitmap = getBitmapFromView(binding.flParent)
+        saveBitmapToGallery(bitmap, onDone = {
+            if (it != "") {
+                val intent = Intent(this, SaveFromEditImage::class.java)
+                intent.putExtra("image_path", it)
+                showInterSave(intent)
+            } else {
+                showToast("Failed to save image.", Gravity.CENTER)
+            }
+        })
+    }
     private fun showInterBack() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
@@ -1393,5 +1440,24 @@ override fun onPieceClick() {
         } else {
             startActivity(intent)
         }
+    }
+    private fun loadBanner() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()) {
+            val config = BannerPlugin.Config()
+            config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
+            config.defaultCBFetchIntervalSec = cbFetchInterval
+
+            if (true /*thêm biến check remote, thường là switch_banner_collapse*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.CollapsibleBottom
+            } else if (true /*thêm biến check remote, thường là banner_all*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.Adaptive
+            } else {
+                binding.banner.gone()
+                return
+            }
+            Admob.getInstance().loadBannerPlugin(this, findViewById(R.id.banner), findViewById(R.id.shimmer), config)
+        } else binding.banner.gone()
     }
 }

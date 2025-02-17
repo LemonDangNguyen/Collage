@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.example.collageimage.R
-import com.example.collageimage.ViewControl.gone
 import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogBackToHomeBinding
 import com.example.collageimage.databinding.DialogExitAppBinding
@@ -41,6 +40,7 @@ import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
 import com.example.collageimage.extensions.changeLanguage
 import com.example.collageimage.extensions.createBackground
+import com.example.collageimage.extensions.gone
 
 import com.example.collageimage.extensions.setAnimExit
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
