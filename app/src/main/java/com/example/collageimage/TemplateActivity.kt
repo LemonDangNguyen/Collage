@@ -545,7 +545,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
     private fun showInterBack() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_back) {
             Admob.getInstance().showInterAds(this@TemplateActivity, AdsConfig.interBack, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
@@ -568,7 +568,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
     private fun showInterSave(intent: Intent) {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_save) {
             Admob.getInstance().showInterAds(this@TemplateActivity, AdsConfig.interSave, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()

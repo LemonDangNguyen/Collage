@@ -51,6 +51,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 //        AdsConfig.loadNativeAll(this@MainActivity)
         AdsConfig.loadInterHome(this@MainActivity)
         AdsConfig.loadInterBack(this@MainActivity)
+        AdsConfig.loadInterItemTemplate(this@MainActivity)
 
     }
     private fun loadBanner() {

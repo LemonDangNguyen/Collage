@@ -1304,7 +1304,6 @@ override fun onPieceClick() {
     }
 
     private fun showDialogBackCollage() {
-
         val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this@HomeCollage, R.style.SheetDialog).create()
         dialog.setUpDialog(bindingDialog.root, true)
@@ -1400,7 +1399,7 @@ override fun onPieceClick() {
     private fun showInterBack() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_back) {
             Admob.getInstance().showInterAds(this@HomeCollage, AdsConfig.interBack, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
@@ -1423,7 +1422,7 @@ override fun onPieceClick() {
     private fun showInterSave(intent: Intent) {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_save) {
             Admob.getInstance().showInterAds(this@HomeCollage, AdsConfig.interSave, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()

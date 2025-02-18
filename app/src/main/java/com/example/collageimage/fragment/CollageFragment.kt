@@ -21,11 +21,16 @@ import com.example.collageimage.R
 import com.example.collageimage.SelectActivity
 import com.example.collageimage.Setting
 import com.example.collageimage.TemplateActivity
+import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.FragmentCollageBinding
+import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.visible
 import com.example.collageimage.permission.PermissionSheet
 import com.example.collageimage.utils.AdsConfig
 import com.example.collageimage.utils.AdsConfig.haveNetworkConnection
+import com.google.android.gms.ads.nativead.NativeAd
 import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.AppOpenManager
 import com.nlbn.ads.util.ConsentHelper
@@ -76,7 +81,7 @@ class CollageFragment : Fragment() {
 
         setupViewPager()
         autoScrollViewPager()
-
+        showNative()
         setuptemplate()
     }
     override fun onResume() {
@@ -236,14 +241,16 @@ class CollageFragment : Fragment() {
 
 
     private fun showInterHomeTemplate(className: String, imageId: Int) {
-        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireContext()).canRequestAds()
-            && AdsConfig.interHome != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds()) {
+        if (haveNetworkConnection(requireContext())
+            && ConsentHelper.getInstance(requireContext()).canRequestAds()
+            && AdsConfig.interHome != null
+            && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds()
+            &&AdsConfig.is_load_inter_home) {
 
             Admob.getInstance().showInterAds(requireContext(), AdsConfig.interHome, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
-                    // Sau khi quảng cáo đóng, chuyển đến TemplateActivity với imageId tương ứng
                     navigateToTemplateActivity(className, imageId)
                 }
 
@@ -255,7 +262,6 @@ class CollageFragment : Fragment() {
                 }
             })
         } else {
-            // Nếu không có quảng cáo, chuyển đến TemplateActivity ngay lập tức
             navigateToTemplateActivity(className, imageId)
         }
     }
@@ -269,9 +275,12 @@ class CollageFragment : Fragment() {
 
 
     private fun showInterHome(className: String) {
-        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireContext()).canRequestAds()
-            && AdsConfig.interHome != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */){
+        if (haveNetworkConnection(requireContext())
+            && ConsentHelper.getInstance(requireContext()).canRequestAds()
+            && AdsConfig.interHome != null
+            && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds()
+            && AdsConfig.is_load_inter_home){
             Admob.getInstance().showInterAds(requireContext(), AdsConfig.interHome, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
@@ -321,5 +330,33 @@ class CollageFragment : Fragment() {
         }
         bottomSheet.showDialog()
     }
+    private fun showNative() {
+        if (haveNetworkConnection(requireActivity()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()&& AdsConfig.isLoadFullAds()) {
+            binding.rlNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(requireActivity(), getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
 
+                        override fun onAdFailedToLoad() {
+                            binding.frNativeAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else binding.rlNative.gone()
+    }
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+        if (!AdsConfig.isLoadFullAds())
+            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+        binding.frNativeAds.removeAllViews()
+        binding.frNativeAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+    }
 }

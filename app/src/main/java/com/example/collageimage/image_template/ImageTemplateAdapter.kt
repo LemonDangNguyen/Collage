@@ -1,39 +1,122 @@
 package com.example.collageimage.image_template
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.collageimage.databinding.AdsNativeBotAdapterBinding
+import com.example.collageimage.databinding.AdsNativeBotAdapterFullBinding
 import com.example.collageimage.databinding.ItemTemplateBinding
+import com.example.collageimage.databinding.ItemAdsBinding
+import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.visible
+import com.example.collageimage.utils.AdsConfig
+import com.google.android.gms.ads.nativead.NativeAd
+import com.nlbn.ads.util.Admob
+import com.example.collageimage.callback.ICallBackDimensional
+import com.nmh.base_lib.callback.ICallBackItem
+import com.google.android.gms.ads.nativead.NativeAdView
 
-class ImageTemplateAdapter : RecyclerView.Adapter<ImageTemplateAdapter.ImageViewHolder>() {
-    private var imageList: List<ImagetemplateModel> = listOf()
-    var onItemClickListener: ((Int) -> Unit)? = null
+class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    fun setImageList(newImageList: List<ImagetemplateModel>) {
-        imageList = newImageList
+    companion object {
+        const val ITEM_TYPE_IMAGE = 0
+        const val ITEM_TYPE_ADS = 1
+    }
+
+    private var itemList: List<Any> = listOf()
+
+    var onItemClickListener: ((ImageTemplateModel) -> Unit)? = null
+    var callbackDimensional: ICallBackDimensional? = null
+
+    fun setItemList(newItemList: MutableList<Any>) {
+        itemList = newItemList
         notifyDataSetChanged()
     }
 
     inner class ImageViewHolder(private val binding: ItemTemplateBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ImagetemplateModel) {
+
+        fun bind(pos: Int) {
+            val item = itemList[pos] as ImageTemplateModel
+
             binding.imageView.setImageResource(item.imageResId)
             binding.root.setOnClickListener {
-                onItemClickListener?.invoke(item.id)
+                onItemClickListener?.invoke(item)
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val binding = ItemTemplateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ImageViewHolder(binding)
+    inner class AdsViewHolder(private val binding: ItemAdsBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(position: Int) {
+            val item = itemList[position] as AdsModel
+            if (!item.keyRemote) binding.rlNative.gone()
+            else {
+                binding.rlNative.visible()
+                if (!item.isLoaded) {
+                    callbackDimensional?.callBackItem(item, object : ICallBackItem {
+                        override fun callBack(ob: Any?, position: Int) {
+                            if (ob is NativeAd) {
+                                item.apply {
+                                    this.nativeAd = ob
+                                    isLoaded = true
+                                }
+                                pushAdsToView(ob)
+                            } else binding.rlNative.gone()
+                        }
+                    })
+                } else item.nativeAd?.let { pushAdsToView(it) } // Nếu quảng cáo đã tải, hiển thị luôn
+            }
+        }
+
+        // Phương thức để đẩy quảng cáo lên view
+        private fun pushAdsToView(nativeAd: NativeAd) {
+            val bindingAds: NativeAdView // Sử dụng NativeAdView của Google
+            if (AdsConfig.isLoadFullAds())
+                bindingAds = AdsNativeBotAdapterFullBinding.inflate(LayoutInflater.from(context)).root
+            else
+                bindingAds = AdsNativeBotAdapterBinding.inflate(LayoutInflater.from(context)).root
+
+            binding.nativeAds.removeAllViews()
+            binding.nativeAds.addView(bindingAds)
+            Admob.getInstance().pushAdsToViewCustom(nativeAd, bindingAds)
+        }
     }
 
-    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val item = imageList[position]
-        holder.bind(item)
+    // Phương thức xác định loại item (hình ảnh hay quảng cáo)
+    override fun getItemViewType(position: Int): Int {
+        return when (itemList[position]) {
+            is ImageTemplateModel -> ITEM_TYPE_IMAGE  // Trả về kiểu cho hình ảnh
+            is AdsModel -> ITEM_TYPE_ADS  // Trả về kiểu cho quảng cáo
+            else -> throw IllegalArgumentException("Unknown item type")  // Nếu không phải hình ảnh hay quảng cáo thì throw lỗi
+        }
     }
 
+    // Tạo ViewHolder phù hợp cho mỗi loại item
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            ITEM_TYPE_IMAGE -> {
+                val binding = ItemTemplateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ImageViewHolder(binding)  // Tạo ImageViewHolder cho hình ảnh
+            }
+            ITEM_TYPE_ADS -> {
+                val binding = ItemAdsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                AdsViewHolder(binding)  // Tạo AdsViewHolder cho quảng cáo
+            }
+            else -> throw IllegalArgumentException("Unknown view type")  // Nếu không xác định được view type thì throw lỗi
+        }
+    }
+
+    // Gắn dữ liệu vào ViewHolder
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            ITEM_TYPE_IMAGE -> (holder as ImageViewHolder).bind(position)  // Gắn dữ liệu hình ảnh
+            ITEM_TYPE_ADS -> (holder as AdsViewHolder).bind(position)  // Gắn dữ liệu quảng cáo
+        }
+    }
+
+    // Trả về số lượng item trong danh sách
     override fun getItemCount(): Int {
-        return imageList.size
+        return itemList.size
     }
 }

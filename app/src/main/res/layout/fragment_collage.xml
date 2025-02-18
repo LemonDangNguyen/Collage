@@ -77,6 +77,24 @@
                 app:layout_constraintTop_toBottomOf="@id/viewPager"
                 app:selectedDotColor="@color/colorPrimary" />
 
+            <RelativeLayout
+                android:id="@+id/rl_native"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:layout_editor_absoluteX="22dp">
+
+                <FrameLayout
+                    android:id="@+id/fr_native_ads"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <include layout="@layout/native_bot_horizontal_media_left_loading" />
+                </FrameLayout>
+            </RelativeLayout>
+
+
             <LinearLayout
                 android:id="@+id/btn_photo_collage"
                 android:layout_width="match_parent"
@@ -161,8 +179,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:padding="10dp"
-                android:textColor="@color/black"
                 android:text="@string/popular_template"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -172,8 +190,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:columnCount="2"
-                >
+                android:columnCount="2">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -286,8 +303,7 @@
                 </LinearLayout>
             </GridLayout>
         </LinearLayout>
-
-
     </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

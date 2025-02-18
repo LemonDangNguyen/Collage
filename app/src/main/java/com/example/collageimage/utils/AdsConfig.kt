@@ -41,7 +41,7 @@ object AdsConfig {
     var is_load_native_loading = true
     var is_load_native_select_albums = true
     var is_load_native_select_image = true
-    var is_load_native_successfully          = true
+    var is_load_native_successfully = true
     var is_load_native_setting = true
     var is_load_native_language_setting = true
 
@@ -60,6 +60,7 @@ object AdsConfig {
     var interBack: InterstitialAd? = null
     var interHome: InterstitialAd? = null
     var interSave: InterstitialAd? = null
+    var inter_item_template: InterstitialAd? = null
 
     var cbFetchInterval = 15
     var interval_show_interstitial = 15
@@ -67,7 +68,7 @@ object AdsConfig {
 
     fun loadInterBack(context: Context) {
         if (ConsentHelper.getInstance(context).canRequestAds() && interBack == null
-            && haveNetworkConnection(context) /* thêm điều kiện remote */) {
+            && haveNetworkConnection(context) && is_load_inter_back  ) {
             Admob.getInstance().loadInterAds(context, context.getString(R.string.inter_back),
                 object : AdCallback() {
                     override fun onInterstitialLoad(interstitialAd: InterstitialAd?) {
@@ -85,7 +86,7 @@ object AdsConfig {
 
     fun loadInterHome(context: Context) {
         if (ConsentHelper.getInstance(context).canRequestAds() && interHome == null
-            && haveNetworkConnection(context) /* thêm điều kiện remote */) {
+            && haveNetworkConnection(context) && is_load_inter_home) {
             Admob.getInstance().loadInterAds(context, context.getString(R.string.inter_home),
                 object : AdCallback() {
                     override fun onInterstitialLoad(interstitialAd: InterstitialAd?) {
@@ -103,7 +104,7 @@ object AdsConfig {
 
     fun loadInterSave(context: Context) {
         if (ConsentHelper.getInstance(context).canRequestAds() && interSave == null
-            && haveNetworkConnection(context) /* thêm điều kiện remote */) {
+            && haveNetworkConnection(context) && is_load_inter_save) {
             Admob.getInstance().loadInterAds(context, context.getString(R.string.inter_back),
                 object : AdCallback() {
                     override fun onInterstitialLoad(interstitialAd: InterstitialAd?) {
@@ -118,11 +119,27 @@ object AdsConfig {
                 })
         }
     }
+    fun loadInterItemTemplate(context: Context) {
+        if (ConsentHelper.getInstance(context).canRequestAds() && inter_item_template == null
+            && haveNetworkConnection(context) && is_load_inter_item_template) {
+            Admob.getInstance().loadInterAds(context, context.getString(R.string.inter_item_template),
+                object : AdCallback() {
+                    override fun onInterstitialLoad(interstitialAd: InterstitialAd?) {
+                        super.onInterstitialLoad(interstitialAd)
+                        inter_item_template = interstitialAd
+                    }
+                    override fun onAdFailedToLoad(p0: LoadAdError?) {
+                        super.onAdFailedToLoad(p0)
+                        inter_item_template = null
+                    }
+                })
+        }
+    }
 
 
     fun loadNativeHome(context: Context) {
         if (haveNetworkConnection(context) && ConsentHelper.getInstance(context).canRequestAds()
-            && nativeHome == null /* thêm điều kiện remote nữa*/) {
+            && nativeHome == null && is_load_native_home) {
             Admob.getInstance().loadNativeAd(context, context.getString(R.string.native_home),
                 object : NativeCallback() {
                     override fun onNativeAdLoaded(nativeAd: NativeAd) {
@@ -167,8 +184,10 @@ object AdsConfig {
     }
 
     fun loadNativeExitApp(context: Context) {
-        if (haveNetworkConnection(context) && ConsentHelper.getInstance(context).canRequestAds()
-            && nativeExitApp == null /*thêm remote config*/) {
+        if (haveNetworkConnection(context)
+            && ConsentHelper.getInstance(context).canRequestAds()
+            && nativeExitApp == null
+            && is_load_native_exit) {
             Admob.getInstance().loadNativeAd(context, context.getString(R.string.native_exit),
                 object : NativeCallback() {
                     override fun onNativeAdLoaded(nativeAd: NativeAd) {
@@ -212,7 +231,7 @@ object AdsConfig {
     }
 
     fun loadNativePermission(context: Context) {
-        if (haveNetworkConnection(context) && nativePermission == null /* thêm điều kiện remote nữa*/) {
+        if (haveNetworkConnection(context) && nativePermission == null && is_load_native_permission) {
             Admob.getInstance().loadNativeAd(context, context.getString(R.string.native_permission),
                 object : NativeCallback() {
                     override fun onNativeAdLoaded(nativeAd: NativeAd) {
@@ -250,7 +269,10 @@ object AdsConfig {
     }
 
     fun loadNativeLanguage(context: Context) {
-        if (haveNetworkConnection(context) && nativeLanguage == null /* thêm điều kiện remote nữa*/) {
+        if (haveNetworkConnection(context)
+            && ConsentHelper.getInstance(context).canRequestAds()
+            && nativeLanguage == null
+            && AdsConfig.is_load_native_language) {
             Admob.getInstance().loadNativeAd(context, context.getString(R.string.native_language),
                 object : NativeCallback() {
                     override fun onNativeAdLoaded(nativeAd: NativeAd) {
@@ -303,5 +325,6 @@ object AdsConfig {
 
     fun getDelayShowInterSplash() = if(isLoadFullAds()) is_delay_show_inter_splash * 1000L else 3000L
 
-    fun isLoadFullAds(): Boolean = true
+   // fun isLoadFullAds(): Boolean = Admob.getInstance().isLoadFullAds // nomal
+    fun isLoadFullAds(): Boolean = true //full ads
 }

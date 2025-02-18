@@ -101,7 +101,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     private fun showInterBack() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */) {
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_back) {
             Admob.getInstance().showInterAds(this@SelectActivity, AdsConfig.interBack, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
