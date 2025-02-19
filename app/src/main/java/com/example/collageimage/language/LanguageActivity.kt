@@ -21,7 +21,7 @@ import com.example.collageimage.extensions.visible
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
 import com.nmh.base.project.helpers.IS_SHOW_BACK
 import com.nmh.base.project.model.LanguageModel
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 import com.nmh.base_lib.callback.ICallBackItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

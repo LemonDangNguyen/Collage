@@ -1,16 +1,12 @@
 package com.example.collageimage
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 import com.google.firebase.FirebaseApp
-import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.util.Adjust
 import com.nlbn.ads.util.AdsApplication
 
-import com.nlbn.ads.util.AppOpenManager
-import com.nmh.base.project.utils.AdsConfig
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

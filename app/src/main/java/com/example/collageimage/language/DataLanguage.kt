@@ -4,10 +4,9 @@ package com.example.collageimage.language
 
 import com.example.collageimage.NMHApp
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
-import com.nmh.base.project.helpers.FIRST_INSTALL
 import com.nmh.base.project.helpers.IS_SHOW_BACK
 import com.nmh.base.project.model.LanguageModel
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.Locale

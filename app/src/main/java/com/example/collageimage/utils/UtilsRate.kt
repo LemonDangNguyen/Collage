@@ -14,7 +14,7 @@ import com.nmh.base_lib.callback.ICallBackCheck
 
 import com.example.collageimage.extensions.showToast
 import com.nmh.base.project.helpers.IS_RATED
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 import com.nmh.base.project.utils.ActionUtils.sendFeedback
 
 

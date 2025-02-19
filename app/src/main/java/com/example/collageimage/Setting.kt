@@ -10,7 +10,7 @@ import com.example.collageimage.extensions.gone
 import com.example.collageimage.language.LanguageActivity
 import com.nlbn.ads.util.AppOpenManager
 import com.nmh.base.project.helpers.IS_SHOW_BACK
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 import com.nmh.base.project.utils.ActionUtils
 import com.nmh.base.project.utils.UtilsRate
 import com.nmh.base_lib.callback.ICallBackCheck

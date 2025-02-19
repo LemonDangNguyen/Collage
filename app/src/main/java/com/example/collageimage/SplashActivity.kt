@@ -10,7 +10,7 @@ import com.example.collageimage.language.LanguageActivity
 import com.nmh.base.project.helpers.CURRENT_LANGUAGE
 import com.nmh.base.project.helpers.IS_SHOW_BACK
 import com.nmh.base.project.model.LanguageModel
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

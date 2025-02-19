@@ -10,7 +10,7 @@ import com.example.collageimage.permission.PermissionActivity
 import com.nmh.base.project.adapter.DepthPageTransformer
 import com.nmh.base.project.helpers.FIRST_INSTALL
 import com.nmh.base.project.model.OnBoardingModel
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

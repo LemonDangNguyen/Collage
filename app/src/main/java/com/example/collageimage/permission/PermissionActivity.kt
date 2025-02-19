@@ -13,7 +13,7 @@ import com.example.collageimage.extensions.openSettingPermission
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
 
 import com.nmh.base.project.helpers.FIRST_INSTALL
-import com.nmh.base.project.sharepref.DataLocalManager
+import com.example.collageimage.sharepref.DataLocalManager
 
 class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermissionBinding::inflate) {
 
