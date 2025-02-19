@@ -18,7 +18,9 @@ import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBindi
 import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.visible
 import com.example.collageimage.utils.AdsConfig
+import com.example.collageimage.utils.AdsConfig.cbFetchInterval
 import com.google.android.gms.ads.nativead.NativeAd
+import com.nlbn.ads.banner.BannerPlugin
 import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
@@ -58,7 +60,7 @@ class SelectImageTemplate :
     }
 
     override fun setUp() {
-        showNative()
+        loadBanner()
     }
 
     private fun setUpListener() {
@@ -173,36 +175,23 @@ class SelectImageTemplate :
         loadImages()
     }
 
-    private fun showNative() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
-            binding.rlNative.visible()
-            AdsConfig.nativeAll?.let {
-                pushViewAds(it)
-            } ?: run {
-                Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
-                    object : NativeCallback() {
-                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
-                            pushViewAds(nativeAd)
-                        }
+    private fun loadBanner() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()) {
+            val config = BannerPlugin.Config()
+            config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
+            config.defaultCBFetchIntervalSec = cbFetchInterval
 
-                        override fun onAdFailedToLoad() {
-                            binding.frNativeAds.removeAllViews()
-                        }
-                    }
-                )
+            if (true /*thêm biến check remote, thường là switch_banner_collapse*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.CollapsibleBottom
+            } else if (true /*thêm biến check remote, thường là banner_all*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.Adaptive
+            } else {
+                binding.banner.gone()
+                return
             }
-        } else binding.rlNative.gone()
-    }
-
-    private fun pushViewAds(nativeAd: NativeAd) {
-        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
-
-        if (!AdsConfig.isLoadFullAds())
-            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
-        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
-
-        binding.frNativeAds.removeAllViews()
-        binding.frNativeAds.addView(adView.root)
-        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+            Admob.getInstance().loadBannerPlugin(this, findViewById(R.id.banner), findViewById(R.id.shimmer), config)
+        } else binding.banner.gone()
     }
 }

@@ -331,7 +331,11 @@ class CollageFragment : Fragment() {
         bottomSheet.showDialog()
     }
     private fun showNative() {
-        if (haveNetworkConnection(requireActivity()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()&& AdsConfig.isLoadFullAds()) {
+        if (haveNetworkConnection(requireActivity())
+            && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+            && AdsConfig.isLoadFullAds()
+            && AdsConfig.is_load_native_home)
+        {
             binding.rlNative.visible()
             AdsConfig.nativeAll?.let {
                 pushViewAds(it)

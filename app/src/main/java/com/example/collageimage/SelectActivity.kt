@@ -1,45 +1,31 @@
 package com.example.collageimage
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.collageimage.MainActivity
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectBinding
-import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
-import com.example.collageimage.databinding.DialogExitBinding
-import com.example.collageimage.databinding.DialogLoading2Binding
-import com.example.collageimage.databinding.DialogLoadingBinding
 import com.example.collageimage.dialog.DialogLoading
 import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.showToast
-import com.example.collageimage.extensions.visible
 import com.example.collageimage.utils.AdsConfig
+import com.example.collageimage.utils.AdsConfig.cbFetchInterval
 import com.example.selectpic.ddat.RepositoryMediaImages
 import com.example.selectpic.ddat.UseCaseMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
-import com.google.android.gms.ads.nativead.NativeAd
 import com.hypersoft.puzzlelayouts.app.features.media.presentation.images.adapter.recyclerView.AdapterMediaImageDetail
+import com.nlbn.ads.banner.BannerPlugin
 import com.nlbn.ads.callback.AdCallback
-import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
 import com.nmh.base_lib.callback.ICallBackCheck
@@ -95,7 +81,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         loadImages()
         setUpListener()
         initObservers()
-        showNative()
+        loadBanner()
     }
 
     private fun showInterBack() {
@@ -118,11 +104,11 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         } else {
             /*nếu không có kịch bản native_back thì finish() luôn*/
             /*ẩn tất cả các ads đang có trên màn hình(banner, native) để show dialog*/
-            binding.rlNative.gone()
+//            binding.rlNative.gone()
             showDialogBack(object : ICallBackCheck {
                 override fun check(isCheck: Boolean) {
                     /*hiện tất cả các ads đang có trên màn hình(banner, native) khi dialog ẩn đi*/
-                    binding.rlNative.visible()
+                 //   binding.rlNative.visible()
                 }
             })
         }
@@ -332,34 +318,24 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         updateSelectedCount()
     }
 
-    private fun showNative() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
-            binding.rlNative.visible()
-            AdsConfig.nativeAll?.let {
-                pushViewAds(it)
-            } ?: run {
-                Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
-                    object : NativeCallback() {
-                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
-                            pushViewAds(nativeAd)
-                        }
 
-                        override fun onAdFailedToLoad() {
-                            binding.frNativeAds.removeAllViews()
-                        }
-                    }
-                )
+    private fun loadBanner() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()) {
+            val config = BannerPlugin.Config()
+            config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
+            config.defaultCBFetchIntervalSec = cbFetchInterval
+
+            if (true /*thêm biến check remote, thường là switch_banner_collapse*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.CollapsibleBottom
+            } else if (true /*thêm biến check remote, thường là banner_all*/) {
+                config.defaultAdUnitId = getString(R.string.banner_all)
+                config.defaultBannerType = BannerPlugin.BannerType.Adaptive
+            } else {
+                binding.banner.gone()
+                return
             }
-        } else binding.rlNative.gone()
-    }
-
-    private fun pushViewAds(nativeAd: NativeAd) {
-        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
-        if (!AdsConfig.isLoadFullAds())
-            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
-        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
-        binding.frNativeAds.removeAllViews()
-        binding.frNativeAds.addView(adView.root)
-        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+            Admob.getInstance().loadBannerPlugin(this, findViewById(R.id.banner), findViewById(R.id.shimmer), config)
+        } else binding.banner.gone()
     }
 }

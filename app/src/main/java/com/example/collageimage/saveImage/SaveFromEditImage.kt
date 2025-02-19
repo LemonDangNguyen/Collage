@@ -51,13 +51,16 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
         }
 
         binding.btGoHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+
         }
 
         binding.btShare.setOnClickListener {
             imagePath?.let { shareImageFromPictures(this, it) }
+        }
+        binding.btnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

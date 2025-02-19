@@ -1353,7 +1353,8 @@ override fun onPieceClick() {
     }
 
     private fun showNativedialog(bindingDialog: DialogSaveBeforeClosingBinding) {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() &&AdsConfig.is_load_native_save && AdsConfig.isLoadFullAds()
+            && AdsConfig.is_load_native_save) {
             bindingDialog.layoutNative.visible()
             AdsConfig.nativeAll?.let {
                 pushViewAdsdialog(bindingDialog, it)

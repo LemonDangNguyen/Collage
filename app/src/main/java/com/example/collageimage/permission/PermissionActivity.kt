@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import com.example.collageimage.MainActivity
 import com.example.collageimage.R
 import com.example.collageimage.base.BaseActivity
@@ -31,10 +32,13 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
     val storagePer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-
+    val notificationPer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+    else arrayOf("")
     private var type = ""
     private var countStorage = 0
     private var countCamera = 0
+    private var countNotification = 0
 
     override fun setUp() {
         setUpLayout()
@@ -46,16 +50,31 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
 
         val storagePer = checkPer(storagePer)
         val cameraPer = checkPer(arrayOf(Manifest.permission.CAMERA))
+        val notificationPer = checkPer(notificationPer)
 
-        if (storagePer || cameraPer)
+        if (storagePer || cameraPer || notificationPer )
             binding.tvGo.text = getString(R.string.str_continue)
         else binding.tvGo.text = getString(R.string.skip)
-
+        binding.scNotify.setCheck(notificationPer)
         binding.scCamera.setCheck(cameraPer)
         binding.scStorage.setCheck(storagePer)
     }
 
     private fun evenClick() {
+        binding.scNotify.onResult = object : StatusResultSwitch {
+            @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+            override fun onResult(isChecked: Boolean) {
+                if (checkPer(notificationPer)) {
+                    binding.scNotify.setCheck(true)
+                    return
+                }
+                if (isChecked) {
+                    AppOpenManager.getInstance().disableAppResumeWithActivity(PermissionActivity::class.java)
+                    type = "notify"
+                    checkPermission.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                }
+            }
+        }
         binding.scCamera.onResult = object : StatusResultSwitch {
             override fun onResult(isChecked: Boolean) {
                 if (checkPer(arrayOf(Manifest.permission.CAMERA))) {
@@ -97,7 +116,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                         openSettingPermission(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     }
 
-                    if (true /*thêm key remote*/)
+                    if (AdsConfig.is_load_native_permission_camera)
                         loadNative(getString(R.string.native_permission_camera))
                     else binding.layoutNative.gone()
                 }
@@ -108,14 +127,25 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                         openSettingPermission(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     }
 
-                    if (true /*thêm key remote*/)
+                    if (AdsConfig.is_load_native_permission_storage)
                         loadNative(getString(R.string.native_permission_storage))
+                    else binding.layoutNative.gone()
+                }
+                "notify" -> {
+                    countNotification++
+                    if (countNotification >= 3) {
+                        AppOpenManager.getInstance().disableAppResumeWithActivity(PermissionActivity::class.java)
+                        openSettingPermission(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    }
+
+                    if (AdsConfig.is_load_native_permission_notification)
+                        loadNative(getString(R.string.native_permission_notification))
                     else binding.layoutNative.gone()
                 }
             }
         }
     private fun setUpLayout() {
-        if (true /*chỗ này check key remote*/) {
+        if (AdsConfig.is_load_native_permission) {
             if (AdsConfig.isLoadFullAds())
                 loadNative(getString(R.string.native_permission))
             else binding.layoutNative.gone()
@@ -123,7 +153,8 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
     }
     private fun loadNative(strId: String) {
         if(haveNetworkConnection() && AdsConfig.isLoadFullAds()
-            && ConsentHelper.getInstance(this).canRequestAds()) {
+            && ConsentHelper.getInstance(this).canRequestAds()
+            ) {
             binding.layoutNative.visible()
             AdsConfig.nativePermission?.let {
                 pushViewNative(it)

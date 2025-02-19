@@ -173,7 +173,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
             if (it != "") {
                 val intent = Intent(this, SaveFromEditImage::class.java)
                 intent.putExtra("image_path", it)
-                startActivity(intent)
+                showInterSave(intent)
             } else showToast("Failed to save image.", Gravity.CENTER)
         })
     }

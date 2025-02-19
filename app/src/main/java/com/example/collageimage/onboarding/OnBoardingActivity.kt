@@ -85,7 +85,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                             binding.tvTitle.text = getString(R.string.title_onboarding_1)
                             binding.tvDes.text = getString(R.string.des_onboarding_1)
 
-                            if (true /*trong này check điều kiện remote*/) {
+                            if (AdsConfig.is_load_native_intro1) {
                                 loadNative(0)
                             } else {
                                 binding.layoutNative.gone()
@@ -98,7 +98,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                             binding.tvTitle.text = getString(R.string.title_onboarding_2)
                             binding.tvDes.text = getString(R.string.des_onboarding_2)
 
-                            if (true /*trong này check điều kiện remote*/) {
+                            if (AdsConfig.is_load_native_intro2) {
                                 if (AdsConfig.isLoadFullAds()) loadNative(1)
                                 else {
                                     binding.layoutNative.gone()
@@ -115,7 +115,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                             binding.tvTitle.text = getString(R.string.title_onboarding_3)
                             binding.tvDes.text = getString(R.string.des_onboarding_3)
 
-                            if (true /*trong này check điều kiện remote*/) {
+                            if (AdsConfig.is_load_native_intro3) {
                                 loadNative(2)
                             } else {
                                 binding.layoutNative.gone()
@@ -127,7 +127,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                             binding.tvTitle.text = getString(R.string.title_onboarding_3)
                             binding.tvDes.text = getString(R.string.des_onboarding_3)
 
-                            if (true /*trong này check điều kiện remote*/) {
+                            if (AdsConfig.is_load_native_intro4) {
                                 if (AdsConfig.isLoadFullAds()) loadNative(3)
                                 else {
                                     binding.layoutNative.gone()
@@ -147,7 +147,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
 
     private fun loadInter() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote */){
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_intro){
             val callback = object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()

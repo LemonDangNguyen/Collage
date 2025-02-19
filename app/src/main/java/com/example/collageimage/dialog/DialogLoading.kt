@@ -44,7 +44,9 @@ class DialogLoading(context: Context) : Dialog(context) {
     fun loadNative() {
         try {
             if (AdsConfig.haveNetworkConnection(context)
-                && ConsentHelper.getInstance(context).canRequestAds()) {
+                && ConsentHelper.getInstance(context).canRequestAds()
+                && AdsConfig.isLoadFullAds()
+                &&AdsConfig.is_load_native_loading) {
                 binding.layoutNative.visible()
                 nativeAds?.let {
                     pushViewAds(it)
@@ -72,6 +74,7 @@ class DialogLoading(context: Context) : Dialog(context) {
                     )
                 }
             } else binding.layoutNative.gone()
+            interCallback?.onNextAction()
         } catch (e: Exception) {
             binding.layoutNative.gone()
             e.printStackTrace()

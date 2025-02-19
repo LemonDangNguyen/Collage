@@ -335,8 +335,11 @@ abstract class BaseActivity<B : ViewBinding>(
     }
 
     fun showNativeBack(bindingDialog: DialogBackToHomeBinding) {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
-            && AdsConfig.isLoadFullAds() /* thêm điều kiện remote nữa*/) {
+        if (haveNetworkConnection()
+            && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.isLoadFullAds()
+            &&AdsConfig.isLoadFullAds()
+            &&AdsConfig.is_load_native_back) {
             bindingDialog.layoutNative.visible()
             AdsConfig.nativeBackHome?.let {
                 pushViewAdsBackHome(bindingDialog, it)
@@ -396,7 +399,7 @@ abstract class BaseActivity<B : ViewBinding>(
 
     private fun showNativeExit(bindingDialog: DialogExitAppBinding) {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
-            && AdsConfig.isLoadFullAds() /*thêm remote config*/) {
+            && AdsConfig.isLoadFullAds()&& AdsConfig.is_load_native_exit) {
             bindingDialog.layoutNative.visible()
             AdsConfig.nativeExitApp?.let {
                 pushViewAdsExit(bindingDialog, it)

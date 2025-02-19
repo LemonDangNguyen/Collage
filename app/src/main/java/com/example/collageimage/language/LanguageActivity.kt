@@ -125,7 +125,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
     }
 
     private fun showNativeLanguageSetting() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_language_setting) {
             binding.layoutNative.visible()
             AdsConfig.nativeAll?.let {
                 pushViewAdsSetting(it)
@@ -159,7 +159,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
     }
 
     private fun showNativeLanguage() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_language) {
             binding.layoutNative.visible()
             AdsConfig.nativeLanguage?.let {
                 pushViewAds(it)
@@ -181,7 +181,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
 
     private fun showNativeLanguageSelect() {
         binding.ivTick.visible()
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()  && AdsConfig.is_load_native_language) {
             binding.layoutNative.visible()
             AdsConfig.nativeLanguageSelect?.let {
                 pushViewAds(it)

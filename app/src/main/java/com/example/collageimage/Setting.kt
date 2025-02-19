@@ -60,7 +60,7 @@ class Setting : BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inf
         showNative()
     }
     private fun showNative() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_language_setting) {
             binding.rlNative.visible()
             AdsConfig.nativeAll?.let {
                 pushViewAds(it)
