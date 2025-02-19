@@ -66,6 +66,8 @@ class TemplateFragment : Fragment() {
                                 callBackItem.callBack(p0,-1)
                             }
 
+
+
                             override fun onAdFailedToLoad() {
                                 super.onAdFailedToLoad()
                                 callBackItem.callBack(null,-1)
