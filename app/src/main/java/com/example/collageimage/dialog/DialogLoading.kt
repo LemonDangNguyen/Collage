@@ -20,7 +20,8 @@ import com.nlbn.ads.util.ConsentHelper
 
 class DialogLoading(context: Context) : Dialog(context) {
 
-    private var binding: DialogLoading2Binding = DialogLoading2Binding.inflate(LayoutInflater.from(context))
+    private var binding: DialogLoading2Binding =
+        DialogLoading2Binding.inflate(LayoutInflater.from(context))
     var interCallback: AdCallback? = null
     private var nativeAds: NativeAd? = null
 
@@ -46,7 +47,8 @@ class DialogLoading(context: Context) : Dialog(context) {
             if (AdsConfig.haveNetworkConnection(context)
                 && ConsentHelper.getInstance(context).canRequestAds()
                 && AdsConfig.isLoadFullAds()
-                &&AdsConfig.is_load_native_loading) {
+                && AdsConfig.is_load_native_loading
+            ) {
                 binding.layoutNative.visible()
                 nativeAds?.let {
                     pushViewAds(it)
@@ -73,8 +75,10 @@ class DialogLoading(context: Context) : Dialog(context) {
                         }
                     )
                 }
-            } else binding.layoutNative.gone()
-            interCallback?.onNextAction()
+            } else {
+                binding.layoutNative.gone()
+                interCallback?.onNextAction()
+            }
         } catch (e: Exception) {
             binding.layoutNative.gone()
             e.printStackTrace()

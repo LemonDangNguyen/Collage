@@ -141,12 +141,6 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
                 showToast(getString(R.string.select_at_least_3_images), Gravity.CENTER)
             }
         }
-
-
-
-        binding.btnBack.setOnClickListener {
-            onBackPressed()
-        }
         binding.btnAlbum.setOnClickListener {
             val bottomSheet = SelectAlbumBottomSheet()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)

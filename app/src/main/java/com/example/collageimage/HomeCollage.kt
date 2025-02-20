@@ -1273,6 +1273,7 @@ override fun onPieceClick() {
         filterrcl()
         initListener2()
         binding.puzzleView.setLineSize(10)
+
         binding.tvSave.setOnUnDoubleClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 when {
@@ -1300,6 +1301,7 @@ override fun onPieceClick() {
                 saveFlParentAsImage()
             }
         }
+
         binding.btnBack.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
@@ -1391,6 +1393,7 @@ override fun onPieceClick() {
             if (it != "") {
                 val intent = Intent(this, SaveFromEditImage::class.java)
                 intent.putExtra("image_path", it)
+                intent.putExtra("extra_text", "HomeCollage")
                 showInterSave(intent)
             } else {
                 showToast("Failed to save image.", Gravity.CENTER)
@@ -1428,6 +1431,7 @@ override fun onPieceClick() {
                 override fun onNextAction() {
                     super.onNextAction()
                     startActivity(intent)
+                    finish()
                 }
 
                 override fun onAdClosedByUser() {

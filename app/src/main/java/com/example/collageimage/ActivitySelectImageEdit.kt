@@ -96,9 +96,6 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
         }
     }
     private fun setUpListener() {
-        binding.btnBack.setOnClickListener {
-            onBackPressed()
-        }
         binding.btnAlbum.setOnClickListener {
             val bottomSheet = SelectAlbumBottomSheet()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
@@ -165,15 +162,16 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
                 images,
                 onItemSelected = { image, isSelected ->
                     if (isSelected) {
-                        //loading dialog hể
                         loadingdialog = DialogLoading(this).apply {
                             interCallback = object : AdCallback() {
                                 override fun onNextAction() {
                                     super.onNextAction()
-                                    val intent = Intent(this@ActivitySelectImageEdit, ActivityEditImage::class.java)
-                                    intent.putExtra("selected_image_path", image.filePath)
-                                    startActivity(intent)
-                                    finish()
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        val intent = Intent(this@ActivitySelectImageEdit, ActivityEditImage::class.java)
+                                        intent.putExtra("selected_image_path", image.filePath)
+                                        startActivity(intent)
+                                        finish()
+                                    }, 3000)
                                 }
                             }
                         }

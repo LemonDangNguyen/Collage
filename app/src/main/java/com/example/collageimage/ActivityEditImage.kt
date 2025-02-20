@@ -136,6 +136,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
                 showDialogBackSave()
             }
         })
+        binding.tvCancel.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
         AdsConfig.loadInterSave(this@ActivityEditImage)
         loadBanner()
         nitview()
@@ -144,7 +145,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
             displayImage(imagePath)
         }
         loadimgCam()
-        backfun()
+
 
         binding.tvSave.setOnUnDoubleClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -182,6 +183,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
             if (it != "") {
                 val intent = Intent(this, SaveFromEditImage::class.java)
                 intent.putExtra("image_path", it)
+                intent.putExtra("extra_text", "ActivityEditImage")
                 showInterSave(intent)
             } else showToast("Failed to save image.", Gravity.CENTER)
         })
@@ -241,13 +243,6 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
             e.printStackTrace()
         }
     }
-
-    fun backfun() {
-        binding.tvCancel.setOnClickListener {
-            onBackPressed()
-        }
-    }
-
     fun loadimgCam() {
         val imageList = intent.getParcelableArrayListExtra<ImageModel>("IMG_FROM_CAM")
         val imageUri = imageList?.get(0)?.uri
@@ -1052,6 +1047,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
                 override fun onNextAction() {
                     super.onNextAction()
                     startActivity(intent)
+                    finish()
                 }
 
                 override fun onAdClosedByUser() {
