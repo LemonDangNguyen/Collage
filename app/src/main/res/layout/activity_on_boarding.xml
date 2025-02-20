@@ -99,9 +99,7 @@
         <FrameLayout
             android:id="@+id/frNativeAds"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp">
-
+            android:layout_height="wrap_content">
             <include layout="@layout/native_button_bot_loading" />
         </FrameLayout>
     </FrameLayout>
