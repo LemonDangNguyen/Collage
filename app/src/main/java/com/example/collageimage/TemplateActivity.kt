@@ -173,6 +173,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
             if (it != "") {
                 val intent = Intent(this, SaveFromEditImage::class.java)
                 intent.putExtra("image_path", it)
+                intent.putExtra("extra_text", "TemplateActivity")
                 showInterSave(intent)
             } else showToast("Failed to save image.", Gravity.CENTER)
         })
@@ -573,6 +574,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                 override fun onNextAction() {
                     super.onNextAction()
                     startActivity(intent)
+                    finish()
                 }
 
                 override fun onAdClosedByUser() {

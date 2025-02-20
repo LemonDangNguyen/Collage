@@ -13,22 +13,28 @@ import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import com.example.collageimage.ActivitySelectImageEdit
 import com.example.collageimage.BuildConfig
 import com.example.collageimage.MainActivity
 import com.example.collageimage.R
+import com.example.collageimage.SelectActivity
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySaveFromEditImageBinding
 import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.example.collageimage.databinding.DialogSaveBeforeClosingBinding
 import com.example.collageimage.extensions.gone
+import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.visible
 import com.example.collageimage.utils.AdsConfig
 import com.google.android.gms.ads.nativead.NativeAd
+import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.AppOpenManager
 import com.nlbn.ads.util.ConsentHelper
+import com.nmh.base_lib.callback.ICallBackCheck
 
 class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(ActivitySaveFromEditImageBinding::inflate) {
 
@@ -50,27 +56,73 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
             }
         }
 
-        binding.btGoHome.setOnClickListener {
+        val extraText = intent.getStringExtra("extra_text")
 
+
+        binding.btGoHome.text = if (extraText == "TemplateActivity") {
+            "Try Other Template"
+        } else {
+            "Edit Other Image"
+        }
+
+        binding.btGoHome.setOnClickListener {
+            val intent = when (extraText) {
+                "HomeCollage" -> Intent(this, SelectActivity::class.java)
+                "TemplateActivity" -> Intent(this, MainActivity::class.java)
+                "ActivityEditImage" -> Intent(this, ActivitySelectImageEdit::class.java)
+                else -> null
+            }
+
+            intent?.let {
+                it.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(it)
+                finish()
+            }
         }
 
         binding.btShare.setOnClickListener {
             imagePath?.let { shareImageFromPictures(this, it) }
         }
-        binding.btnHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+
     }
 
     override fun setUp() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showInterBack()
+            }
+        })
+        binding.btnHome.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
         showNative()
     }
-    override fun onBackPressed() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun showInterBack() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_back) {
+            Admob.getInstance().showInterAds(this@SaveFromEditImage, AdsConfig.interBack, object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+                    finish()
+                }
+
+                override fun onAdClosedByUser() {
+                    super.onAdClosedByUser()
+                    AdsConfig.interBack = null
+                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
+                    AdsConfig.loadInterBack(this@SaveFromEditImage)
+                }
+            })
+        } else {
+            /*nếu không có kịch bản native_back thì finish() luôn*/
+            /*ẩn tất cả các ads đang có trên màn hình(banner, native) để show dialog*/
+            binding.rlNative.gone()
+            showDialogBack(object : ICallBackCheck {
+                override fun check(isCheck: Boolean) {
+                    /*hiện tất cả các ads đang có trên màn hình(banner, native) khi dialog ẩn đi*/
+                       binding.rlNative.visible()
+                }
+            })
+        }
     }
 
     private fun shareImageFromPictures(context: Context, imagePath: String) {
