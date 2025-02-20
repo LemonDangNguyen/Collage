@@ -32,13 +32,10 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
     val storagePer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-    val notificationPer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        arrayOf(Manifest.permission.POST_NOTIFICATIONS)
-    else arrayOf("")
+
     private var type = ""
     private var countStorage = 0
     private var countCamera = 0
-    private var countNotification = 0
 
     override fun setUp() {
         setUpLayout()
@@ -50,31 +47,16 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
 
         val storagePer = checkPer(storagePer)
         val cameraPer = checkPer(arrayOf(Manifest.permission.CAMERA))
-        val notificationPer = checkPer(notificationPer)
 
-        if (storagePer || cameraPer || notificationPer )
+        if (storagePer || cameraPer)
             binding.tvGo.text = getString(R.string.str_continue)
         else binding.tvGo.text = getString(R.string.skip)
-        binding.scNotify.setCheck(notificationPer)
         binding.scCamera.setCheck(cameraPer)
         binding.scStorage.setCheck(storagePer)
     }
 
     private fun evenClick() {
-        binding.scNotify.onResult = object : StatusResultSwitch {
-            @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-            override fun onResult(isChecked: Boolean) {
-                if (checkPer(notificationPer)) {
-                    binding.scNotify.setCheck(true)
-                    return
-                }
-                if (isChecked) {
-                    AppOpenManager.getInstance().disableAppResumeWithActivity(PermissionActivity::class.java)
-                    type = "notify"
-                    checkPermission.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
-                }
-            }
-        }
+
         binding.scCamera.onResult = object : StatusResultSwitch {
             override fun onResult(isChecked: Boolean) {
                 if (checkPer(arrayOf(Manifest.permission.CAMERA))) {
@@ -83,6 +65,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                 }
                 if (isChecked) {
                     type = "camera"
+                    binding.layoutNative.gone()
                     checkPermission.launch(arrayOf(Manifest.permission.CAMERA))
                 }
             }
@@ -95,6 +78,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                 }
                 if (isChecked) {
                     type = "storage"
+                    binding.layoutNative.gone()
                     checkPermission.launch(storagePer)
                 }
             }
@@ -112,6 +96,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                 "camera" -> {
                     countCamera++
                     if (countCamera >= 3) {
+                        binding.layoutNative.gone()
                         AppOpenManager.getInstance().disableAppResumeWithActivity(PermissionActivity::class.java)
                         openSettingPermission(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     }
@@ -123,6 +108,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                 "storage" -> {
                     countStorage++
                     if (countStorage >= 3) {
+                        binding.layoutNative.gone()
                         AppOpenManager.getInstance().disableAppResumeWithActivity(PermissionActivity::class.java)
                         openSettingPermission(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     }
@@ -131,17 +117,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                         loadNative(getString(R.string.native_permission_storage))
                     else binding.layoutNative.gone()
                 }
-                "notify" -> {
-                    countNotification++
-                    if (countNotification >= 3) {
-                        AppOpenManager.getInstance().disableAppResumeWithActivity(PermissionActivity::class.java)
-                        openSettingPermission(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    }
 
-                    if (AdsConfig.is_load_native_permission_notification)
-                        loadNative(getString(R.string.native_permission_notification))
-                    else binding.layoutNative.gone()
-                }
             }
         }
     private fun setUpLayout() {

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.collageimage.NMHApp
+import com.example.collageimage.R
 import com.example.collageimage.Setting
 import com.example.collageimage.TemplateActivity
 import com.example.collageimage.databinding.FragmentTemplateBinding
@@ -28,6 +30,15 @@ import com.nmh.base_lib.callback.ICallBackItem
 
 class TemplateFragment : Fragment() {
 
+    companion object {
+        fun newInstance(): TemplateFragment {
+            val args = Bundle()
+
+            val fragment = TemplateFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
     private var _binding: FragmentTemplateBinding? = null
     private val binding get() = _binding!!
     private lateinit var imageTemplateAdapter: ImageTemplateAdapter
@@ -123,4 +134,55 @@ class TemplateFragment : Fragment() {
             startActivity(intent)
         }
     }
+     fun hideAds2() {
+        val updatedList = mutableListOf<Any>()
+        for (item in imageTemplateAdapter.getItemList()) {
+            if (item !is AdsModel) {
+                updatedList.add(item)
+            }
+        }
+        imageTemplateAdapter.setItemList(updatedList)
+    }
+
+    fun showAds2() {
+        val updatedList = mutableListOf<Any>()
+        for (item in imageTemplateAdapter.getItemList()) {
+            updatedList.add(item)
+        }
+
+        var pos = -4
+        var isCheck = false
+        while (pos < updatedList.size) {
+            pos += if (!isCheck) 5 else if (AdsConfig.is_load_native_item_template3) 5 else 4
+            if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
+                updatedList.add(pos, AdsModel(
+                    pos, null,
+                    NMHApp.ctx.getString(R.string.native_item_template1),
+                    false, AdsConfig.is_load_native_item_template3
+                ))
+            }
+
+            pos += if (AdsConfig.is_load_native_item_template2) 5 else 4
+            if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
+                updatedList.add(pos, AdsModel(
+                    pos, null,
+                    NMHApp.ctx.getString(R.string.native_item_template2),
+                    false, AdsConfig.is_load_native_item_template2
+                ))
+            }
+
+            pos += if (AdsConfig.is_load_native_item_template3) 5 else 4
+            if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
+                updatedList.add(pos, AdsModel(
+                    pos, null,
+                    NMHApp.ctx.getString(R.string.native_item_template3),
+                    false, AdsConfig.is_load_native_item_template3
+                ))
+            }
+
+            isCheck = true
+        }
+        imageTemplateAdapter.setItemList(updatedList)
+    }
+
 }

@@ -24,6 +24,7 @@ import com.example.collageimage.permission.PermissionSheet
 import com.example.collageimage.utils.AdsConfig
 import com.example.collageimage.utils.AdsConfig.cbFetchInterval
 import com.nlbn.ads.banner.BannerPlugin
+import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.AppOpenManager
 import com.nlbn.ads.util.ConsentHelper
@@ -35,13 +36,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     @Inject
     lateinit var bottomSheet: PermissionSheet
 
+    private val collageFragment : CollageFragment by lazy { CollageFragment.newInstance() }
+    private val templateFragment : TemplateFragment by lazy { TemplateFragment.newInstance() }
+
     override fun setUp() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 binding.banner.gone()
+                collageFragment.hideAds()
+                templateFragment.hideAds2()
                 showDialogExit(object : ICallBackCheck {
                     override fun check(isCheck: Boolean) {
                         binding.banner.visible()
+                        collageFragment.showAds()
+                        templateFragment.showAds2()
                     }
                 })
             }
@@ -89,11 +97,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         binding.vpHome.isUserInputEnabled = false
 
         binding.btnCollage.setOnClickListener {
+            loadInter()
             binding.vpHome.currentItem = 0
         }
         binding.btnTemplate.setOnClickListener {
+            loadInter()
             binding.vpHome.currentItem = 1
-           // showPermissionBottomSheet()
         }
     }
     override fun onResume() {
@@ -104,25 +113,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    private fun showPermissionBottomSheet() {
-        bottomSheet = PermissionSheet(this).apply {
-            isDone = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (status) {
-                        binding.vpHome.currentItem = 1
-                        binding.vpHome.adapter?.notifyDataSetChanged()
-                        cancel()
-                    } else {
-                    }
-                }
-            }
-            isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                }
-            }
-        }
-        bottomSheet.showDialog()
-    }
 
     private fun selectBottomNavBar(position: Int) {
         binding.lnBottomBar.actionAnimation()
@@ -144,16 +134,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         }
     }
+    private fun loadInter() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_home && AdsConfig.isLoadFullAds()) {
+
+            val callback = object : AdCallback() {
+                override fun onNextAction() {
+                    super.onNextAction()
+
+                }
+            }
+
+            Admob.getInstance().loadAndShowInter(this, getString(R.string.inter_intro), true, callback)
+        }
+    }
 
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
         FragmentStateAdapter(fragmentActivity) {
-        override fun getItemCount(): Int = 3
+        override fun getItemCount(): Int = 2
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> CollageFragment()
-                1 -> TemplateFragment()
-                else -> CollageFragment()
+                0 -> collageFragment
+                1 -> templateFragment
+                else -> collageFragment
             }
         }
     }

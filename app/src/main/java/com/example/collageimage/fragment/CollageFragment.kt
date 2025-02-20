@@ -40,6 +40,16 @@ import kotlinx.coroutines.launch
 
 class CollageFragment : Fragment() {
 
+    companion object {
+        fun newInstance(): CollageFragment {
+            val args = Bundle()
+
+            val fragment = CollageFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     private lateinit var bottomSheet: PermissionSheet
 
     private val binding by lazy { FragmentCollageBinding.inflate(layoutInflater) }
@@ -114,33 +124,7 @@ class CollageFragment : Fragment() {
     }
 
 
-    private fun checkAndRequestPermissions2(imageId: Int) {
-        if (hasStoragePermissions()) {
-            //navigateToTemplateActivity(imageId)
-            showInterHomeTemplate(TemplateActivity::class.java.name, imageId)
-        } else {
-            showPermissionBottomSheet(imageId)
-        }
-    }
 
-    private fun showPermissionBottomSheet(imageId: Int) {
-        bottomSheet = PermissionSheet(requireContext()).apply {
-            isDone = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (status) {
-                        navigateToTemplateActivity(TemplateActivity::class.java.name, imageId)
-                        cancel()
-                    } else {
-                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {}
-            }
-        }
-        bottomSheet.showDialog()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -149,48 +133,12 @@ class CollageFragment : Fragment() {
         return binding.root
     }
 
-    private fun checkAndRequestPermissions() {
-        if (hasStoragePermissions()) {
-            navigateToTargetActivity()
-        } else {
-            showPermissionBottomSheet()
-        }
-    }
-    private fun showPermissionBottomSheet() {
-         bottomSheet = PermissionSheet(requireContext()).apply {
-            isDone = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (status) {
-                        navigateToTargetActivity()
-                        cancel()
-                    } else {
-                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                }
-            }
-        }
-        bottomSheet.showDialog()
-    }
-
-
-
     private fun hasStoragePermissions(): Boolean {
         return storagePermissions.all {
             ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
         }
     }
 
-    private fun navigateToTargetActivity() {
-        targetActivity?.let { startActivity(Intent(requireContext(), it)) }
-    }
-
-    private fun navigateToSettings() {
-        startActivity(Intent(requireContext(), Setting::class.java))
-    }
 
     private fun setupViewPager() {
         val adapter = ImageInMainAdapter(imageList)
@@ -312,20 +260,21 @@ class CollageFragment : Fragment() {
     }
 
     private fun showPermissionBottomSheetForHome(className: String) {
+        binding.rlNative.gone()
         bottomSheet = PermissionSheet(requireContext()).apply {
             isDone = object : ICallBackCheck {
                 override fun check(status: Boolean) {
                     if (status) {
-                        // Nếu người dùng cấp quyền, hiển thị quảng cáo và chuyển đến màn hình
                         showInterHome(className)
                         cancel()
                     } else {
                         Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
                     }
+                    binding.rlNative.visible()
                 }
             }
             isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {}
+                override fun check(status: Boolean) {  binding.rlNative.visible()}
             }
         }
         bottomSheet.showDialog()
@@ -362,5 +311,12 @@ class CollageFragment : Fragment() {
         binding.frNativeAds.removeAllViews()
         binding.frNativeAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+    }
+
+    fun hideAds(){
+        binding.rlNative.gone()
+    }
+    fun showAds(){
+        binding.rlNative.visible()
     }
 }

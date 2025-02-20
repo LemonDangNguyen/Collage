@@ -83,7 +83,6 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                         0 -> {
                             binding.tvAction.text = getString(R.string.next)
                             binding.tvTitle.text = getString(R.string.title_onboarding_1)
-                            binding.tvDes.text = getString(R.string.des_onboarding_1)
 
                             if (AdsConfig.is_load_native_intro1) {
                                 loadNative(0)
@@ -96,7 +95,6 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                         1 -> {
                             binding.tvAction.text = getString(R.string.next)
                             binding.tvTitle.text = getString(R.string.title_onboarding_2)
-                            binding.tvDes.text = getString(R.string.des_onboarding_2)
 
                             if (AdsConfig.is_load_native_intro2) {
                                 if (AdsConfig.isLoadFullAds()) loadNative(1)
@@ -113,7 +111,6 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                         2 -> {
                             binding.tvAction.text = getString(R.string.next)
                             binding.tvTitle.text = getString(R.string.title_onboarding_3)
-                            binding.tvDes.text = getString(R.string.des_onboarding_3)
 
                             if (AdsConfig.is_load_native_intro3) {
                                 loadNative(2)
@@ -124,8 +121,7 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                         }
                         3 -> {
                             binding.tvAction.text = getString(R.string.start)
-                            binding.tvTitle.text = getString(R.string.title_onboarding_3)
-                            binding.tvDes.text = getString(R.string.des_onboarding_3)
+                            binding.tvTitle.text = getString(R.string.title_onboarding_4)
 
                             if (AdsConfig.is_load_native_intro4) {
                                 if (AdsConfig.isLoadFullAds()) loadNative(3)

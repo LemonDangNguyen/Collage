@@ -65,11 +65,10 @@ class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<
                             } else binding.rlNative.gone()
                         }
                     })
-                } else item.nativeAd?.let { pushAdsToView(it) } // Nếu quảng cáo đã tải, hiển thị luôn
+                } else item.nativeAd?.let { pushAdsToView(it) }
             }
         }
 
-        // Phương thức để đẩy quảng cáo lên view
         private fun pushAdsToView(nativeAd: NativeAd) {
             val bindingAds: NativeAdView // Sử dụng NativeAdView của Google
             if (AdsConfig.isLoadFullAds())
@@ -83,12 +82,11 @@ class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<
         }
     }
 
-    // Phương thức xác định loại item (hình ảnh hay quảng cáo)
     override fun getItemViewType(position: Int): Int {
         return when (itemList[position]) {
             is ImageTemplateModel -> ITEM_TYPE_IMAGE  // Trả về kiểu cho hình ảnh
             is AdsModel -> ITEM_TYPE_ADS  // Trả về kiểu cho quảng cáo
-            else -> throw IllegalArgumentException("Unknown item type")  // Nếu không phải hình ảnh hay quảng cáo thì throw lỗi
+            else -> throw IllegalArgumentException("Unknown item type")
         }
     }
 
@@ -97,26 +95,27 @@ class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<
         return when (viewType) {
             ITEM_TYPE_IMAGE -> {
                 val binding = ItemTemplateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                ImageViewHolder(binding)  // Tạo ImageViewHolder cho hình ảnh
+                ImageViewHolder(binding)
             }
             ITEM_TYPE_ADS -> {
                 val binding = ItemAdsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                AdsViewHolder(binding)  // Tạo AdsViewHolder cho quảng cáo
+                AdsViewHolder(binding)
             }
-            else -> throw IllegalArgumentException("Unknown view type")  // Nếu không xác định được view type thì throw lỗi
+            else -> throw IllegalArgumentException("Unknown view type")
         }
     }
 
-    // Gắn dữ liệu vào ViewHolder
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             ITEM_TYPE_IMAGE -> (holder as ImageViewHolder).bind(position)  // Gắn dữ liệu hình ảnh
             ITEM_TYPE_ADS -> (holder as AdsViewHolder).bind(position)  // Gắn dữ liệu quảng cáo
         }
     }
-
-    // Trả về số lượng item trong danh sách
     override fun getItemCount(): Int {
         return itemList.size
     }
+    fun getItemList(): List<Any> {
+        return itemList
+    }
+
 }

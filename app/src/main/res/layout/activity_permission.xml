@@ -111,34 +111,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/_16sdp" />
             </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/rlNotify"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_46sdp"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_6sdp"
-                android:background="@drawable/bg_item_permisison"
-                android:foreground="@drawable/rippleeffect"
-                android:visibility="visible">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_16sdp"
-                    android:fontFamily="@font/notosans_bold"
-                    android:text="@string/str_notify"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14ssp" />
-
-                <com.example.collageimage.customview.CustomSwitch
-                    android:id="@+id/scNotify"
-                    android:layout_width="@dimen/_48sdp"
-                    android:layout_height="@dimen/_28sdp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/_16sdp" />
-            </RelativeLayout>
             <FrameLayout
                 android:id="@+id/layout_native"
                 android:layout_width="match_parent"

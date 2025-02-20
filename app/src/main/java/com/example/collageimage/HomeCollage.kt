@@ -270,6 +270,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         binding.layoutParentTool.changeDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(true)
             binding.barDrawing.root.visibility = View.VISIBLE
+           // finishAffinity()
             binding.linearLayout.visibility = View.GONE
             binding.layoutLayout.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.GONE
