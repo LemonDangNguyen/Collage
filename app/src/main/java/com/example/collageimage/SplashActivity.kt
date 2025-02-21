@@ -45,7 +45,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
         if (DataLocalManager.getLanguage(CURRENT_LANGUAGE) == null) {
             DataLocalManager.setLanguage(
                 CURRENT_LANGUAGE,
-                LanguageModel("English", "flag_language", Locale.ENGLISH, true)
+                LanguageModel("English", "flag_language", getString(R.string.english), Locale.ENGLISH, true)
             )
         }
 

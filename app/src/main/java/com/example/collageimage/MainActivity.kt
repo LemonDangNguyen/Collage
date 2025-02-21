@@ -44,17 +44,23 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             override fun handleOnBackPressed() {
                 binding.banner.gone()
                 collageFragment.hideAds()
-                templateFragment.hideAds2()
+                if (templateFragment.isAdded) {  // Kiểm tra fragment có hoạt động không
+                    templateFragment.hideAds2()
+                }
+
                 showDialogExit(object : ICallBackCheck {
                     override fun check(isCheck: Boolean) {
                         binding.banner.visible()
                         collageFragment.showAds()
-                        templateFragment.showAds2()
+                        if (templateFragment.isAdded) {
+                            templateFragment.showAds2()
+                        }
                     }
                 })
             }
         })
         loadBanner()
+        AdsConfig.loadNativeHome(this@MainActivity)
         AdsConfig.loadNativeExitApp(this@MainActivity)
 //        AdsConfig.loadNativeAll(this@MainActivity)
         AdsConfig.loadInterHome(this@MainActivity)
@@ -102,6 +108,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
         binding.btnTemplate.setOnClickListener {
             loadInter()
+            binding.vpHome.currentItem = 1
+        }
+        if (intent.getBooleanExtra("navigate_to_template", false)) {
             binding.vpHome.currentItem = 1
         }
     }

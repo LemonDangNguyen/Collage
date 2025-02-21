@@ -12,17 +12,9 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_25sdp"
         android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="@id/iv"
+        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+        app:layout_constraintEnd_toEndOf="@+id/tvTitle"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/img_bg_text_intro"
-        app:layout_constraintBottom_toTopOf="@id/vTrans"
-        app:layout_constraintDimensionRatio="360:198" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/indicator"
@@ -32,16 +24,15 @@
         app:dotsColor="@color/color_DFDFDF"
         app:dotsSize="@dimen/_8sdp"
         app:dotsSpacing="@dimen/_4sdp"
-        app:layout_constraintBottom_toTopOf="@id/tvAction"
+        app:layout_constraintBottom_toTopOf="@+id/tvAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         app:selectedDotColor="@color/main_color" />
+
     <TextView
         android:id="@+id/tvAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_5sdp"
         android:fontFamily="@font/notosans_bold"
         android:padding="@dimen/_5sdp"
         android:text="@string/next"
@@ -49,7 +40,7 @@
         android:textColor="@color/main_color"
         android:textSize="@dimen/_15ssp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/iv"
+        app:layout_constraintBottom_toTopOf="@+id/layout_native"
         app:layout_constraintEnd_toEndOf="@id/indicator"
         app:layout_constraintStart_toStartOf="@id/indicator" />
 
@@ -65,12 +56,9 @@
         android:textColor="@color/black"
         android:textSize="@dimen/_15ssp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tvAction"
-        app:layout_constraintTop_toTopOf="@id/iv"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:layout_editor_absoluteX="21dp" />
-
-
+        app:layout_constraintBottom_toTopOf="@+id/indicator"
+        app:layout_constraintEnd_toEndOf="@+id/indicator"
+        app:layout_constraintStart_toStartOf="@+id/indicator" />
 
     <View
         android:id="@+id/vTrans"

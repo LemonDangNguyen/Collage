@@ -499,6 +499,8 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this@TemplateActivity, R.style.SheetDialog).create()
         dialog.setUpDialog(bindingDialog.root, true)
+        binding.banner.gone()
+        dialog.setCancelable(false)
         bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
         showNativedialog(bindingDialog)
 
@@ -542,6 +544,9 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                 })
             }
         }
+        dialog.setOnDismissListener {
+            binding.banner.visible()
+        }
     }
     private fun showInterBack() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
@@ -569,7 +574,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
     private fun showInterSave(intent: Intent) {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_save) {
+             && AdsConfig.is_load_inter_save) {
             Admob.getInstance().showInterAds(this@TemplateActivity, AdsConfig.interSave, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
@@ -589,7 +594,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         }
     }
     private fun showNativedialog(bindingDialog: DialogSaveBeforeClosingBinding) {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()&& AdsConfig.isLoadFullAds()&&AdsConfig.is_load_native_save) {
             bindingDialog.layoutNative.visible()
             AdsConfig.nativeAll?.let {
                 pushViewAdsdialog(bindingDialog, it)

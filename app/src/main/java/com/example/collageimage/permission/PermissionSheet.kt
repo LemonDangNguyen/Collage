@@ -99,19 +99,29 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
             if (binding.tvStorage.currentTextColor == Color.BLACK)
                 return@setOnUnDoubleClickListener
 
-            if (!context.checkPer(storagePer)) requestStoragePermission()
+            if (!context.checkPer(storagePer)) {
+                binding.rlNative.gone()
+                requestStoragePermission()
+            }
         }
+
         binding.tvCamera.setOnUnDoubleClickListener {
             if (binding.tvCamera.currentTextColor == Color.BLACK)
                 return@setOnUnDoubleClickListener
 
-            if (!context.checkPer(arrayOf(Manifest.permission.CAMERA))) requestCameraPermission()
+            if (!context.checkPer(arrayOf(Manifest.permission.CAMERA))) {
+                binding.rlNative.gone()
+                requestCameraPermission()
+            }
         }
+
         binding.rl.setOnUnDoubleClickListener {
             context.showToast(context.getString(R.string.click_to_step_by_step_for_require_permission), Gravity.CENTER)
         }
+
         binding.ivExit.setOnUnDoubleClickListener { cancel() }
     }
+
 
     @SuppressLint("SetTextI18n")
     fun checkPer(): Boolean {
@@ -160,12 +170,13 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
         }, 2000)
     }
 
-
+//binding.rlNative.gone()
     private fun requestCameraPermission() {
         Dexter.withContext(context)
             .withPermission(Manifest.permission.CAMERA)
             .withListener(object : PermissionListener {
                 override fun onPermissionGranted(p0: PermissionGrantedResponse) {
+                    binding.rlNative.visible()
                     if (checkPer()) cancel()
                 }
 
@@ -192,6 +203,7 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
             .withPermissions(*storagePer)
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(p0: MultiplePermissionsReport) {
+                    binding.rlNative.visible()
                     if (p0.isAnyPermissionPermanentlyDenied) {
                         AppOpenManager.getInstance().disableAppResumeWithActivity(context::class.java)
                         context.openSettingPermission(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)

@@ -53,7 +53,7 @@ class TemplateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        imageTemplateAdapter = ImageTemplateAdapter(requireContext())
+        imageTemplateAdapter = ImageTemplateAdapter(activity ?: return)
         imageTemplateViewModel = ViewModelProvider(this).get(ImageTemplateViewModel::class.java)
 
         imageTemplateViewModel.imageList.observe(viewLifecycleOwner) { imageList ->
@@ -65,6 +65,7 @@ class TemplateFragment : Fragment() {
             val intent = Intent(requireContext(), TemplateActivity::class.java)
             intent.putExtra("imageId", imageId.id)
             showInterHomeTemplate(intent)
+
         }
         imageTemplateAdapter.callbackDimensional = object : ICallBackDimensional {
             override fun callBackItem(objects: Any, callBackItem: ICallBackItem) {
@@ -114,6 +115,7 @@ class TemplateFragment : Fragment() {
 
 
     private fun showInterHomeTemplate(intent: Intent) {
+        val context = activity ?: return
         if (haveNetworkConnection(requireActivity()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()
             && AdsConfig.inter_item_template != null && AdsConfig.checkTimeShowInter()
             && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_item_template) {
@@ -127,7 +129,7 @@ class TemplateFragment : Fragment() {
                     super.onAdClosedByUser()
                     AdsConfig.inter_item_template = null
                     AdsConfig.lastTimeShowInter = System.currentTimeMillis()
-                    AdsConfig.loadInterItemTemplate(requireActivity())
+                    AdsConfig.loadInterItemTemplate(context)
                 }
             })
         } else {

@@ -81,6 +81,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                     binding.layoutNative.gone()
                     checkPermission.launch(storagePer)
                 }
+            //    else binding.layoutNative.visible()
             }
         }
 

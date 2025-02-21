@@ -181,7 +181,7 @@ class SelectAlbumBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun showNative() {
-        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireContext()).canRequestAds() && AdsConfig.isLoadFullAds()
+        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireContext()).canRequestAds()
             && AdsConfig.is_load_native_select_albums) {
             binding.rlNative.visible()
             AdsConfig.nativeAll?.let {

@@ -12,14 +12,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewbinding.ViewBinding
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectImageTemplateBinding
+import com.example.collageimage.databinding.AdsNativeBotBinding
 import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
+import com.example.collageimage.databinding.AdsNativeTopFullAdsBinding
 import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.visible
 import com.example.collageimage.utils.AdsConfig
 import com.example.collageimage.utils.AdsConfig.cbFetchInterval
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.nlbn.ads.banner.BannerPlugin
 import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
@@ -60,7 +64,7 @@ class SelectImageTemplate :
     }
 
     override fun setUp() {
-        loadBanner()
+        showNativeADS()
     }
 
     private fun setUpListener() {
@@ -174,24 +178,35 @@ class SelectImageTemplate :
         imageAdapter.notifyDataSetChanged()
         loadImages()
     }
+    private fun showNativeADS() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()  && AdsConfig.is_load_native_select_image) {
+            binding.layoutNative.visible()
+            AdsConfig.nativeLanguageSelect?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_language_select),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
 
-    private fun loadBanner() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()) {
-            val config = BannerPlugin.Config()
-            config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
-            config.defaultCBFetchIntervalSec = cbFetchInterval
-
-            if (true /*thêm biến check remote, thường là switch_banner_collapse*/) {
-                config.defaultAdUnitId = getString(R.string.banner_all)
-                config.defaultBannerType = BannerPlugin.BannerType.CollapsibleBottom
-            } else if (true /*thêm biến check remote, thường là banner_all*/) {
-                config.defaultAdUnitId = getString(R.string.banner_all)
-                config.defaultBannerType = BannerPlugin.BannerType.Adaptive
-            } else {
-                binding.banner.gone()
-                return
+                        override fun onAdFailedToLoad() {
+                            binding.frAds.removeAllViews()
+                        }
+                    }
+                )
             }
-            Admob.getInstance().loadBannerPlugin(this, findViewById(R.id.banner), findViewById(R.id.shimmer), config)
-        } else binding.banner.gone()
+        } else binding.layoutNative.gone()
+    }
+
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView: ViewBinding
+        if (!AdsConfig.isLoadFullAds()) adView = AdsNativeBotBinding.inflate(layoutInflater)
+        else adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        binding.layoutNative.visible()
+        binding.frAds.removeAllViews()
+        binding.frAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root as NativeAdView)
     }
 }

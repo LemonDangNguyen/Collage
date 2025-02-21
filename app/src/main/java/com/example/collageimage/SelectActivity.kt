@@ -3,6 +3,8 @@ package com.example.collageimage
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.view.Gravity
 import android.widget.Toast
@@ -16,6 +18,7 @@ import com.example.collageimage.dialog.DialogLoading
 import com.example.collageimage.extensions.gone
 import com.example.collageimage.extensions.setOnUnDoubleClickListener
 import com.example.collageimage.extensions.showToast
+import com.example.collageimage.extensions.visible
 import com.example.collageimage.utils.AdsConfig
 import com.example.collageimage.utils.AdsConfig.cbFetchInterval
 import com.example.selectpic.ddat.RepositoryMediaImages
@@ -37,7 +40,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     private var selectedImages = mutableListOf<ImageModel>()
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var selectedImagesAdapter: SelectedImagesAdapter
-    private lateinit var loadingdialog: DialogLoading
+    private var loadingdialog: DialogLoading? = null
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val repositoryMediaImages by lazy { RepositoryMediaImages(mediaStoreMediaImages) }
     private val useCaseMediaImageDetail by lazy { UseCaseMediaImageDetail(repositoryMediaImages) }
@@ -104,11 +107,11 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
         } else {
             /*nếu không có kịch bản native_back thì finish() luôn*/
             /*ẩn tất cả các ads đang có trên màn hình(banner, native) để show dialog*/
-//            binding.rlNative.gone()
+            binding.banner.gone()
             showDialogBack(object : ICallBackCheck {
                 override fun check(isCheck: Boolean) {
                     /*hiện tất cả các ads đang có trên màn hình(banner, native) khi dialog ẩn đi*/
-                 //   binding.rlNative.visible()
+                    binding.banner.visible()
                 }
             })
         }
@@ -124,23 +127,37 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
 // next
         binding.nextSelect.setOnUnDoubleClickListener {
             if (selectedImages.size >= 3) {
-                loadingdialog = DialogLoading(this).apply {
-                    interCallback = object : AdCallback() {
-                        override fun onNextAction() {
-                            super.onNextAction()
-                            val intent = Intent(this@SelectActivity, HomeCollage::class.java)
-                            intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
-                            startActivity(intent)
-                            finish()
+                if (loadingdialog == null) loadingdialog = DialogLoading(this@SelectActivity)
+                loadingdialog?.let {
+                    if (!isFinishing && !isDestroyed) {
+                        if (!it.isShowing) {
+                            binding.banner.gone()
+                            it.show()
                         }
                     }
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(this@SelectActivity, HomeCollage::class.java)
+                        intent.putParcelableArrayListExtra("SELECTED_IMAGES", ArrayList(selectedImages))
+                        startActivity(intent)
+                        finish()
+                    }, 5000)
+
+                    it.setOnDismissListener {
+                        binding.banner.visible()
+                    }
+                    if (!isFinishing && !isDestroyed && !it.isShowing) {
+                        binding.banner.gone()
+                        it.show()
+                    }
                 }
-                loadingdialog.show()
 
             } else {
                 showToast(getString(R.string.select_at_least_3_images), Gravity.CENTER)
             }
+
         }
+
         binding.btnAlbum.setOnClickListener {
             val bottomSheet = SelectAlbumBottomSheet()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)

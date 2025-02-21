@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/_16sdp"
     android:layout_marginVertical="@dimen/_8sdp"
-    android:background="@color/white">
+    android:background="@color/trans"
+    android:foreground="@drawable/rippleeffect">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivFlag"
@@ -26,7 +27,41 @@
         android:fontFamily="@font/notosans_regular"
         android:textColor="@color/black"
         android:textSize="@dimen/_12ssp"
-        app:layout_constraintBottom_toBottomOf="@id/ivFlag"
+        app:layout_constraintBottom_toTopOf="@id/tvDes"
         app:layout_constraintStart_toEndOf="@id/ivFlag"
         app:layout_constraintTop_toTopOf="@id/ivFlag" />
+
+    <TextView
+        android:id="@+id/tvDes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/notosans_regular"
+        android:textColor="@color/color_828282"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintBottom_toBottomOf="@id/ivFlag"
+        app:layout_constraintStart_toStartOf="@id/tvName"
+        app:layout_constraintTop_toBottomOf="@id/tvName" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivSelect"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:src="@drawable/ic_un_choose"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/ivFlag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivFlag" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationTap"
+        android:layout_width="@dimen/_55sdp"
+        android:layout_height="@dimen/_55sdp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/ivSelect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivSelect"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/tap" />
 </androidx.constraintlayout.widget.ConstraintLayout>

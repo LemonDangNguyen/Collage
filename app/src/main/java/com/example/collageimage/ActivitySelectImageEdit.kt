@@ -1,5 +1,6 @@
 package com.example.collageimage
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -13,9 +14,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewbinding.ViewBinding
 import com.example.collageimage.base.BaseActivity
 import com.example.collageimage.databinding.ActivitySelectImageEditBinding
+import com.example.collageimage.databinding.AdsNativeBotBinding
 import com.example.collageimage.databinding.AdsNativeBotHorizontalMediaLeftBinding
+import com.example.collageimage.databinding.AdsNativeTopFullAdsBinding
 import com.example.collageimage.databinding.DialogExitBinding
 import com.example.collageimage.databinding.DialogLoading2Binding
 import com.example.collageimage.dialog.DialogLoading
@@ -25,6 +29,7 @@ import com.example.collageimage.extensions.visible
 import com.example.collageimage.utils.AdsConfig
 import com.example.collageimage.utils.AdsConfig.cbFetchInterval
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.nlbn.ads.banner.BannerPlugin
 import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.callback.NativeCallback
@@ -52,7 +57,7 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
             }
         })
 
-        loadBanner()
+        showNativeADS()
 
         binding.btnBack.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
 
@@ -86,11 +91,11 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
         } else {
             /*nếu không có kịch bản native_back thì finish() luôn*/
             /*ẩn tất cả các ads đang có trên màn hình(banner, native) để show dialog*/
-           // binding.rlNative.gone()
+            binding.rlNative.gone()
             showDialogBack(object : ICallBackCheck {
                 override fun check(isCheck: Boolean) {
                     /*hiện tất cả các ads đang có trên màn hình(banner, native) khi dialog ẩn đi*/
-                //    binding.rlNative.visible()
+                    binding.rlNative.visible()
                 }
             })
         }
@@ -175,6 +180,7 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
                                 }
                             }
                         }
+                        binding.rlNative.gone()
                         loadingdialog.show()
                     }
                 },
@@ -204,33 +210,46 @@ class ActivitySelectImageEdit : BaseActivity<ActivitySelectImageEditBinding>(Act
         loadImages()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onImagesCaptured(images: ArrayList<ImageModel>) {
         images.forEach { image ->
-            val intent = Intent(this, ActivityEditImage::class.java).apply {
-                putExtra("selected_image_path", image.filePath)
-            }
-            startActivity(intent)
-            finish()
+            val intent = Intent(this, ActivityEditImage::class.java)
+                intent.putExtra("selected_image_path", image.filePath)
+                startActivity(intent)
+                finish()
         }
     }
 
-    private fun loadBanner() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()) {
-            val config = BannerPlugin.Config()
-            config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
-            config.defaultCBFetchIntervalSec = cbFetchInterval
+    private fun showNativeADS() {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()  && AdsConfig.is_load_native_select_image) {
+            binding.rlNative.visible()
+            AdsConfig.nativeLanguageSelect?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(this, getString(R.string.native_language_select),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
 
-            if (true /*thêm biến check remote, thường là switch_banner_collapse*/) {
-                config.defaultAdUnitId = getString(R.string.banner_all)
-                config.defaultBannerType = BannerPlugin.BannerType.CollapsibleBottom
-            } else if (true /*thêm biến check remote, thường là banner_all*/) {
-                config.defaultAdUnitId = getString(R.string.banner_all)
-                config.defaultBannerType = BannerPlugin.BannerType.Adaptive
-            } else {
-                binding.banner.gone()
-                return
+                        override fun onAdFailedToLoad() {
+                            binding.frNativeAds.removeAllViews()
+                        }
+                    }
+                )
             }
-            Admob.getInstance().loadBannerPlugin(this, findViewById(R.id.banner), findViewById(R.id.shimmer), config)
-        } else binding.banner.gone()
+        } else binding.rlNative.gone()
     }
+
+    private fun pushViewAds(nativeAd: NativeAd) {
+        val adView: ViewBinding
+        if (!AdsConfig.isLoadFullAds()) adView = AdsNativeBotBinding.inflate(layoutInflater)
+        else adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+
+        binding.rlNative.visible()
+        binding.frNativeAds.removeAllViews()
+        binding.frNativeAds.addView(adView.root)
+        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root as NativeAdView)
+    }
+
 }

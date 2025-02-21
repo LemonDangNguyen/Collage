@@ -270,7 +270,6 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         binding.layoutParentTool.changeDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(true)
             binding.barDrawing.root.visibility = View.VISIBLE
-           // finishAffinity()
             binding.linearLayout.visibility = View.GONE
             binding.layoutLayout.root.visibility = View.GONE
             binding.layoutParentTool.root.visibility = View.GONE
@@ -1274,7 +1273,7 @@ override fun onPieceClick() {
         filterrcl()
         initListener2()
         binding.puzzleView.setLineSize(10)
-
+//savebtn
         binding.tvSave.setOnUnDoubleClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 when {
@@ -1310,6 +1309,8 @@ override fun onPieceClick() {
         val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this@HomeCollage, R.style.SheetDialog).create()
         dialog.setUpDialog(bindingDialog.root, true)
+        binding.banner.gone()
+        dialog.setCancelable(false)
         bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
         showNativedialog(bindingDialog)
 
@@ -1408,7 +1409,6 @@ override fun onPieceClick() {
             Admob.getInstance().showInterAds(this@HomeCollage, AdsConfig.interBack, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
-
                     finish()
                 }
 
@@ -1427,7 +1427,7 @@ override fun onPieceClick() {
     private fun showInterSave(intent: Intent) {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_save) {
+             && AdsConfig.is_load_inter_save) {
             Admob.getInstance().showInterAds(this@HomeCollage, AdsConfig.interSave, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()

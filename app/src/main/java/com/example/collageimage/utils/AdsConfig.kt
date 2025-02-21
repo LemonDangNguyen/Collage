@@ -289,7 +289,7 @@ object AdsConfig {
 
     fun loadNativeLanguageSelect(context: Context) {
         if (haveNetworkConnection(context) && ConsentHelper.getInstance(context).canRequestAds()
-            && nativeLanguageSelect == null /* thêm điều kiện remote nữa*/) {
+            && nativeLanguageSelect == null && AdsConfig.is_load_native_language_select) {
             Admob.getInstance().loadNativeAd(context, context.getString(R.string.native_language_select),
                 object : NativeCallback() {
                     override fun onNativeAdLoaded(nativeAd: NativeAd) {

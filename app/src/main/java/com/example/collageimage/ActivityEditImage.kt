@@ -972,6 +972,8 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
         val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this@ActivityEditImage, R.style.SheetDialog).create()
         dialog.setUpDialog(bindingDialog.root, true)
+        binding.banner.gone()
+        dialog.setCancelable(false)
         bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
         showNativedialog(bindingDialog)
 
@@ -1041,8 +1043,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
     private fun showInterSave(intent: Intent) {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
-            && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_save) {
+            && AdsConfig.interSave != null && AdsConfig.checkTimeShowInter() && AdsConfig.is_load_inter_save) {
             Admob.getInstance().showInterAds(this@ActivityEditImage, AdsConfig.interSave, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()

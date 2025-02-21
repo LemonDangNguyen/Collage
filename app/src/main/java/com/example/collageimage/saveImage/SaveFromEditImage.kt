@@ -68,7 +68,9 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
         binding.btGoHome.setOnClickListener {
             val intent = when (extraText) {
                 "HomeCollage" -> Intent(this, SelectActivity::class.java)
-                "TemplateActivity" -> Intent(this, MainActivity::class.java)
+                "TemplateActivity" -> Intent(this, MainActivity::class.java).apply {
+                    putExtra("navigate_to_template", true)
+                }
                 "ActivityEditImage" -> Intent(this, ActivitySelectImageEdit::class.java)
                 else -> null
             }
@@ -145,7 +147,7 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
 
 
     private fun showNative() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() /*thêm điều kiện remote*/) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_save) {
             binding.rlNative.visible()
             AdsConfig.nativeAll?.let {
                 pushViewAds(it)

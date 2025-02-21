@@ -27,7 +27,7 @@ class DialogLoading(context: Context) : Dialog(context) {
 
     init {
         setContentView(binding.root)
-        setCancelable(true)
+        setCancelable(false)
         binding.root.layoutParams.width = (NMHApp.w * 100).toInt()
     }
 

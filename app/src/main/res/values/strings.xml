@@ -152,4 +152,12 @@
     <string name="maximunpic">Maximun pictures</string>
     <string name="take_only_pic">You can only take 1 photo</string>
     <string name="select_other_img">select other image</string>
+
+    <string name="english">English</string>
+    <string name="spanish">Español</string>
+    <string name="french">Français</string>
+    <string name="hindi">हिंदी</string>
+    <string name="portuguese">Português</string>
+    <string name="arabic">العربية</string>
+    <string name="turkish">Türkçe</string>
 </resources>
