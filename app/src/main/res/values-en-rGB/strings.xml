@@ -6,10 +6,10 @@
     <string name="share">Share</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="backtohome">Back to home</string>
-    <string name="Dywtbh">Do you want back to home?</string>
+    <string name="Dywtbh">Do you want to go back home?</string>
     <string name="something_went_wrong">Something went wrong!</string>
     <string name="image_not_found">Image not found</string>
-    <string name="selectsingleimage">Select image to apply changes</string>
+    <string name="selectsingleimage">Select an image to apply changes</string>
     <string name="pmirror">Mirror</string>
     <string name="pflip">Flip</string>
     <string name="protate">Rotate</string>
@@ -41,7 +41,7 @@
     <string name="padding">Padding</string>
     <string name="try_again">Try Again</string>
     <string name="font">Font</string>
-    <string name="add_text">Add text</string>
+    <string name="add_text">Add Text</string>
     <string name="label">Label</string>
     <string name="adjust">Adjust</string>
     <string name="cancel">Cancel</string>
@@ -60,43 +60,43 @@
     <string name="fade">Fade</string>
     <string name="staturation">Saturation</string>
     <string name="label_brush">Brush</string>
-    <string name="tap_to_edit">Tap to edit</string>
+    <string name="tap_to_edit">Tap to Edit</string>
     <string name="todo">TODO</string>
     <string name="Origin">Origin</string>
     <string name="Fit">Fit</string>
     <string name="save_successful">Save Successful</string>
-    <string name="mess_save_ss">You have saved your image successfully\nEnjoy your time now!</string>
-    <string name="back_to_home">Back to home</string>
+    <string name="mess_save_ss">You have successfully saved your image\nEnjoy your time now!</string>
+    <string name="back_to_home">Back to Home</string>
     <string name="this_action_can_contain_ads">This action may contain advertising</string>
-    <string name="finish">Press 1 more time to exit</string>
+    <string name="finish">Press one more time to exit</string>
     <string name="we_will_return_you_to_the_previous_screen">We will return you to the previous screen?</string>
     <string name="str_continue">Continue</string>
     <string name="unknown_error_occurred">An unknown error occurred</string>
     <string name="no_browser">No Browser</string>
-    <string name="channel_description">This is notify</string>
+    <string name="channel_description">This is a notification</string>
     <string name="channel_name">NotiNoti</string>
     <string name="des_rate_4_5">We like you too</string>
     <string name="thanks_for_your_feedback">Thanks for your feedback</string>
-    <string name="des_rate_1_2_3">Oh, no!</string>
+    <string name="des_rate_1_2_3">Oh no!</string>
     <string name="please_give_us_some_feedback">Please give us some feedback</string>
-    <string name="rate_thanks">Rate in app</string>
+    <string name="rate_thanks">Rate this app</string>
     <string name="language">Language</string>
-    <string name="you_need_pick_a_language">You need pick a language</string>
+    <string name="you_need_pick_a_language">You need to pick a language</string>
 
     <!-- onBoarding -->
     <string name="title_onboarding_1">Free Collage and Photo Editing Tool</string>
     <string name="des_onboarding_1"> </string>
-    <string name="title_onboarding_2">Professional design template</string>
+    <string name="title_onboarding_2">Professional Design Templates</string>
     <string name="des_onboarding_2"> </string>
-    <string name="title_onboarding_3">Expert photo filters and smooth image blending</string>
+    <string name="title_onboarding_3">Expert Photo Filters and Smooth Image Blending</string>
     <string name="des_onboarding_3"> </string>
-    <string name="title_onboarding_4">Many beautiful fonts, stickers, and decorative frames</string>
+    <string name="title_onboarding_4">Many Beautiful Fonts, Stickers, and Decorative Frames</string>
     <string name="des_onboarding_4"> </string>
 
     <!-- permission -->
     <string name="permission">Permission</string>
     <string name="permission_need">Permission</string>
-    <string name="des_permission"><b>Photo Collage</b> requires permission to use the (device’s camera and storage)</string>
+    <string name="des_permission"><b>Photo Collage</b> requires permission to use the device’s camera and storage</string>
     <string name="go">Go</string>
     <string name="per_overlay">You need overlay permission to use this app</string>
     <string name="deny_pers">Permissions are required to use this application</string>
@@ -105,16 +105,16 @@
     <string name="str_notify">Notification</string>
     <string name="str_record">Recorder</string>
     <string name="str_camera">Camera</string>
-    <string name="str_draw">Draw overlay</string>
+    <string name="str_draw">Draw Overlay</string>
     <string name="str_storage">Storage</string>
-    <string name="step_2">Step 1. Camera</string>
-    <string name="step_4">Step 2. Storage</string>
+    <string name="step_2">Step 1: Camera</string>
+    <string name="step_4">Step 2: Storage</string>
     <string name="you_can_select">You can select: </string>
-    <string name="message_per_dialog">Click button Step to grant permission!</string>
+    <string name="message_per_dialog">Click the button to grant permission step by step!</string>
     <string name="message_per_granted">Permission has been granted!</string>
     <string name="next">Next</string>
     <string name="start">Start</string>
-    <string name="are_you_sure_to_exit_the_app">Are you sure to exit the app?</string>
+    <string name="are_you_sure_to_exit_the_app">Are you sure you want to exit the app?</string>
     <string name="exit_the_app">Exit the app?</string>
     <string name="exit">Exit</string>
     <string name="stay">Stay</string>
@@ -122,10 +122,10 @@
     <string name="des_rate_0">We’d love to know!</string>
     <string name="may_be_later">Maybe later</string>
     <string name="update_now">Update now</string>
-    <string name="des_update">Please, update the app to the new version to continue using</string>
-    <string name="title_update">New version available</string>
+    <string name="des_update">Please update the app to the new version to continue using it</string>
+    <string name="title_update">New Version Available</string>
 
-    <string name="home">HOME</string>
+    <string name="home">Home</string>
     <string name="template">Template</string>
     <string name="album">Album</string>
     <string name="photo">Photo</string>
@@ -133,7 +133,7 @@
     <string name="change_image">Change Image</string>
 
     <string name="save_file_before_closing">Save file before closing</string>
-    <string name="the_file_will_be_disappear_and_you_can_t_find_this_file_in_any_folders">The file will disappear and you can’t find this file in any folders</string>
+    <string name="the_file_will_be_disappear_and_you_can_t_find_this_file_in_any_folders">The file will disappear and you won’t be able to find it in any folders</string>
     <string name="txt_loading">Loading</string>
     <string name="pswap">Swap</string>
     <string name="replace">Replace</string>
@@ -141,15 +141,28 @@
     <string name="vertical">Vertical</string>
     <string name="horizontal">Horizontal</string>
     <string name="click_to_step_by_step_for_require_permission">Click to step by step for required permission</string>
-    <string name="setting">Setting</string>
+    <string name="setting">Settings</string>
     <string name="feedback">Feedback</string>
     <string name="don_t_save">Don’t Save</string>
     <string name="commingsoon">Coming Soon</string>
-    <string name="image_count">images</string>
+    <string name="image_count">Images</string>
     <string name="select_at_least_3_images">Please select at least 3 images</string>
     <string name="capture_no">No images captured</string>
-    <string name="maximunpic">Maximun pictures</string>
+    <string name="maximunpic">Maximum pictures</string>
     <string name="take_only_pic">You can only take 1 photo</string>
-    <string name="select_other_img">select other image</string>
+    <string name="select_other_img">Select another image</string>
+    <string name="select_image_to_change">Select an image to change</string>
+
+    <string name="english">English</string>
+    <string name="spanish">Español</string>
+    <string name="french">Français</string>
+    <string name="hindi">हिंदी</string>
+    <string name="portuguese">Português</string>
+    <string name="arabic">العربية</string>
+    <string name="turkish">Türkçe</string>
+    <string name="chinese">中文</string>
+    <string name="japanese">日本語</string>
+    <string name="korean">한국어</string>
+    <string name="russian">Русский</string>
 
 </resources>

@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">صورة مجمعة</string>
-    <string name="hello_blank_fragment">مرحبًا بفراغ</string>
+    <string name="app_name">CollageImage</string>
+    <string name="hello_blank_fragment">مرحبًا، جزء فارغ</string>
     <string name="language_options">اللغة</string>
     <string name="rate">التقييم</string>
     <string name="share">مشاركة</string>
@@ -9,8 +8,8 @@
     <string name="backtohome">العودة إلى الصفحة الرئيسية</string>
     <string name="Dywtbh">هل تريد العودة إلى الصفحة الرئيسية؟</string>
     <string name="something_went_wrong">حدث خطأ ما!</string>
-    <string name="image_not_found">الصورة غير موجودة</string>
-    <string name="selectsingleimage">حدد صورة لتطبيق التعديلات</string>
+    <string name="image_not_found">لم يتم العثور على الصورة</string>
+    <string name="selectsingleimage">اختر صورة لتطبيق التعديلات</string>
     <string name="pmirror">انعكاس</string>
     <string name="pflip">قلب</string>
     <string name="protate">تدوير</string>
@@ -19,31 +18,31 @@
     <string name="pright">يمين</string>
     <string name="pup">أعلى</string>
     <string name="pdown">أسفل</string>
-    <string name="photo_collage">تجميع الصور</string>
+    <string name="photo_collage">مجموعة صور</string>
     <string name="edit_image">تحرير الصورة</string>
     <string name="popular_template">القوالب الشائعة</string>
     <string name="corner">الزاوية</string>
     <string name="color">اللون</string>
-    <string name="blur">تمويه</string>
+    <string name="blur">ضبابية</string>
     <string name="gradient">تدرج</string>
     <string name="custom">مخصص</string>
     <string name="layout">التخطيط</string>
     <string name="filter">فلتر</string>
     <string name="bg">الخلفية</string>
     <string name="frame">الإطار</string>
-    <string name="text">نص</string>
+    <string name="text">النص</string>
     <string name="sticker">ملصق</string>
     <string name="draw">رسم</string>
     <string name="add">إضافة</string>
-    <string name="ratio">النسبة</string>
+    <string name="ratio">نسبة</string>
     <string name="border_color">لون الحدود</string>
     <string name="txt_border">الحدود</string>
-    <string name="border_thickness">سمك الحدود</string>
-    <string name="padding">الحشو</string>
+    <string name="border_thickness">سُمك الحدود</string>
+    <string name="padding">التعبئة</string>
     <string name="try_again">حاول مرة أخرى</string>
     <string name="font">الخط</string>
     <string name="add_text">إضافة نص</string>
-    <string name="label">ملصق</string>
+    <string name="label">تسمية</string>
     <string name="adjust">تعديل</string>
     <string name="cancel">إلغاء</string>
     <string name="edit">تحرير الصورة</string>
@@ -52,61 +51,112 @@
     <string name="ratio_image">نسبة الصورة</string>
     <string name="brightness">السطوع</string>
     <string name="contrast">التباين</string>
-    <string name="hightlight">تمييز</string>
-    <string name="shadow">ظل</string>
+    <string name="hightlight">الإضاءة</string>
+    <string name="shadow">الظل</string>
     <string name="warmth">الدفء</string>
-    <string name="vignette">فيجنيت</string>
-    <string name="hue">الصبغة</string>
-    <string name="tint">التلوين</string>
+    <string name="vignette">تأثير الظل</string>
+    <string name="hue">درجة اللون</string>
+    <string name="tint">الصبغة</string>
     <string name="fade">تلاشي</string>
     <string name="staturation">التشبع</string>
     <string name="label_brush">فرشاة</string>
-    <string name="tap_to_edit">اضغط للتحرير</string>
-    <string name="todo">قائمة المهام</string>
+    <string name="tap_to_edit">اضغط للتعديل</string>
+    <string name="todo">مهام</string>
     <string name="Origin">الأصل</string>
-    <string name="Fit">مناسب</string>
+    <string name="Fit">ملاءمة</string>
     <string name="save_successful">تم الحفظ بنجاح</string>
-    <string name="mess_save_ss">لقد تم حفظ صورتك بنجاح\nاستمتع بوقتك الآن!</string>
+    <string name="mess_save_ss">لقد قمت بحفظ الصورة بنجاح\nاستمتع بوقتك الآن!</string>
     <string name="back_to_home">العودة إلى الصفحة الرئيسية</string>
     <string name="this_action_can_contain_ads">قد تحتوي هذه العملية على إعلانات</string>
     <string name="finish">اضغط مرة أخرى للخروج</string>
-    <string name="we_will_return_you_to_the_previous_screen">سنعيدك إلى الشاشة السابقة</string>
+    <string name="we_will_return_you_to_the_previous_screen">سنعيدك إلى \nالشاشة السابقة؟</string>
     <string name="str_continue">متابعة</string>
     <string name="unknown_error_occurred">حدث خطأ غير معروف</string>
     <string name="no_browser">لا يوجد متصفح</string>
-    <string name="channel_description">هذه إشعارات</string>
-    <string name="channel_name">الإشعارات</string>
+    <string name="channel_description">هذا إشعار</string>
+    <string name="channel_name">إشعار</string>
     <string name="des_rate_4_5">نحن نحبك أيضًا</string>
     <string name="thanks_for_your_feedback">شكرًا على ملاحظاتك</string>
     <string name="des_rate_1_2_3">أوه، لا!</string>
     <string name="please_give_us_some_feedback">يرجى تقديم بعض الملاحظات</string>
-    <string name="rate_thanks">قيم التطبيق</string>
+    <string name="rate_thanks">التقييم داخل التطبيق</string>
     <string name="language">اللغة</string>
     <string name="you_need_pick_a_language">يجب عليك اختيار لغة</string>
 
+
     <!-- onBoarding -->
-    <string name="title_onboarding_1">أداة مجانية لتجميع الصور وتحريرها</string>
-    <string name="des_onboarding_1"></string>
+    <string name="title_onboarding_1">أداة مجانية لإنشاء الكولاج وتحرير الصور</string>
+    <string name="des_onboarding_1"> </string>
     <string name="title_onboarding_2">قوالب تصميم احترافية</string>
-    <string name="des_onboarding_2"></string>
-    <string name="title_onboarding_3">مرشحات صور احترافية ودمج سلس</string>
-    <string name="des_onboarding_3"></string>
-    <string name="title_onboarding_4">خطوط جميلة وملصقات وإطارات زخرفية</string>
-    <string name="des_onboarding_4"></string>
+    <string name="des_onboarding_2"> </string>
+    <string name="title_onboarding_3">فلاتر صور احترافية ودمج سلس للصور</string>
+    <string name="des_onboarding_3"> </string>
+    <string name="title_onboarding_4">العديد من الخطوط الجميلة والملصقات والإطارات الزخرفية</string>
+    <string name="des_onboarding_4"> </string>
 
     <!-- permission -->
-    <string name="permission">الإذن</string>
-    <string name="permission_need">الإذن مطلوب</string>
-    <string name="des_permission"><b>تجميع الصور</b> يتطلب إذنًا لاستخدام (الكاميرا والتخزين)</string>
-    <string name="go">انتقال</string>
+    <string name="permission">إذن</string>
+    <string name="permission_need">إذن</string>
+    <string name="des_permission"><b>Photo Collage</b> يتطلب إذنًا لاستخدام (الكاميرا والتخزين في الجهاز)</string>
+    <string name="go">اذهب</string>
     <string name="per_overlay">تحتاج إلى إذن التراكب لاستخدام هذا التطبيق</string>
-    <string name="deny_pers">الإذن مطلوب لاستخدام هذا التطبيق</string>
+    <string name="deny_pers">يجب منح الأذونات لاستخدام هذا التطبيق</string>
     <string name="permissions_have_been_granted">تم منح الأذونات!</string>
     <string name="skip">تخطي</string>
+    <string name="str_notify">إشعار</string>
+    <string name="str_record">مسجل</string>
+    <string name="str_camera">الكاميرا</string>
+    <string name="str_draw">رسم التراكب</string>
+    <string name="str_storage">التخزين</string>
+    <string name="step_2">الخطوة 1: الكاميرا</string>
+    <string name="step_4">الخطوة 2: التخزين</string>
+    <string name="you_can_select">يمكنك الاختيار: </string>
+    <string name="message_per_dialog">انقر فوق الزر لمنح الإذن!</string>
+    <string name="message_per_granted">تم منح الإذن!</string>
+    <string name="next">التالي</string>
+    <string name="start">ابدأ</string>
+    <string name="are_you_sure_to_exit_the_app">هل أنت متأكد أنك تريد الخروج من التطبيق؟</string>
+    <string name="exit_the_app">الخروج من التطبيق؟</string>
     <string name="exit">خروج</string>
     <string name="stay">البقاء</string>
+    <string name="title_rate">قيم هذا التطبيق</string>
+    <string name="des_rate_0">نود أن نعرف رأيك!</string>
+    <string name="may_be_later">ربما لاحقًا</string>
+    <string name="update_now">تحديث الآن</string>
+    <string name="des_update">يرجى تحديث التطبيق إلى الإصدار الجديد لمواصلة الاستخدام</string>
+    <string name="title_update">إصدار جديد متاح</string>
 
-    <!-- Language Options -->
+    <!-- Home & Navigation -->
+    <string name="home">الرئيسية</string>
+    <string name="template">قالب</string>
+    <string name="album">ألبوم</string>
+    <string name="photo">صورة</string>
+    <string name="selected">المحدد</string>
+    <string name="change_image">تغيير الصورة</string>
+
+    <!-- File Handling -->
+    <string name="save_file_before_closing">حفظ الملف قبل الإغلاق</string>
+    <string name="the_file_will_be_disappear_and_you_can_t_find_this_file_in_any_folders">سيختفي الملف ولن تتمكن من العثور عليه في أي مجلدات</string>
+    <string name="txt_loading">جار التحميل</string>
+    <string name="pswap">تبديل</string>
+    <string name="replace">استبدال</string>
+    <string name="crop">اقتصاص</string>
+    <string name="vertical">عمودي</string>
+    <string name="horizontal">أفقي</string>
+    <string name="click_to_step_by_step_for_require_permission">انقر للانتقال خطوة بخطوة لمنح الإذن</string>
+    <string name="setting">الإعدادات</string>
+    <string name="feedback">ملاحظات</string>
+    <string name="don_t_save">عدم الحفظ</string>
+    <string name="commingsoon">قريبًا</string>
+    <string name="image_count">صور</string>
+    <string name="select_at_least_3_images">الرجاء تحديد 3 صور على الأقل</string>
+    <string name="capture_no">لم يتم التقاط أي صور</string>
+    <string name="maximunpic">الحد الأقصى للصور</string>
+    <string name="take_only_pic">يمكنك التقاط صورة واحدة فقط</string>
+    <string name="select_other_img">اختر صورة أخرى</string>
+    <string name="select_image_to_change">اختر صورة لتغييرها</string>
+
+    <!-- Languages -->
     <string name="english">الإنجليزية</string>
     <string name="spanish">الإسبانية</string>
     <string name="french">الفرنسية</string>
@@ -118,4 +168,5 @@
     <string name="japanese">اليابانية</string>
     <string name="korean">الكورية</string>
     <string name="russian">الروسية</string>
+
 </resources>
