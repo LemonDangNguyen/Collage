@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@id/ivLogo" />
 
 
-    <com.example.collageimage.customview.CustomLoadingSplash
+    <com.photomaker.camerashot.photocollage.instacolor.customview.CustomLoadingSplash
         android:id="@+id/vLoading"
         android:layout_width="0dp"
         android:layout_height="@dimen/_10sdp"

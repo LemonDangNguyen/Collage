@@ -126,7 +126,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
-        <com.example.collageimage.customview.CustomSwitch
+        <com.photomaker.camerashot.photocollage.instacolor.customview.CustomSwitch
             android:id="@+id/sc"
             android:layout_width="@dimen/_48sdp"
             android:layout_height="@dimen/_28sdp"

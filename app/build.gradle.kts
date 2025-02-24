@@ -12,11 +12,11 @@ plugins {
 
 
 android {
-    namespace = "com.example.collageimage"
+    namespace = "com.photomaker.camerashot.photocollage.instacolor"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.collageimage"
+        applicationId = "com.photomaker.camerashot.photocollage.instacolor"
         minSdk = 27
         targetSdk = 34
         versionCode = 100
@@ -25,7 +25,7 @@ android {
         //setProperty("archivesBaseName", "CollageImage-$versionName")
 
         val formattedDate = SimpleDateFormat("MMM.dd.yyyy").format(Date())
-        setProperty("archivesBaseName", "CollageImage-${versionName}(${versionCode})_${formattedDate}")
+        setProperty("archivesBaseName", "App456_CollageImage-${versionName}(${versionCode})_${formattedDate}")
     }
 
     buildTypes {

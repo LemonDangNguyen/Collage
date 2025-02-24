@@ -64,7 +64,7 @@
         app:layout_constraintBottom_toTopOf="@+id/ctlBottom"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <com.example.collageimage.customview.BlurParentCollage
+        <com.photomaker.camerashot.photocollage.instacolor.customview.BlurParentCollage
             android:id="@+id/ivBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -74,7 +74,7 @@
             app:layout_constraintStart_toStartOf="@+id/puzzle_view"
             app:layout_constraintTop_toTopOf="@+id/puzzle_view" />
 
-        <com.example.collageimage.customview.CustomPuzzleView
+        <com.photomaker.camerashot.photocollage.instacolor.customview.CustomPuzzleView
             android:id="@+id/puzzle_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -92,7 +92,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="20dp" />
 
-        <com.example.collageimage.customview.DrawView
+        <com.photomaker.camerashot.photocollage.instacolor.customview.DrawView
             android:id="@+id/drawview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

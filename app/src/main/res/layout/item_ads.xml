@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/rl_native"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_210sdp"
+        android:layout_height="@dimen/_140sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true">
-
             <include layout="@layout/native_bot_horizontal_media_left_loading" />
         </FrameLayout>
     </RelativeLayout>

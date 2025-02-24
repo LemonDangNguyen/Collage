@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.collageimage",
+  "applicationId": "com.photomaker.camerashot.photocollage.instacolor",
   "variantName": "developDebug",
   "elements": [
     {
