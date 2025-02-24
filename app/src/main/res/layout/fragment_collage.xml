@@ -82,14 +82,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:layout_editor_absoluteX="22dp">
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <FrameLayout
                     android:id="@+id/fr_native_ads"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
                     <include layout="@layout/native_bot_horizontal_media_left_loading" />
                 </FrameLayout>
             </RelativeLayout>

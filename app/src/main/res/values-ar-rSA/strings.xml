@@ -156,17 +156,24 @@
     <string name="select_other_img">اختر صورة أخرى</string>
     <string name="select_image_to_change">اختر صورة لتغييرها</string>
 
+
     <!-- Languages -->
-    <string name="english">الإنجليزية</string>
-    <string name="spanish">الإسبانية</string>
-    <string name="french">الفرنسية</string>
-    <string name="hindi">الهندية</string>
-    <string name="portuguese">البرتغالية</string>
+    <string name="english">English</string>
+    <string name="spanish">Español</string>
+    <string name="french">Français</string>
+    <string name="hindi">हिंदी</string>
+    <string name="portuguese">Português</string>
     <string name="arabic">العربية</string>
-    <string name="turkish">التركية</string>
-    <string name="chinese">الصينية</string>
-    <string name="japanese">اليابانية</string>
-    <string name="korean">الكورية</string>
-    <string name="russian">الروسية</string>
+    <string name="turkish">Türkçe</string>
+    <string name="chinese">中文</string>
+    <string name="japanese">日本語</string>
+    <string name="korean">한국어</string>
+    <string name="russian">Русский</string>
+    <string name="chinese_simplified">中文 (简体)</string>
+    <string name="chinese_traditional">中文 (繁体)</string>
+    <string name="portuguese_brazil">Português (Brasil)</string>
+    <string name="bengal">বাংলা</string>
+    <string name="german">Deutsch</string>
+    <string name="indonesia">Indonesia</string>
 
 </resources>

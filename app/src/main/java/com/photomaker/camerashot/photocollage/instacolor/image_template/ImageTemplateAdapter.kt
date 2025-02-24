@@ -13,6 +13,7 @@ import com.photomaker.camerashot.photocollage.instacolor.callback.ICallBackDimen
 import com.nmh.base_lib.callback.ICallBackItem
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotAdapterBinding
+import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotAdapterFullBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotAdapterNomediaBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.ItemAdsBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.ItemTemplateBinding
@@ -73,7 +74,7 @@ class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<
         private fun pushAdsToView(nativeAd: NativeAd) {
             val bindingAds: NativeAdView // Sử dụng NativeAdView của Google
             if (AdsConfig.isLoadFullAds())
-                bindingAds = AdsNativeBotAdapterNomediaBinding.inflate(LayoutInflater.from(context)).root
+                bindingAds = AdsNativeBotAdapterFullBinding.inflate(LayoutInflater.from(context)).root
             else
                 bindingAds = AdsNativeBotAdapterBinding.inflate(LayoutInflater.from(context)).root
 

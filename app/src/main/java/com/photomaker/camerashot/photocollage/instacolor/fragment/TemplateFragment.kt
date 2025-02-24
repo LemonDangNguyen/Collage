@@ -1,10 +1,15 @@
 package com.photomaker.camerashot.photocollage.instacolor.fragment
 
 import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,6 +32,8 @@ import com.nmh.base_lib.callback.ICallBackItem
 import com.photomaker.camerashot.photocollage.instacolor.NMHApp
 import com.photomaker.camerashot.photocollage.instacolor.R
 import com.photomaker.camerashot.photocollage.instacolor.databinding.FragmentTemplateBinding
+import com.photomaker.camerashot.photocollage.instacolor.image_template.ImageTemplateModel
+import com.photomaker.camerashot.photocollage.instacolor.permission.PermissionSheet
 
 class TemplateFragment : Fragment() {
 
@@ -39,6 +46,7 @@ class TemplateFragment : Fragment() {
             return fragment
         }
     }
+    private lateinit var bottomSheet: PermissionSheet
     private var _binding: FragmentTemplateBinding? = null
     private val binding get() = _binding!!
     private lateinit var imageTemplateAdapter: ImageTemplateAdapter
@@ -61,11 +69,14 @@ class TemplateFragment : Fragment() {
         }
         AdsConfig.loadInterItemTemplate(requireActivity())
 
-        imageTemplateAdapter.onItemClickListener = { imageId ->
-            val intent = Intent(requireContext(), TemplateActivity::class.java)
-            intent.putExtra("imageId", imageId.id)
-            showInterHomeTemplate(intent)
-
+        imageTemplateAdapter.onItemClickListener = { imageTemplateModel ->
+            if (hasStoragePermissions()) {
+                val intent = Intent(requireContext(), TemplateActivity::class.java)
+                intent.putExtra("imageId", imageTemplateModel.id)
+                showInterHomeTemplate(intent)
+            } else {
+                showPermissionBottomSheetForTemplate(imageTemplateModel)
+            }
         }
         imageTemplateAdapter.callbackDimensional = object : ICallBackDimensional {
             override fun callBackItem(objects: Any, callBackItem: ICallBackItem) {
@@ -100,6 +111,37 @@ class TemplateFragment : Fragment() {
             startActivity(Intent(requireContext(), Setting::class.java))
         }
     }
+    private fun hasStoragePermissions(): Boolean {
+        val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
+        return storagePermissions.all {
+            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+    private fun showPermissionBottomSheetForTemplate(imageTemplateModel: ImageTemplateModel) {
+        bottomSheet = PermissionSheet(requireContext()).apply {
+            isDone = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (status) {
+                        val intent = Intent(requireContext(), TemplateActivity::class.java)
+                        intent.putExtra("imageId", imageTemplateModel.id)
+                        showInterHomeTemplate(intent)
+                        cancel()
+                    } else {
+                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        bottomSheet.showDialog()
+    }
+
 
     private fun setupRecyclerView() {
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
@@ -138,7 +180,8 @@ class TemplateFragment : Fragment() {
             startActivity(intent)
         }
     }
-     fun hideAds2() {
+
+    fun hideAds2() {
         val updatedList = mutableListOf<Any>()
         for (item in imageTemplateAdapter.getItemList()) {
             if (item !is AdsModel) {

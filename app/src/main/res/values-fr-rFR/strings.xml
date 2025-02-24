@@ -153,16 +153,22 @@
     <string name="select_other_img">Sélectionner une autre image</string>
     <string name="select_image_to_change">Sélectionner une image à changer</string>
 
-    <string name="english">Anglais</string>
-    <string name="spanish">Espagnol</string>
+    <string name="english">English</string>
+    <string name="spanish">Español</string>
     <string name="french">Français</string>
     <string name="hindi">हिंदी</string>
-    <string name="portuguese">Portugais</string>
-    <string name="arabic">Arabe</string>
-    <string name="turkish">Turc</string>
-    <string name="chinese">Chinois</string>
-    <string name="japanese">Japonais</string>
-    <string name="korean">Coréen</string>
-    <string name="russian">Russe</string>
+    <string name="portuguese">Português</string>
+    <string name="arabic">العربية</string>
+    <string name="turkish">Türkçe</string>
+    <string name="chinese">中文</string>
+    <string name="japanese">日本語</string>
+    <string name="korean">한국어</string>
+    <string name="russian">Русский</string>
+    <string name="chinese_simplified">中文 (简体)</string>
+    <string name="chinese_traditional">中文 (繁体)</string>
+    <string name="portuguese_brazil">Português (Brasil)</string>
+    <string name="bengal">বাংলা</string>
+    <string name="german">Deutsch</string>
+    <string name="indonesia">Indonesia</string>
 
 </resources>

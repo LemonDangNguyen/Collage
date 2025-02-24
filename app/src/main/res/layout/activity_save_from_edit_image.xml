@@ -80,35 +80,39 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/_18sdp"
-            android:paddingVertical="@dimen/_4sdp"
+            android:paddingHorizontal="@dimen/_13sdp"
+            android:paddingVertical="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <TextView
                 android:id="@+id/btGoHome"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_8sdp"
+                android:textSize="@dimen/_10sdp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:textAlignment="center"
                 android:background="@drawable/bg_button_stroked"
                 android:fontFamily="@font/font_bold"
                 android:text="@string/back_to_home"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary" />
-
-            <androidx.appcompat.widget.AppCompatButton
+                android:textColor="@color/colorPrimary"
+                android:paddingVertical="@dimen/_8sdp"
+                android:paddingHorizontal="@dimen/_10sdp" />
+            <TextView
                 android:id="@+id/btShare"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:background="@drawable/bg_button_filled"
                 android:fontFamily="@font/font_bold"
-                android:stateListAnimator="@null"
+                android:textSize="@dimen/_10sdp"
                 android:text="@string/share"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:paddingVertical="@dimen/_8sdp"
+                android:paddingHorizontal="@dimen/_10sdp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@ package com.photomaker.camerashot.photocollage.instacolor.language
 
 import android.content.Context
 import com.photomaker.camerashot.photocollage.instacolor.NMHApp
-
 import com.photomaker.camerashot.photocollage.instacolor.helpers.CURRENT_LANGUAGE
 import com.photomaker.camerashot.photocollage.instacolor.helpers.FINISH_LANGUAGE
 import com.photomaker.camerashot.photocollage.instacolor.model.LanguageModel
@@ -45,23 +44,44 @@ object DataLanguage {
     }
 
     private fun checkLocale(name: String?): Locale {
-        return if (name?.lowercase()?.contains("french") == true) Locale.FRANCE
-        else if (name?.lowercase()?.contains("hindi") == true) Locale("hi", "IN")
-        else if (name?.lowercase()?.contains("portuguese") == true) Locale("pt", "PT")
-        else if (name?.lowercase()?.contains("spanish") == true) Locale("es", "ES")
-        else if (name?.lowercase()?.contains("arabic") == true) Locale("ar", "AE")
-        else if (name?.lowercase()?.contains("turkish") == true) Locale("tr", "TR")
-        else Locale.ENGLISH
+        return when {
+            name?.lowercase()?.contains("french") == true -> Locale.FRANCE
+            name?.lowercase()?.contains("hindi") == true -> Locale("hi", "IN")
+            name?.lowercase()?.contains("portuguese") == true -> Locale("pt", "PT")
+            name?.lowercase()?.contains("spanish") == true -> Locale("es", "ES")
+            name?.lowercase()?.contains("arabic") == true -> Locale("ar", "AE")
+            name?.lowercase()?.contains("turkish") == true -> Locale("tr", "TR")
+            name?.lowercase()?.contains("china_simplified") == true -> Locale.SIMPLIFIED_CHINESE
+            name?.lowercase()?.contains("china_traditional") == true -> Locale.TRADITIONAL_CHINESE
+            name?.lowercase()?.contains("bengal") == true -> Locale("bn", "IN")
+            name?.lowercase()?.contains("german") == true -> Locale.GERMANY
+            name?.lowercase()?.contains("japan") == true -> Locale("ja", "JP")
+            name?.lowercase()?.contains("south_korea") == true -> Locale("ko", "KR")
+            name?.lowercase()?.contains("indonesia") == true -> Locale("id", "ID")
+            name?.lowercase()?.contains("brazil") == true -> Locale("pt", "BR")
+            name?.lowercase()?.contains("russia") == true -> Locale("ru", "RU")
+            name?.lowercase()?.contains("turkey") == true -> Locale("tr", "TR")
+            else -> Locale.ENGLISH
+        }
     }
 
     private fun getTextLang(context: Context, name: String): String = when(name.lowercase()) {
-        "english" -> context.getString(R.string.english)
-        "spanish" -> context.getString(R.string.spanish)
-        "french" -> context.getString(R.string.french)
-        "hindi" -> context.getString(R.string.hindi)
-        "portuguese" -> context.getString(R.string.portuguese)
-        "turkish" -> context.getString(R.string.turkish)
         "arabic" -> context.getString(R.string.arabic)
+        "bengal" -> context.getString(R.string.bengal)
+        "brazil" -> context.getString(R.string.portuguese_brazil)
+        "china_simplified" -> context.getString(R.string.chinese_simplified)
+        "china_traditional" -> context.getString(R.string.chinese_traditional)
+        "english" -> context.getString(R.string.english)
+        "french" -> context.getString(R.string.french)
+        "german" -> context.getString(R.string.german)
+        "hindi" -> context.getString(R.string.hindi)
+        "indonesia" -> context.getString(R.string.indonesia)
+        "japan" -> context.getString(R.string.japanese)
+        "portuguese" -> context.getString(R.string.portuguese)
+        "russia" -> context.getString(R.string.russian)
+        "south_korea" -> context.getString(R.string.korean)
+        "spanish" -> context.getString(R.string.spanish)
+        "turkey" -> context.getString(R.string.turkish)
         else -> ""
     }
 }

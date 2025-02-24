@@ -1,18 +1,18 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
-    android:width="142dp"
+    android:width="154dp"
     android:height="50dp"
-    android:viewportWidth="142"
+    android:viewportWidth="154"
     android:viewportHeight="50">
     <path
         android:strokeWidth="1"
-        android:pathData="M1 25c0-13.25 10.75-24 24-24h92c13.25 0 24 10.75 24 24v0c0 13.25-10.75 24-24 24h-92c-13.25 0-24-10.75-24-24z">
+        android:pathData="M1 9c0-4.42 3.58-8 8-8h136c4.42 0 8 3.58 8 8v32c0 4.42-3.58 8-8 8h-136c-4.42 0-8-3.58-8-8z">
         <aapt:attr name="android:strokeColor">
             <gradient
                 android:type="linear"
-                android:startX="71"
+                android:startX="77"
                 android:startY="1"
-                android:endX="71"
+                android:endX="77"
                 android:endY="49">
                 <item
                     android:color="#FF009EFD"

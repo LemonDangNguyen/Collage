@@ -61,7 +61,14 @@ class LanguageAdapter @Inject constructor(@ActivityContext private val context: 
                 .load("file:///android_asset/${lang.uri}/${lang.name.lowercase()}.webp")
                 .into(binding.ivFlag)
 
-            binding.tvName.text = lang.name
+            binding.tvName.apply {
+                text = when(lang.name){
+                    "China_simplified" -> "China (Simplified)"
+                    "China_traditional" -> "China (Traditional)"
+                    "South_korea" -> "South Korea"
+                    else -> lang.name
+                }
+            }
             binding.tvDes.text = lang.nativeName
             if (position == 1 && !isSelected) {
                 binding.animationTap.visible()

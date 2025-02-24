@@ -58,9 +58,9 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
 
 
         binding.btGoHome.text = if (extraText == "TemplateActivity") {
-            "Try Other Template"
+            getString(R.string.try_other_template)
         } else {
-            "Edit Other Image"
+            getString(R.string.edit_other_image)
         }
 
         binding.btGoHome.setOnClickListener {

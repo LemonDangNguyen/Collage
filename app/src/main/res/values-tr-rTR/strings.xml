@@ -154,16 +154,22 @@
     <string name="select_other_img">Başka bir resim seçin</string>
     <string name="select_image_to_change">Değiştirecek resmi seçin</string>
 
-    <string name="english">İngilizce</string>
-    <string name="spanish">İspanyolca</string>
-    <string name="french">Fransızca</string>
-    <string name="hindi">Hintçe</string>
-    <string name="portuguese">Portekizce</string>
-    <string name="arabic">Arapça</string>
+    <string name="english">English</string>
+    <string name="spanish">Español</string>
+    <string name="french">Français</string>
+    <string name="hindi">हिंदी</string>
+    <string name="portuguese">Português</string>
+    <string name="arabic">العربية</string>
     <string name="turkish">Türkçe</string>
-    <string name="chinese">Çince</string>
-    <string name="japanese">Japonca</string>
-    <string name="korean">Korece</string>
-    <string name="russian">Rusça</string>
+    <string name="chinese">中文</string>
+    <string name="japanese">日本語</string>
+    <string name="korean">한국어</string>
+    <string name="russian">Русский</string>
+    <string name="chinese_simplified">中文 (简体)</string>
+    <string name="chinese_traditional">中文 (繁体)</string>
+    <string name="portuguese_brazil">Português (Brasil)</string>
+    <string name="bengal">বাংলা</string>
+    <string name="german">Deutsch</string>
+    <string name="indonesia">Indonesia</string>
 
 </resources>
