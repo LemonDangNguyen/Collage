@@ -128,11 +128,13 @@ class CollageFragment : Fragment() {
 
     private fun checkAndRequestPermissionsForHomeTemplate(className: String, imageId: Int) {
         if (requireContext().checkAllPerGrand()) {
-            showInterHomeTemplate(className, imageId)
+            cancelPermissionSheet()
         } else {
             showPermissionBottomSheetForHomeTemplate(className, imageId)
         }
     }
+
+
     private fun showPermissionBottomSheetForHomeTemplate(className: String, imageId: Int) {
         binding.rlNative.gone()
         bottomSheet = PermissionSheet(requireContext()).apply {
@@ -283,11 +285,16 @@ class CollageFragment : Fragment() {
     }
     private fun checkAndRequestPermissionsForHome(className: String?) {
         if (requireContext().checkAllPerGrand()) {
-            showInterHome(className.orEmpty())
+            cancelPermissionSheet()
         } else {
             showPermissionBottomSheetForHome(className.orEmpty())
         }
     }
+    private fun cancelPermissionSheet() {
+        bottomSheet?.cancel()
+    }
+
+
 
     private fun showPermissionBottomSheetForHome(className: String) {
         binding.rlNative.gone()
@@ -303,7 +310,8 @@ class CollageFragment : Fragment() {
                     if (haveNetworkConnection(requireActivity())
                         && ConsentHelper.getInstance(requireActivity()).canRequestAds()
                         && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home) binding.rlNative.visible()
+                        && AdsConfig.is_load_native_home)
+                        binding.rlNative.visible()
                 }
             }
             isDismiss = object : ICallBackCheck {

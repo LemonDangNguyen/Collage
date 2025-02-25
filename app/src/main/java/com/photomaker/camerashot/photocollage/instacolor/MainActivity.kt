@@ -51,7 +51,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
                 showDialogExit(object : ICallBackCheck {
                     override fun check(isCheck: Boolean) {
-                        binding.banner.visible()
+                        if(haveNetworkConnection() && ConsentHelper.getInstance(this@MainActivity).canRequestAds()
+                            && AdsConfig.is_load_banner_all){
+                            binding.banner.visible()
+                        }
                         collageFragment.showAds()
                         if (templateFragment.isAdded) {
                             templateFragment.showAds2()

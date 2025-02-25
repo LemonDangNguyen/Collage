@@ -163,7 +163,6 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
         }
     }
 
-
     private fun startAnimationButton(view: View) {
         Handler(Looper.getMainLooper()).postDelayed({
             view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.heart_beat))

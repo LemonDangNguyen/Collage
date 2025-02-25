@@ -946,7 +946,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
 
     private fun loadBanner() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
-            && AdsConfig.is_load_banner_all && AdsConfig.isLoadFullAds()) {
+            && AdsConfig.is_load_banner_all) {
             val config = BannerPlugin.Config()
             config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
             config.defaultCBFetchIntervalSec = cbFetchInterval
