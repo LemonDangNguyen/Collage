@@ -153,6 +153,9 @@
     <string name="take_only_pic">Sadece 1 fotoğraf çekebilirsiniz</string>
     <string name="select_other_img">Başka bir resim seçin</string>
     <string name="select_image_to_change">Değiştirecek resmi seçin</string>
+    <string name="try_other_template">Başka bir şablon deneyin</string>
+    <string name="edit_other_image">Başka bir fotoğraf düzenleyin</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

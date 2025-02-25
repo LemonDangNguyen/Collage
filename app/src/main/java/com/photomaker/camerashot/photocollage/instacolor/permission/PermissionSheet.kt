@@ -170,7 +170,6 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
         }, 2000)
     }
 
-//binding.rlNative.gone()
     private fun requestCameraPermission() {
         Dexter.withContext(context)
             .withPermission(Manifest.permission.CAMERA)

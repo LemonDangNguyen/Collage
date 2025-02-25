@@ -153,6 +153,9 @@
     <string name="take_only_pic">您只能拍摄1张照片</string>
     <string name="select_other_img">选择其他图片</string>
     <string name="select_image_to_change">选择要更改的图片</string>
+    <string name="try_other_template">尝试其他模板</string>
+    <string name="edit_other_image">编辑其他图片</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

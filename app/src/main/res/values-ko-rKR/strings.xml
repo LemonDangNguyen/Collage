@@ -153,6 +153,9 @@
     <string name="take_only_pic">하나의 사진만 찍을 수 있습니다</string>
     <string name="select_other_img">다른 이미지 선택</string>
     <string name="select_image_to_change">변경할 이미지를 선택하십시오</string>
+    <string name="try_other_template">다른 템플릿을 시도하십시오</string>
+    <string name="edit_other_image">다른 이미지를 편집</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

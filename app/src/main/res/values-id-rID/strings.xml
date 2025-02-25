@@ -153,6 +153,9 @@
     <string name="take_only_pic">Anda hanya dapat mengambil 1 foto</string>
     <string name="select_other_img">Pilih gambar lain</string>
     <string name="select_image_to_change">Pilih gambar untuk diubah</string>
+    <string name="try_other_template">Coba template lain</string>
+    <string name="edit_other_image">Ubah gambar lain</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

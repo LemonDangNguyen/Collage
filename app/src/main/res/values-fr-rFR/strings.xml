@@ -152,6 +152,8 @@
     <string name="take_only_pic">Vous ne pouvez prendre qu\'une photo</string>
     <string name="select_other_img">Sélectionner une autre image</string>
     <string name="select_image_to_change">Sélectionner une image à changer</string>
+    <string name="try_other_template">Essayer avec un autre modèle</string>
+    <string name="edit_other_image">Modifier une autre image</string>"
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

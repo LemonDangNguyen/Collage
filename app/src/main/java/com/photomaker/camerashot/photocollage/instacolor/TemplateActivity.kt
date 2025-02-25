@@ -347,7 +347,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
 
         binding.btnText.setOnClickListener {
 
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.commingsoon), Gravity.CENTER)
 //            binding.layoutAddText.root.visibility = View.VISIBLE
 //            binding.lnBottomBar.visibility = View.GONE
         }

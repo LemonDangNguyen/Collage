@@ -155,6 +155,9 @@
     <string name="take_only_pic">يمكنك التقاط صورة واحدة فقط</string>
     <string name="select_other_img">اختر صورة أخرى</string>
     <string name="select_image_to_change">اختر صورة لتغييرها</string>
+    <string name="try_other_template">جرب قالب آخر</string>
+    <string name="edit_other_image">تحرير صورة أخرى</string>
+
 
 
     <!-- Languages -->

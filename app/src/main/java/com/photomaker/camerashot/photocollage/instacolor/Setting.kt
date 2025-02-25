@@ -40,16 +40,22 @@ class Setting : BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inf
         }
 
         binding.btnRate.setOnClickListener {
+            binding.rlNative.gone()
             AppOpenManager.getInstance().disableAppResumeWithActivity(Setting::class.java)
             UtilsRate.showRate(this, false, object : ICallBackCheck {
                 override fun check(isCheck: Boolean) {
                     if (isCheck) binding.btnRate.gone()
+                    binding.rlNative.visible()
                 }
             })
         }
+
         binding.btnShare.setOnClickListener {
+            binding.rlNative.gone()
             ActionUtils.shareApp(this)
+            binding.rlNative.visible()
         }
+
         binding.btnFeedback.setOnClickListener {
             ActionUtils.sendFeedback(this)
         }

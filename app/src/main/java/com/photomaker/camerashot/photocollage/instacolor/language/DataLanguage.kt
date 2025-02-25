@@ -7,6 +7,7 @@ import com.photomaker.camerashot.photocollage.instacolor.helpers.FINISH_LANGUAGE
 import com.photomaker.camerashot.photocollage.instacolor.model.LanguageModel
 import com.photomaker.camerashot.photocollage.instacolor.sharepref.DataLocalManager
 import com.photomaker.camerashot.photocollage.instacolor.R
+import com.photomaker.camerashot.photocollage.instacolor.helpers.IS_SHOW_BACK
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.Locale
@@ -17,7 +18,7 @@ object DataLanguage {
 
         var currentLang = ""
         DataLocalManager.getLanguage(CURRENT_LANGUAGE)?.let { currentLang = it.name }
-        if (!DataLocalManager.getBoolean(FINISH_LANGUAGE, false)) currentLang = ""
+        if (!DataLocalManager.getBoolean(IS_SHOW_BACK, false)) currentLang = ""
 
         val lstLang = mutableListOf<LanguageModel>()
         val f = NMHApp.ctx.assets.list("flag_language")

@@ -153,6 +153,8 @@
     <string name="take_only_pic">আপনি শুধু ১টি ছবি তুলতে পারেন</string>
     <string name="select_other_img">অন্যান্য ছবি নির্বাচন করুন</string>
     <string name="select_image_to_change">পরিবর্তন করতে একটি ছবি নির্বাচন করুন</string>
+    <string name="try_other_template">অন্যান্য টেমপ্লেট ট্রাই করুন</string>
+    <string name="edit_other_image">অন্যান্য ছবি সম্পাদনা করুন</string>
 
 
     <string name="english">English</string>

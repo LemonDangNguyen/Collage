@@ -249,14 +249,15 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.layoutParentTool.root.visibility = View.GONE
         }
         binding.layoutParentTool.llChangeText.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+
+            showToast(getString(R.string.commingsoon), Gravity.CENTER)
 //            addText()
 //            binding.layoutAddText.root.visibility = View.VISIBLE
 //            binding.linearLayout.visibility = View.GONE
 
         }
         binding.layoutParentTool.llChangeFilter.setOnClickListener {
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.commingsoon), Gravity.CENTER)
 //            binding.barFilterAndAdjust.root.visibility = View.VISIBLE
 //            binding.linearLayout.visibility = View.GONE
 //            binding.layoutLayout.root.visibility = View.GONE
@@ -430,7 +431,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
 
         binding.layoutBg.tvBlur.setOnClickListener {
            // updateTextViewStyle(binding.layoutBg.tvBlur)
-            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+            showToast(getString(R.string.commingsoon), Gravity.CENTER)
         }
     }
 

@@ -5,6 +5,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,9 @@ import com.nmh.base_lib.callback.ICallBackCheck
 import com.photomaker.camerashot.photocollage.instacolor.callback.ICallBackDimensional
 import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
 import com.nlbn.ads.callback.AdCallback
+import com.nlbn.ads.util.AppOpenManager
 import com.nmh.base_lib.callback.ICallBackItem
+import com.photomaker.camerashot.photocollage.instacolor.MainActivity
 import com.photomaker.camerashot.photocollage.instacolor.NMHApp
 import com.photomaker.camerashot.photocollage.instacolor.R
 import com.photomaker.camerashot.photocollage.instacolor.databinding.FragmentTemplateBinding
@@ -36,6 +39,12 @@ import com.photomaker.camerashot.photocollage.instacolor.image_template.ImageTem
 import com.photomaker.camerashot.photocollage.instacolor.permission.PermissionSheet
 
 class TemplateFragment : Fragment() {
+
+    override fun onResume() {
+        super.onResume()
+        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
+        bottomSheet?.checkPer()
+    }
 
     companion object {
         fun newInstance(): TemplateFragment {
@@ -46,7 +55,7 @@ class TemplateFragment : Fragment() {
             return fragment
         }
     }
-    private lateinit var bottomSheet: PermissionSheet
+    private  var bottomSheet: PermissionSheet? =null
     private var _binding: FragmentTemplateBinding? = null
     private val binding get() = _binding!!
     private lateinit var imageTemplateAdapter: ImageTemplateAdapter
@@ -125,6 +134,7 @@ class TemplateFragment : Fragment() {
         }
     }
     private fun showPermissionBottomSheetForTemplate(imageTemplateModel: ImageTemplateModel) {
+        hideAds2()
         bottomSheet = PermissionSheet(requireContext()).apply {
             isDone = object : ICallBackCheck {
                 override fun check(status: Boolean) {
@@ -132,14 +142,27 @@ class TemplateFragment : Fragment() {
                         val intent = Intent(requireContext(), TemplateActivity::class.java)
                         intent.putExtra("imageId", imageTemplateModel.id)
                         showInterHomeTemplate(intent)
-                        cancel()
+                        cancel()  // Đảm bảo BottomSheet được ẩn
                     } else {
                         Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+
+
+            isDismiss = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (haveNetworkConnection(requireActivity())
+                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+                        && AdsConfig.isLoadFullAds()
+                        && AdsConfig.is_load_native_home
+                    )
+                    showAds2()
+                }
+            }
+
         }
-        bottomSheet.showDialog()
+        bottomSheet?.showDialog()
     }
 
 

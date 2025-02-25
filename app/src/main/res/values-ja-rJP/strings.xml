@@ -153,6 +153,9 @@
     <string name="take_only_pic">1枚の写真しか撮れません</string>
     <string name="select_other_img">他の画像を選択</string>
     <string name="select_image_to_change">変更する画像を選択</string>
+    <string name="try_other_template">他のテンプレートを試す</string>
+    <string name="edit_other_image">他の画像を変更</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

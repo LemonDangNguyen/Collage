@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1079012104532",
-    "project_id": "app118-b71cf",
-    "storage_bucket": "app118-b71cf.appspot.com"
+    "project_number": "657097285494",
+    "project_id": "app456-82dd1",
+    "storage_bucket": "app456-82dd1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1079012104532:android:260b84adc79866bbf1d0c1",
+        "mobilesdk_app_id": "1:657097285494:android:4c63d0a8ec7884a32ce457",
         "android_client_info": {
-          "package_name":"com.photomaker.camerashot.photocollage.instacolor"
+          "package_name": "com.photomaker.camerashot.photocollage.instacolor"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDbbFkT8YVrPyAfsXTyA7JuJEYDDb31A5g"
+          "current_key": "AIzaSyBicmp29lvD80H_hMx8tJbsEcfc8lMRlRU"
         }
       ],
       "services": {

@@ -153,6 +153,9 @@
     <string name="take_only_pic">Вы можете сделать только 1 фото</string>
     <string name="select_other_img">Выберите другое изображение</string>
     <string name="select_image_to_change">Выберите изображение для изменения</string>
+    <string name="try_other_template">Попробуйте другой шаблон</string>
+    <string name="edit_other_image">Редактируйте другое изображение</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

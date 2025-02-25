@@ -152,6 +152,9 @@
     <string name="take_only_pic">Você pode tirar apenas 1 foto</string>
     <string name="select_other_img">Selecione outra imagem</string>
     <string name="select_image_to_change">Selecione uma imagem para alterar</string>
+    <string name="try_other_template">Tente outro template</string>
+    <string name="edit_other_image">Edite outra imagem</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

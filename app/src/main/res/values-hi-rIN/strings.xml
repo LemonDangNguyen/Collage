@@ -152,6 +152,9 @@
     <string name="take_only_pic">आप केवल 1 फोटो ले सकते हैं</string>
     <string name="select_other_img">दूसरी छवि चुनें</string>
     <string name="select_image_to_change">बदलने के लिए एक छवि चुनें</string>
+    <string name="try_other_template">अन्य टेम्पलेट आज़माएँ</string>
+    <string name="edit_other_image">अन्य छवि संपादित करें</string>
+
 
     <string name="english">English</string>
     <string name="spanish">Español</string>

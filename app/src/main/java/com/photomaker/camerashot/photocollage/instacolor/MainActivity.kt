@@ -45,7 +45,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             override fun handleOnBackPressed() {
                 binding.banner.gone()
                 collageFragment.hideAds()
-                if (templateFragment.isAdded) {  // Kiểm tra fragment có hoạt động không
+                if (templateFragment.isAdded) {
                     templateFragment.hideAds2()
                 }
 

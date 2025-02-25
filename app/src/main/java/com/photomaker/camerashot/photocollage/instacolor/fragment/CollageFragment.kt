@@ -51,7 +51,7 @@ class CollageFragment : Fragment() {
         }
     }
 
-    private lateinit var bottomSheet: PermissionSheet
+    private  var bottomSheet: PermissionSheet? =null
 
     private val binding by lazy { FragmentCollageBinding.inflate(layoutInflater) }
     private val imageList = listOf(
@@ -98,10 +98,9 @@ class CollageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
-        if (::bottomSheet.isInitialized) {
-            bottomSheet.checkPer()
-        }
+        bottomSheet?.checkPer()
     }
+
 
     private fun setuptemplate() {
         binding.image1.setOnUnDoubleClickListener {
@@ -126,10 +125,8 @@ class CollageFragment : Fragment() {
 
     private fun checkAndRequestPermissionsForHomeTemplate(className: String, imageId: Int) {
         if (hasStoragePermissions()) {
-            // Nếu có quyền, hiển thị quảng cáo rồi chuyển đến activity
             showInterHomeTemplate(className, imageId)
         } else {
-            // Nếu chưa có quyền, hiển thị bảng yêu cầu quyền
             showPermissionBottomSheetForHomeTemplate(className, imageId)
         }
     }
@@ -161,7 +158,7 @@ class CollageFragment : Fragment() {
                 }
             }
         }
-        bottomSheet.showDialog()
+        bottomSheet?.showDialog()
     }
 
 
@@ -177,8 +174,6 @@ class CollageFragment : Fragment() {
             ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
         }
     }
-
-
     private fun setupViewPager() {
         val adapter = ImageInMainAdapter(imageList)
         binding.viewPager.adapter = adapter
@@ -290,10 +285,8 @@ class CollageFragment : Fragment() {
     }
     private fun checkAndRequestPermissionsForHome(className: String?) {
         if (hasStoragePermissions()) {
-            // Nếu đã có quyền, hiển thị quảng cáo rồi chuyển đến activity cần thiết
             showInterHome(className.orEmpty())
         } else {
-            // Nếu không có quyền, hiển thị bảng yêu cầu quyền
             showPermissionBottomSheetForHome(className.orEmpty())
         }
     }
@@ -326,7 +319,7 @@ class CollageFragment : Fragment() {
                 }
             }
         }
-        bottomSheet.showDialog()
+        bottomSheet?.showDialog()
     }
     private fun showNative() {
         if (haveNetworkConnection(requireActivity())
