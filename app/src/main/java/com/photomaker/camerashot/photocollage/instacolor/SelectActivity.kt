@@ -119,7 +119,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     }
 
     private fun setUpListener() {
-        binding.clearImgList.setOnClickListener {
+        binding.clearImgList.setOnUnDoubleClickListener {
             selectedImages.clear()
             selectedImagesAdapter.notifyDataSetChanged()
             updateSelectedCount()
@@ -159,7 +159,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
 
         }
 
-        binding.btnAlbum.setOnClickListener {
+        binding.btnAlbum.setOnUnDoubleClickListener {
             val bottomSheet = SelectAlbumBottomSheet()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
@@ -332,21 +332,14 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
 
 
     private fun loadBanner() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.is_load_banner_all) {
             val config = BannerPlugin.Config()
             config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
             config.defaultCBFetchIntervalSec = cbFetchInterval
 
-            if (true /*thêm biến check remote, thường là switch_banner_collapse*/) {
-                config.defaultAdUnitId = getString(R.string.banner_all)
-                config.defaultBannerType = BannerPlugin.BannerType.CollapsibleBottom
-            } else if (true /*thêm biến check remote, thường là banner_all*/) {
-                config.defaultAdUnitId = getString(R.string.banner_all)
-                config.defaultBannerType = BannerPlugin.BannerType.Adaptive
-            } else {
-                binding.banner.gone()
-                return
-            }
+            config.defaultAdUnitId = getString(R.string.banner_all)
+            config.defaultBannerType = BannerPlugin.BannerType.Adaptive
             Admob.getInstance().loadBannerPlugin(this, findViewById(R.id.banner), findViewById(R.id.shimmer), config)
         } else binding.banner.gone()
     }

@@ -189,7 +189,7 @@ class SelectAlbumBottomSheet : BottomSheetDialogFragment() {
             AdsConfig.nativeAll?.let {
                 pushViewAds(it)
             } ?: run {
-                Admob.getInstance().loadNativeAd(requireContext(), getString(R.string.native_all),
+                Admob.getInstance().loadNativeAd(requireActivity(), getString(R.string.native_all),
                     object : NativeCallback() {
                         override fun onNativeAdLoaded(nativeAd: NativeAd) {
                             pushViewAds(nativeAd)
@@ -204,14 +204,18 @@ class SelectAlbumBottomSheet : BottomSheetDialogFragment() {
         } else binding.rlNative.gone()
     }
     private fun pushViewAds(nativeAd: NativeAd) {
-        val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
+        try {
+            val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
 
-        if (!AdsConfig.isLoadFullAds())
-            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
-        else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+            if (!AdsConfig.isLoadFullAds())
+                adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+            else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
 
-        binding.frNativeAds.removeAllViews()
-        binding.frNativeAds.addView(adView.root)
-        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+            binding.frNativeAds.removeAllViews()
+            binding.frNativeAds.addView(adView.root)
+            Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 }

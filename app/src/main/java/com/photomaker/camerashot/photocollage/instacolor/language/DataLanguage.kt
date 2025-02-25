@@ -58,7 +58,7 @@ object DataLanguage {
             name?.lowercase()?.contains("german") == true -> Locale.GERMANY
             name?.lowercase()?.contains("japan") == true -> Locale("ja", "JP")
             name?.lowercase()?.contains("south_korea") == true -> Locale("ko", "KR")
-            name?.lowercase()?.contains("indonesia") == true -> Locale("id", "ID")
+            name?.lowercase()?.contains("indonesia") == true -> Locale("in", "ID")
             name?.lowercase()?.contains("brazil") == true -> Locale("pt", "BR")
             name?.lowercase()?.contains("russia") == true -> Locale("ru", "RU")
             name?.lowercase()?.contains("turkey") == true -> Locale("tr", "TR")

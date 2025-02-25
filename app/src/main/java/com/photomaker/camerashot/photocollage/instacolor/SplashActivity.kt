@@ -154,7 +154,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     }
 
     private fun loadBanner(strId: String, isRemote: Boolean) {
-        if (haveNetworkConnection() && AdsConfig.isLoadFullAds() && isRemote /* -->điều kiện remote ads*/ ) {
+        if (haveNetworkConnection() && AdsConfig.isLoadFullAds() && isRemote&& AdsConfig.is_load_banner_all ) {
             binding.rlBanner.visible()
             val config = BannerPlugin.Config()
             val cbFetchInterval = AdsConfig.cbFetchInterval /*cbFetchInterval lấy theo remote*/

@@ -123,8 +123,29 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
             binding.rlNative.gone()
             showDialogBack(object : ICallBackCheck {
                 override fun check(isCheck: Boolean) {
-                    /*hiện tất cả các ads đang có trên màn hình(banner, native) khi dialog ẩn đi*/
-                       binding.rlNative.visible()
+
+                    if (AdsConfig.haveNetworkConnection(this@SaveFromEditImage)
+                        && ConsentHelper.getInstance(this@SaveFromEditImage).canRequestAds()
+                        && AdsConfig.isLoadFullAds()
+                        && AdsConfig.is_load_native_successfully)
+                    {
+                        binding.rlNative.visible()
+                        AdsConfig.nativeAll?.let {
+                            pushViewAds(it)
+                        } ?: run {
+                            Admob.getInstance().loadNativeAd(this@SaveFromEditImage, getString(R.string.native_all),
+                                object : NativeCallback() {
+                                    override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                                        pushViewAds(nativeAd)
+                                    }
+
+                                    override fun onAdFailedToLoad() {
+                                        binding.frNativeAds.removeAllViews()
+                                    }
+                                }
+                            )
+                        }
+                    } else binding.rlNative.gone()
                 }
             })
         }
@@ -150,7 +171,7 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
 
 
     private fun showNative() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_save) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_successfully) {
             binding.rlNative.visible()
             AdsConfig.nativeAll?.let {
                 pushViewAds(it)

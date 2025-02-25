@@ -327,5 +327,5 @@ object AdsConfig {
     fun getDelayShowInterSplash() = if(isLoadFullAds()) is_delay_show_inter_splash * 1000L else 3000L
 
    // fun isLoadFullAds(): Boolean = Admob.getInstance().isLoadFullAds // nomal
-    fun isLoadFullAds(): Boolean = true //full ads
+    fun isLoadFullAds(): Boolean = false //nomal
 }

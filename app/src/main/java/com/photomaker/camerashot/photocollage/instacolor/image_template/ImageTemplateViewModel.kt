@@ -51,15 +51,16 @@ class ImageTemplateViewModel : ViewModel() {
 
         while (pos< imageResIds.size){
             pos+= if (!isCheck) 5 else if (AdsConfig.is_load_native_item_template3) 5 else 4
-            if (imageResIds.size>= pos +1 && AdsConfig.isLoadFullAds())
-                imageResIds.add(pos, AdsModel(pos, null, NMHApp.ctx.getString(R.string.native_item_template1), false, AdsConfig.is_load_native_item_template3))
+            if (imageResIds.size>= pos +1 && AdsConfig.isLoadFullAds() && AdsConfig.is_load_native_item_template1){
+                imageResIds.add(pos, AdsModel(pos, null, NMHApp.ctx.getString(R.string.native_item_template1), false, AdsConfig.is_load_native_item_template1))
+            }
 
-            pos += if (AdsConfig.is_load_native_item_template2) 5 else 4
-            if (imageResIds.size>= pos +1 && AdsConfig.isLoadFullAds())
+            pos += if (AdsConfig.is_load_native_item_template1) 5 else 4
+            if (imageResIds.size>= pos +1 && AdsConfig.isLoadFullAds() && AdsConfig.is_load_native_item_template2)
                 imageResIds.add(pos, AdsModel(pos, null, NMHApp.ctx.getString(R.string.native_item_template2), false, AdsConfig.is_load_native_item_template2))
 
-            pos += if (AdsConfig.is_load_native_item_template3) 5 else 4
-            if (imageResIds.size>= pos +1 && AdsConfig.isLoadFullAds())
+            pos += if (AdsConfig.is_load_native_item_template2) 5 else 4
+            if (imageResIds.size>= pos +1 && AdsConfig.isLoadFullAds() && AdsConfig.is_load_native_item_template3)
                 imageResIds.add(pos, AdsModel(pos, null, NMHApp.ctx.getString(R.string.native_item_template3), false, AdsConfig.is_load_native_item_template3))
             isCheck = true
         }

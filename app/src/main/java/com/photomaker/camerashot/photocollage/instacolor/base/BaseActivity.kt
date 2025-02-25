@@ -47,6 +47,7 @@ import com.photomaker.camerashot.photocollage.instacolor.helpers.TAG
 import com.photomaker.camerashot.photocollage.instacolor.sharepref.DataLocalManager
 import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
 import com.nmh.base_lib.callback.ICallBackCheck
+import com.photomaker.camerashot.photocollage.instacolor.MainActivity
 import com.photomaker.camerashot.photocollage.instacolor.R
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.DialogBackToHomeBinding
@@ -330,7 +331,11 @@ abstract class BaseActivity<B : ViewBinding>(
             dialog.cancel()
             isDismiss.check(true)
         }
-        bindingDialog.tvContinue.setOnUnDoubleClickListener { finish() }
+        bindingDialog.tvContinue.setOnUnDoubleClickListener {
+            val intent = Intent(this@BaseActivity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
+            finish() }
     }
 
     fun showNativeBack(bindingDialog: DialogBackToHomeBinding) {

@@ -36,6 +36,8 @@ import com.nmh.base_lib.callback.ICallBackCheck
 import com.photomaker.camerashot.photocollage.instacolor.R
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.FragmentCollageBinding
+import com.photomaker.camerashot.photocollage.instacolor.extensions.checkAllPerGrand
+import com.photomaker.camerashot.photocollage.instacolor.extensions.checkPer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -71,6 +73,7 @@ class CollageFragment : Fragment() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
     }
+
     private var targetActivity: Class<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,7 +127,7 @@ class CollageFragment : Fragment() {
     }
 
     private fun checkAndRequestPermissionsForHomeTemplate(className: String, imageId: Int) {
-        if (hasStoragePermissions()) {
+        if (requireContext().checkAllPerGrand()) {
             showInterHomeTemplate(className, imageId)
         } else {
             showPermissionBottomSheetForHomeTemplate(className, imageId)
@@ -169,11 +172,6 @@ class CollageFragment : Fragment() {
         return binding.root
     }
 
-    private fun hasStoragePermissions(): Boolean {
-        return storagePermissions.all {
-            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
-        }
-    }
     private fun setupViewPager() {
         val adapter = ImageInMainAdapter(imageList)
         binding.viewPager.adapter = adapter
@@ -284,7 +282,7 @@ class CollageFragment : Fragment() {
         startActivity(Intent(requireContext(), Class.forName(className)))
     }
     private fun checkAndRequestPermissionsForHome(className: String?) {
-        if (hasStoragePermissions()) {
+        if (requireContext().checkAllPerGrand()) {
             showInterHome(className.orEmpty())
         } else {
             showPermissionBottomSheetForHome(className.orEmpty())
@@ -359,6 +357,28 @@ class CollageFragment : Fragment() {
         binding.rlNative.gone()
     }
     fun showAds(){
-        binding.rlNative.visible()
+
+        if (haveNetworkConnection(requireActivity())
+            && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+            && AdsConfig.isLoadFullAds()
+            && AdsConfig.is_load_native_home)
+        {
+            binding.rlNative.visible()
+            AdsConfig.nativeAll?.let {
+                pushViewAds(it)
+            } ?: run {
+                Admob.getInstance().loadNativeAd(requireActivity(), getString(R.string.native_all),
+                    object : NativeCallback() {
+                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
+                            pushViewAds(nativeAd)
+                        }
+
+                        override fun onAdFailedToLoad() {
+                            binding.frNativeAds.removeAllViews()
+                        }
+                    }
+                )
+            }
+        } else binding.rlNative.gone()
     }
 }

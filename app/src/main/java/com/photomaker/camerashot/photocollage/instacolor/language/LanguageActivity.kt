@@ -181,7 +181,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
 
     private fun showNativeLanguageSelect() {
         binding.ivTick.visible()
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()  && AdsConfig.is_load_native_language) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()  && AdsConfig.is_load_native_language_select) {
             binding.layoutNative.visible()
             AdsConfig.nativeLanguageSelect?.let {
                 pushViewAds(it)

@@ -223,7 +223,7 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
     fun checkPerDialog(): Boolean = context.checkAllPerGrand()
     fun loadNative() {
         try {
-            if (AdsConfig.haveNetworkConnection(context) /*thêm điều kiện remote*/
+            if (AdsConfig.haveNetworkConnection(context) && AdsConfig.is_load_native_permission
                 && ConsentHelper.getInstance(context).canRequestAds()) {
                 binding.rlNative.visible()
                 nativeAds?.let {

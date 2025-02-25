@@ -37,8 +37,7 @@ fun Context.checkAllPerGrand(): Boolean {
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE))
 
-    val overlayPer = Settings.canDrawOverlays(this)
     val cameraPer = checkPer(arrayOf(Manifest.permission.CAMERA))
 
-    return storagePer && overlayPer && cameraPer
+    return storagePer && cameraPer
 }

@@ -148,8 +148,6 @@ class TemplateFragment : Fragment() {
                     }
                 }
             }
-
-
             isDismiss = object : ICallBackCheck {
                 override fun check(status: Boolean) {
                     if (haveNetworkConnection(requireActivity())
@@ -228,11 +226,11 @@ class TemplateFragment : Fragment() {
                 updatedList.add(pos, AdsModel(
                     pos, null,
                     NMHApp.ctx.getString(R.string.native_item_template1),
-                    false, AdsConfig.is_load_native_item_template3
+                    false, AdsConfig.is_load_native_item_template1
                 ))
             }
 
-            pos += if (AdsConfig.is_load_native_item_template2) 5 else 4
+            pos += if (AdsConfig.is_load_native_item_template1) 5 else 4
             if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
                 updatedList.add(pos, AdsModel(
                     pos, null,
@@ -241,7 +239,7 @@ class TemplateFragment : Fragment() {
                 ))
             }
 
-            pos += if (AdsConfig.is_load_native_item_template3) 5 else 4
+            pos += if (AdsConfig.is_load_native_item_template2) 5 else 4
             if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
                 updatedList.add(pos, AdsModel(
                     pos, null,
