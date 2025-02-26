@@ -54,10 +54,10 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
             }
         }
 
-        val extraText = intent.getStringExtra("extra_text")
+        val extraText = intent.getStringExtra("extra_text") 
 
 
-        binding.btGoHome.text = if (extraText == "TemplateActivity") {
+        binding.btGoHome.text = if (extraText!!.contains("TemplateActivity")) {
             getString(R.string.try_other_template)
         } else {
             getString(R.string.edit_other_image)
@@ -85,7 +85,10 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
         }
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
+    }
     override fun setUp() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

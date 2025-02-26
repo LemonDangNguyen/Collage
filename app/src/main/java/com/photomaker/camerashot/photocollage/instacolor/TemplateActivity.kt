@@ -483,7 +483,6 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         dialog.setCancelable(false)
         bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
         showNativedialog(bindingDialog)
-
         bindingDialog.btnExit.setOnClickListener {
             dialog.dismiss()
             showInterBack()

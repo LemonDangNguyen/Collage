@@ -54,7 +54,7 @@ class CollageFragment : Fragment() {
     }
 
     private  var bottomSheet: PermissionSheet? =null
-    private var isPermissionGranted = false
+
 
     private val binding by lazy { FragmentCollageBinding.inflate(layoutInflater) }
     private val imageList = listOf(
@@ -132,7 +132,7 @@ class CollageFragment : Fragment() {
             isDone = object : ICallBackCheck {
                 override fun check(status: Boolean) {
                     if (status) {
-                        isPermissionGranted = true
+
                        // showInterHomeTemplate(className, imageId)
                         cancel()
                     } else {
@@ -215,9 +215,7 @@ class CollageFragment : Fragment() {
 
 
     private fun showInterHomeTemplate(className: String, imageId: Int) {
-        if (!isPermissionGranted) {
-            return
-        }
+
         if (haveNetworkConnection(requireContext())
             && ConsentHelper.getInstance(requireContext()).canRequestAds()
             && AdsConfig.interHome != null
@@ -250,9 +248,7 @@ class CollageFragment : Fragment() {
     }
 
     private fun showInterHome(className: String) {
-        if (!isPermissionGranted) {
-            return
-        }
+
         if (haveNetworkConnection(requireContext())
             && ConsentHelper.getInstance(requireContext()).canRequestAds()
             && AdsConfig.interHome != null
@@ -290,7 +286,7 @@ class CollageFragment : Fragment() {
             isDone = object : ICallBackCheck {
                 override fun check(status: Boolean) {
                     if (status) {
-                        isPermissionGranted = true
+
                         //showInterHome(className)
                         cancel()
                     } else {

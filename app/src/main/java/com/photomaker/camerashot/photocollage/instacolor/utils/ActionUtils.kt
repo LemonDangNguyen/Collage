@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.nlbn.ads.util.AppOpenManager
 import com.photomaker.camerashot.photocollage.instacolor.R
+import com.photomaker.camerashot.photocollage.instacolor.Setting
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -103,7 +104,11 @@ object ActionUtils {
             var shareMessage = "Let me recommend you this application\nDownload now:\n\n"
             shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + context.packageName
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
-            context.startActivity(Intent.createChooser(shareIntent, "choose one"))
+
+            // Sử dụng startActivityForResult với mã yêu cầu từ Setting
+            if (context is Setting) {
+                context.startActivityForResult(Intent.createChooser(shareIntent, "choose one"), Setting.REQUEST_SHARE)
+            }
 
             AppOpenManager.getInstance().disableAppResumeWithActivity(context::class.java)
         } catch (e: java.lang.Exception) {

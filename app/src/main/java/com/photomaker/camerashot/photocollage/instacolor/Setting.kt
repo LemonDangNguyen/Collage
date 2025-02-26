@@ -26,7 +26,9 @@ import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBo
 
 
 class Setting : BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
-
+    companion object {
+        const val REQUEST_SHARE = 1001
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -53,7 +55,6 @@ class Setting : BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inf
         binding.btnShare.setOnClickListener {
             binding.rlNative.gone()
             ActionUtils.shareApp(this)
-            binding.rlNative.visible()
         }
 
         binding.btnFeedback.setOnClickListener {
@@ -67,6 +68,17 @@ class Setting : BaseActivity<ActivitySettingBinding>(ActivitySettingBinding::inf
     override fun setUp() {
         showNative()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_SHARE) {
+            if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_setting) {
+                binding.rlNative.visible()
+            }
+        }
+    }
+
     private fun showNative() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_setting) {
             binding.rlNative.visible()
