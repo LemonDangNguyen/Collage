@@ -141,7 +141,7 @@ class TemplateFragment : Fragment() {
                     if (status) {
                         val intent = Intent(requireContext(), TemplateActivity::class.java)
                         intent.putExtra("imageId", imageTemplateModel.id)
-                        showInterHomeTemplate(intent)
+                       // showInterHomeTemplate(intent)
                         cancel()  // Đảm bảo BottomSheet được ẩn
                     } else {
                         Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()

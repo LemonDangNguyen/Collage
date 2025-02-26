@@ -54,6 +54,7 @@ class CollageFragment : Fragment() {
     }
 
     private  var bottomSheet: PermissionSheet? =null
+    private var isPermissionGranted = false
 
     private val binding by lazy { FragmentCollageBinding.inflate(layoutInflater) }
     private val imageList = listOf(
@@ -64,16 +65,6 @@ class CollageFragment : Fragment() {
         R.drawable.bg_in_main_05,
         R.drawable.bg_in_main_06
     )
-
-    private val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-    } else {
-        arrayOf(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-    }
-
     private var targetActivity: Class<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,7 +119,7 @@ class CollageFragment : Fragment() {
 
     private fun checkAndRequestPermissionsForHomeTemplate(className: String, imageId: Int) {
         if (requireContext().checkAllPerGrand()) {
-            cancelPermissionSheet()
+            showInterHomeTemplate(className, imageId)
         } else {
             showPermissionBottomSheetForHomeTemplate(className, imageId)
         }
@@ -141,7 +132,8 @@ class CollageFragment : Fragment() {
             isDone = object : ICallBackCheck {
                 override fun check(status: Boolean) {
                     if (status) {
-                        showInterHomeTemplate(className, imageId)
+                        isPermissionGranted = true
+                       // showInterHomeTemplate(className, imageId)
                         cancel()
                     } else {
                         Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
@@ -223,6 +215,9 @@ class CollageFragment : Fragment() {
 
 
     private fun showInterHomeTemplate(className: String, imageId: Int) {
+        if (!isPermissionGranted) {
+            return
+        }
         if (haveNetworkConnection(requireContext())
             && ConsentHelper.getInstance(requireContext()).canRequestAds()
             && AdsConfig.interHome != null
@@ -254,9 +249,10 @@ class CollageFragment : Fragment() {
         startActivity(intent)
     }
 
-
-
     private fun showInterHome(className: String) {
+        if (!isPermissionGranted) {
+            return
+        }
         if (haveNetworkConnection(requireContext())
             && ConsentHelper.getInstance(requireContext()).canRequestAds()
             && AdsConfig.interHome != null
@@ -266,7 +262,6 @@ class CollageFragment : Fragment() {
             Admob.getInstance().showInterAds(requireContext(), AdsConfig.interHome, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
-
                     startActivity(className)
                 }
 
@@ -279,30 +274,24 @@ class CollageFragment : Fragment() {
             })
         } else startActivity(className)
     }
-
     private fun startActivity(className: String) {
         startActivity(Intent(requireContext(), Class.forName(className)))
     }
     private fun checkAndRequestPermissionsForHome(className: String?) {
         if (requireContext().checkAllPerGrand()) {
-            cancelPermissionSheet()
+            showInterHome(className.orEmpty())
         } else {
             showPermissionBottomSheetForHome(className.orEmpty())
         }
     }
-    private fun cancelPermissionSheet() {
-        bottomSheet?.cancel()
-    }
-
-
-
     private fun showPermissionBottomSheetForHome(className: String) {
         binding.rlNative.gone()
         bottomSheet = PermissionSheet(requireContext()).apply {
             isDone = object : ICallBackCheck {
                 override fun check(status: Boolean) {
                     if (status) {
-                        showInterHome(className)
+                        isPermissionGranted = true
+                        //showInterHome(className)
                         cancel()
                     } else {
                         Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()

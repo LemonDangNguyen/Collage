@@ -126,7 +126,6 @@ class SaveFromEditImage : BaseActivity<ActivitySaveFromEditImageBinding>(Activit
 
                     if (AdsConfig.haveNetworkConnection(this@SaveFromEditImage)
                         && ConsentHelper.getInstance(this@SaveFromEditImage).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
                         && AdsConfig.is_load_native_successfully)
                     {
                         binding.rlNative.visible()

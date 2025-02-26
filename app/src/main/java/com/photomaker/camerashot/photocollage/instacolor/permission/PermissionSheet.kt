@@ -118,7 +118,6 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
         binding.rl.setOnUnDoubleClickListener {
             context.showToast(context.getString(R.string.click_to_step_by_step_for_require_permission), Gravity.CENTER)
         }
-
         binding.ivExit.setOnUnDoubleClickListener { cancel() }
     }
 
@@ -222,7 +221,7 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
     fun checkPerDialog(): Boolean = context.checkAllPerGrand()
     fun loadNative() {
         try {
-            if (AdsConfig.haveNetworkConnection(context) && AdsConfig.is_load_native_permission
+            if (AdsConfig.haveNetworkConnection(context) && AdsConfig.is_load_native_popup_permission
                 && ConsentHelper.getInstance(context).canRequestAds()) {
                 binding.rlNative.visible()
                 nativeAds?.let {
@@ -257,7 +256,6 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
 
     private fun pushViewAds(nativeAd: NativeAd) {
         val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
-
         if (AdsConfig.isLoadFullAds())
             adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
         else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
