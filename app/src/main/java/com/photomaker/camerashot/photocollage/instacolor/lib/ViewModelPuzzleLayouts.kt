@@ -1,15 +1,13 @@
-package com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels
+package com.photomaker.camerashot.photocollage.instacolor.lib
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.selectpic.ddat.SingleLiveEvent
-import com.example.selectpic.ddat.UseCasePuzzleLayouts
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.launch
 
 class ViewModelPuzzleLayouts(private val useCasePuzzleLayouts: UseCasePuzzleLayouts) : ViewModel() {
@@ -42,9 +40,8 @@ class ViewModelPuzzleLayouts(private val useCasePuzzleLayouts: UseCasePuzzleLayo
 
     fun getPuzzleLayouts(pieceCount: Int) = viewModelScope.launch(Dispatchers.IO) {
         useCasePuzzleLayouts.getPuzzleLayouts(pieceCount).let { list ->
-            if (list.size > 5) {
-                delay(500)
-            }
+            if (list.size > 5) delay(500)
+
             _puzzleLayoutsLiveData.postValue(list)
         }
     }

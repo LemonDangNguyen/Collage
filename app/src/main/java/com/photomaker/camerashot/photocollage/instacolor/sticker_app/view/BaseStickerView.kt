@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.view
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.view
 
 import android.graphics.Rect
 import android.content.Context
@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.Sticker
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.Sticker
 import com.photomaker.camerashot.photocollage.instacolor.R
 import kotlin.math.atan2
 

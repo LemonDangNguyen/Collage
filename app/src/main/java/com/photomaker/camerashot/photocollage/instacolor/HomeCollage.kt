@@ -2,7 +2,6 @@ package com.photomaker.camerashot.photocollage.instacolor;
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -11,16 +10,13 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.TextView
@@ -40,13 +36,13 @@ import com.photomaker.camerashot.photocollage.instacolor.CustomBg.CustomImageAda
 import com.photomaker.camerashot.photocollage.instacolor.CustomBg.CustomImageViewModel
 import com.photomaker.camerashot.photocollage.instacolor.Gradient.GradientAdapter
 import com.photomaker.camerashot.photocollage.instacolor.Gradient.GradientViewModel
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.Adapter.IconAdapter
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.Adapter.IconCategoryAdapter
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.Adapter.PhotoAdapter
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerIcon
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerPhoto
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.view.StickerIconView
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.view.StickerPhotoView
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.adapter.IconAdapter
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.adapter.IconCategoryAdapter
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.adapter.PhotoAdapter
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerIcon
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerPhoto
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.view.StickerIconView
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.view.StickerPhotoView
 import com.photomaker.camerashot.photocollage.instacolor.adjust.AdjustMode
 import com.photomaker.camerashot.photocollage.instacolor.adjust.ImageAdjustmentViewModel
 import com.photomaker.camerashot.photocollage.instacolor.adjust.filter.FilterListener
@@ -71,16 +67,16 @@ import com.photomaker.camerashot.photocollage.instacolor.ratio.AspectRatioViewMo
 import com.photomaker.camerashot.photocollage.instacolor.ratio.adapter.FontAdapter
 import com.photomaker.camerashot.photocollage.instacolor.ratio.adapter.RatioAdapter
 import com.photomaker.camerashot.photocollage.instacolor.saveImage.SaveFromEditImage
-import com.example.selectpic.ddat.PuzzleUtils
-import com.example.selectpic.ddat.RepoPuzzleUtils
+import com.photomaker.camerashot.photocollage.instacolor.lib.PuzzleUtils
+import com.photomaker.camerashot.photocollage.instacolor.lib.RepoPuzzleUtils
 import com.example.selectpic.ddat.RepositoryMediaImages
 import com.example.selectpic.ddat.UseCaseMediaImageDetail
-import com.example.selectpic.ddat.UseCasePuzzleLayouts
+import com.photomaker.camerashot.photocollage.instacolor.lib.UseCasePuzzleLayouts
 import com.example.selectpic.ddat.ViewModelMediaImageDetail
 import com.example.selectpic.ddat.ViewModelMediaImageDetailProvider
 import com.example.selectpic.lib.MediaStoreMediaImages
 import com.photomaker.camerashot.photocollage.instacolor.lib.AdapterPuzzleLayoutsPieces
-import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayouts
+import com.photomaker.camerashot.photocollage.instacolor.lib.ViewModelPuzzleLayouts
 import com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels.ViewModelPuzzleLayoutsProvider
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.utils.PuzzlePiece
@@ -95,8 +91,6 @@ import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
-import com.nmh.base_lib.callback.ICallBackCheck
-import com.photomaker.camerashot.photocollage.instacolor.R
 import com.photomaker.camerashot.photocollage.instacolor.databinding.ActivityHomeCollageBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.DialogSaveBeforeClosingBinding
@@ -111,16 +105,10 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
 
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val useCaseMediaImageDetail by lazy {
-        UseCaseMediaImageDetail(
-            RepositoryMediaImages(
-                mediaStoreMediaImages
-            )
-        )
+        UseCaseMediaImageDetail(RepositoryMediaImages(mediaStoreMediaImages))
     }
     private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> {
-        ViewModelMediaImageDetailProvider(
-            useCaseMediaImageDetail
-        )
+        ViewModelMediaImageDetailProvider(useCaseMediaImageDetail)
     }
     private val viewModelPuzzleLayouts by viewModels<ViewModelPuzzleLayouts> {
         ViewModelPuzzleLayoutsProvider(
@@ -138,6 +126,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private val stickerData = mutableMapOf<String, List<String>>()
     private lateinit var photoAdapter: PhotoAdapter
     private lateinit var fontAdapter: FontAdapter
+
     val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
@@ -231,67 +220,67 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
 
     private fun btntParentBottom() {
         binding.layoutParentTool.llChangeLayout.setOnClickListener {
-            binding.layoutLayout.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.GONE
-            binding.linearLayout.visibility = View.GONE
+            binding.layoutLayout.root.visible()
+            binding.layoutParentTool.root.gone()
+            binding.linearLayout.gone()
         }
         binding.layoutParentTool.llChangeBG.setOnClickListener {
-            binding.layoutBg.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.GONE
-            binding.layoutLayout.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.GONE
+            binding.layoutBg.root.visible()
+            binding.linearLayout.gone()
+            binding.layoutLayout.root.gone()
+            binding.layoutParentTool.root.gone()
         }
         binding.layoutParentTool.llChangeFrame.setOnClickListener {
             setupRecyclerView()
-            binding.layoutFrame.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.GONE
-            binding.layoutLayout.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.GONE
+            binding.layoutFrame.root.visible()
+            binding.linearLayout.gone()
+            binding.layoutLayout.root.gone()
+            binding.layoutParentTool.root.gone()
         }
         binding.layoutParentTool.llChangeText.setOnClickListener {
 
             showToast(getString(R.string.commingsoon), Gravity.CENTER)
 //            addText()
-//            binding.layoutAddText.root.visibility = View.VISIBLE
-//            binding.linearLayout.visibility = View.GONE
+//            binding.layoutAddText.root.visible()
+//            binding.linearLayout.gone()
 
         }
         binding.layoutParentTool.llChangeFilter.setOnClickListener {
             showToast(getString(R.string.commingsoon), Gravity.CENTER)
-//            binding.barFilterAndAdjust.root.visibility = View.VISIBLE
-//            binding.linearLayout.visibility = View.GONE
-//            binding.layoutLayout.root.visibility = View.GONE
-//            binding.layoutParentTool.root.visibility = View.GONE
+//            binding.barFilterAndAdjust.root.visible()
+//            binding.linearLayout.gone()
+//            binding.layoutLayout.root.gone()
+//            binding.layoutParentTool.root.gone()
         }
         binding.layoutParentTool.llChangeSticker.setOnClickListener {
-            binding.barStickers.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.GONE
-            binding.layoutLayout.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.GONE
+            binding.barStickers.root.visible()
+            binding.linearLayout.gone()
+            binding.layoutLayout.root.gone()
+            binding.layoutParentTool.root.gone()
             layoutStickerFunc()
         }
         binding.layoutParentTool.changeDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(true)
-            binding.barDrawing.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.GONE
-            binding.layoutLayout.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.GONE
+            binding.barDrawing.root.visible()
+            binding.linearLayout.gone()
+            binding.layoutLayout.root.gone()
+            binding.layoutParentTool.root.gone()
             drawFun()
         }
         binding.layoutParentTool.addImage.setOnClickListener {
-            binding.layoutAddImage.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.GONE
-            binding.linearLayout.visibility = View.GONE
+            binding.layoutAddImage.root.visible()
+            binding.layoutParentTool.root.gone()
+            binding.linearLayout.gone()
             setupRecyclerView2()
             binding.layoutAddImage.icClose.setOnClickListener {
-                binding.layoutAddImage.root.visibility = View.GONE
-                binding.layoutParentTool.root.visibility = View.VISIBLE
-                binding.linearLayout.visibility = View.VISIBLE
+                binding.layoutAddImage.root.gone()
+                binding.layoutParentTool.root.visible()
+                binding.linearLayout.visible()
             }
             binding.layoutAddImage.btnDoneAddImage.setOnClickListener {
-                binding.layoutAddImage.root.visibility = View.GONE
-                binding.layoutParentTool.root.visibility = View.VISIBLE
-                binding.linearLayout.visibility = View.VISIBLE
+                binding.layoutAddImage.root.gone()
+                binding.layoutParentTool.root.visible()
+                binding.linearLayout.visible()
             }
         }
     }
@@ -301,16 +290,16 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         binding.layoutLayout.ivDone.setOnClickListener {
             currentColorMode = ColorMode.BACKGROUND
             adapterPuzzleLayoutsPieces.confirmSelection()
-            binding.layoutLayout.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.layoutLayout.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
         binding.layoutLayout.ivClose.setOnClickListener {
             currentColorMode = ColorMode.BACKGROUND
             adapterPuzzleLayoutsPieces.discardSelection()
-            binding.layoutLayout.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.layoutLayout.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
         binding.layoutLayout.layout.setOnClickListener {
             binding.layoutLayout.tvLayout.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
@@ -322,10 +311,10 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.layoutLayout.tvBorderColor.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.layoutLayout.ivBorderColor.setImageResource(R.drawable.ic_border_color)
 
-            binding.layoutLayout.layoutBorderColor.visibility = View.GONE
-            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.VISIBLE
-            binding.layoutLayout.rvRatio.visibility = View.GONE
-            binding.layoutLayout.layoutBorder.visibility = View.GONE
+            binding.layoutLayout.layoutBorderColor.gone()
+            binding.layoutLayout.rcvListPuzzleLayouts.visible()
+            binding.layoutLayout.rvRatio.gone()
+            binding.layoutLayout.layoutBorder.gone()
 
         }
         binding.layoutLayout.ratio.setOnClickListener {
@@ -339,10 +328,10 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.layoutLayout.tvBorderColor.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.layoutLayout.ivBorderColor.setImageResource(R.drawable.ic_border_color)
 
-            binding.layoutLayout.layoutBorderColor.visibility = View.GONE
-            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
-            binding.layoutLayout.rvRatio.visibility = View.VISIBLE
-            binding.layoutLayout.layoutBorder.visibility = View.GONE
+            binding.layoutLayout.layoutBorderColor.gone()
+            binding.layoutLayout.rcvListPuzzleLayouts.gone()
+            binding.layoutLayout.rvRatio.visible()
+            binding.layoutLayout.layoutBorder.gone()
             setRatio()
         }
         binding.layoutLayout.llBorder.setOnClickListener {
@@ -356,21 +345,21 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.layoutLayout.tvBorderColor.setTextColor(ContextCompat.getColor(this, R.color.black))
             binding.layoutLayout.ivBorderColor.setImageResource(R.drawable.ic_border_color)
 
-            binding.layoutLayout.layoutBorderColor.visibility = View.GONE
-            binding.layoutLayout.ivClose.visibility = View.GONE
-            binding.layoutLayout.ivRefresh.visibility = View.VISIBLE
-            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
-            binding.layoutLayout.rvRatio.visibility = View.GONE
-            binding.layoutLayout.layoutBorder.visibility = View.VISIBLE
+            binding.layoutLayout.layoutBorderColor.gone()
+            binding.layoutLayout.ivClose.gone()
+            binding.layoutLayout.ivRefresh.visible()
+            binding.layoutLayout.rcvListPuzzleLayouts.gone()
+            binding.layoutLayout.rvRatio.gone()
+            binding.layoutLayout.layoutBorder.visible()
             corner()
             padding()
 
             binding.layoutLayout.ivRefresh.setOnClickListener {
                 currentColorMode = ColorMode.BACKGROUND
                 adapterPuzzleLayoutsPieces.discardSelection()
-                binding.layoutLayout.root.visibility = View.GONE
-                binding.layoutParentTool.root.visibility = View.VISIBLE
-                binding.linearLayout.visibility = View.VISIBLE
+                binding.layoutLayout.root.gone()
+                binding.layoutParentTool.root.visible()
+                binding.linearLayout.visible()
             }
         }
         binding.layoutLayout.llBorderColor.setOnClickListener {
@@ -385,10 +374,10 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.layoutLayout.ivBorderColor.setImageResource(R.drawable.ic_border_color_selected)
 
             currentColorMode = ColorMode.BORDER
-            binding.layoutLayout.rcvListPuzzleLayouts.visibility = View.GONE
-            binding.layoutLayout.rvRatio.visibility = View.GONE
-            binding.layoutLayout.layoutBorder.visibility = View.GONE
-            binding.layoutLayout.layoutBorderColor.visibility = View.VISIBLE
+            binding.layoutLayout.rcvListPuzzleLayouts.gone()
+            binding.layoutLayout.rvRatio.gone()
+            binding.layoutLayout.layoutBorder.gone()
+            binding.layoutLayout.layoutBorderColor.visible()
 
             binding.layoutLayout.selectbodercolor.setOnClickListener {
                 openColorPickerDialog()
@@ -405,36 +394,36 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         colorrecylayout()
 
         binding.layoutBg.ivClose.setOnClickListener {
-            binding.layoutBg.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.layoutBg.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
         binding.layoutBg.ivDone.setOnClickListener {
-            binding.layoutBg.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.layoutBg.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
 
         binding.layoutBg.tvColor.setOnClickListener {
             updateTextViewStyle(binding.layoutBg.tvColor)
-            binding.layoutBg.rvGradient.visibility = View.GONE
-            binding.layoutBg.rvcolorcustom.visibility = View.GONE
-            binding.layoutBg.rvColorln.visibility = View.VISIBLE
+            binding.layoutBg.rvGradient.gone()
+            binding.layoutBg.rvcolorcustom.gone()
+            binding.layoutBg.rvColorln.visible()
         }
 
         binding.layoutBg.tvCustom.setOnClickListener {
             updateTextViewStyle(binding.layoutBg.tvCustom)
-            binding.layoutBg.rvGradient.visibility = View.GONE
-            binding.layoutBg.rvColorln.visibility = View.GONE
-            binding.layoutBg.rvcolorcustom.visibility = View.VISIBLE
+            binding.layoutBg.rvGradient.gone()
+            binding.layoutBg.rvColorln.gone()
+            binding.layoutBg.rvcolorcustom.visible()
             setBgCus()
         }
 
         binding.layoutBg.tvGradient.setOnClickListener {
             updateTextViewStyle(binding.layoutBg.tvGradient)
-            binding.layoutBg.rvColorln.visibility = View.GONE
-            binding.layoutBg.rvcolorcustom.visibility = View.GONE
-            binding.layoutBg.rvGradient.visibility = View.VISIBLE
+            binding.layoutBg.rvColorln.gone()
+            binding.layoutBg.rvcolorcustom.gone()
+            binding.layoutBg.rvGradient.visible()
             setBgGradi()
         }
 
@@ -476,14 +465,14 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private fun layoutFrameFunc() {
         binding.layoutFrame.ivRefresh.setOnClickListener {
             binding.framebg.background = null
-            binding.layoutFrame.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.layoutFrame.root.gone()
+            binding.layoutParentTool.root.visible()
         }
 
         binding.layoutFrame.ivDone.setOnClickListener {
-            binding.layoutFrame.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.layoutFrame.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
     }
 
@@ -504,15 +493,15 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         colorrecyPenlayout()
         binding.barDrawing.btnCancelDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(false)
-            binding.barDrawing.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.barDrawing.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
         binding.barDrawing.btnApplyDraw.setOnClickListener {
             binding.drawview.setInteractionEnabled(false)
-            binding.barDrawing.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.barDrawing.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
         binding.barDrawing.btnUndo.setOnClickListener {
             binding.drawview.setUndo()
@@ -561,20 +550,20 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     }
     private fun layoutFilterandAdjustFunc() {
         binding.barFilterAndAdjust.btnDone.setOnClickListener {
-            binding.barFilterAndAdjust.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
-            binding.barFilterAndAdjust.layoutAdjustfunc.root.visibility = View.GONE
-            binding.barFilterAndAdjust.layoutFilterControl.visibility = View.GONE
+            binding.barFilterAndAdjust.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
+            binding.barFilterAndAdjust.layoutAdjustfunc.root.gone()
+            binding.barFilterAndAdjust.layoutFilterControl.gone()
         }
         binding.barFilterAndAdjust.btnRedoFilter.setOnClickListener {
-            binding.barFilterAndAdjust.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
-            binding.barFilterAndAdjust.layoutAdjustfunc.root.visibility = View.GONE
+            binding.barFilterAndAdjust.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
+            binding.barFilterAndAdjust.layoutAdjustfunc.root.gone()
         }
         binding.barFilterAndAdjust.tabAdjust.setOnClickListener {
-            binding.barFilterAndAdjust.layoutAdjustfunc.root.visibility = View.VISIBLE
+            binding.barFilterAndAdjust.layoutAdjustfunc.root.visible()
         }
 
         binding.barFilterAndAdjust.layoutAdjustfunc.icBrightness.setOnClickListener {
@@ -630,16 +619,16 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private fun layoutStickerFunc() {
         addSticker()
         binding.barStickers.icClose.setOnClickListener {
-            binding.barStickers.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.barStickers.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
         binding.barStickers.btnDoneSticker.setOnClickListener {
-            binding.barStickers.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.barStickers.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
         }
     }
 
@@ -826,13 +815,13 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     private fun down() = handlePuzzleAction { binding.puzzleView.moveDown() }
 
     private fun corner() = binding.layoutLayout.apply {
-        sbCorner.visibility = View.VISIBLE
+        sbCorner.visible()
         sbCorner.max = 100
         sbCorner.progress = binding.puzzleView.getPieceRadian().toInt()
     }
 
     private fun padding() = binding.layoutLayout.apply {
-        sbBorder.visibility = View.VISIBLE
+        sbBorder.visible()
         sbBorder.max = 100
         sbBorder.progress = binding.puzzleView.getPiecePadding().toInt()
     }
@@ -848,15 +837,15 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
 override fun onPieceClick() {
 
     if (binding.layoutEditImage.root.visibility == View.VISIBLE) {
-        binding.layoutEditImage.root.visibility = View.GONE
+        binding.layoutEditImage.root.gone()
     } else {
-        binding.layoutEditImage.root.visibility = View.VISIBLE
+        binding.layoutEditImage.root.visible()
     }
     binding.layoutEditImage.ivDone.setOnClickListener {
-        binding.layoutEditImage.root.visibility = View.GONE
+        binding.layoutEditImage.root.gone()
     }
     binding.layoutEditImage.ivClose.setOnClickListener {
-        binding.layoutEditImage.root.visibility = View.GONE
+        binding.layoutEditImage.root.gone()
     }
 
     binding.layoutEditImage.pmirror.setOnClickListener { mirror() }
@@ -978,12 +967,12 @@ override fun onPieceClick() {
         loadStickerData()
 
         binding.barStickers.icClose.setOnClickListener {
-            binding.barStickers.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.barStickers.root.gone()
+            binding.layoutParentTool.root.visible()
         }
         binding.barStickers.btnDoneSticker.setOnClickListener {
-            binding.barStickers.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
+            binding.barStickers.root.gone()
+            binding.layoutParentTool.root.visible()
         }
 
         categoryAdapter = IconCategoryAdapter(stickerData) { category ->
@@ -1148,34 +1137,34 @@ override fun onPieceClick() {
     }
     private fun addText() {
         binding.layoutAddText.ivClose.setOnClickListener {
-            binding.layoutAddText.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.layoutAddText.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
 
 
         }
         binding.layoutAddText.ivDone.setOnClickListener {
-            binding.layoutAddText.root.visibility = View.GONE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.layoutParentTool.root.visibility = View.VISIBLE
-            binding.linearLayout.visibility = View.VISIBLE
+            binding.layoutAddText.root.gone()
+            binding.layoutParentTool.root.visible()
+            binding.layoutParentTool.root.visible()
+            binding.linearLayout.visible()
 
         }
 
         binding.layoutAddText.tvFont.setOnClickListener {
             updateTextViewStyle2(binding.layoutAddText.tvFont)
-            binding.layoutAddText.llColor.visibility = View.GONE
-            binding.layoutAddText.rvTextColor.visibility = View.GONE
-            binding.layoutAddText.rvFont.visibility = View.VISIBLE
+            binding.layoutAddText.llColor.gone()
+            binding.layoutAddText.rvTextColor.gone()
+            binding.layoutAddText.rvFont.visible()
         }
 
         binding.layoutAddText.tvColor.setOnClickListener {
             colortextsticker()
             updateTextViewStyle2(binding.layoutAddText.tvColor)
-            binding.layoutAddText.llColor.visibility = View.VISIBLE
-            binding.layoutAddText.rvTextColor.visibility = View.VISIBLE
-            binding.layoutAddText.rvFont.visibility = View.GONE
+            binding.layoutAddText.llColor.visible()
+            binding.layoutAddText.rvTextColor.visible()
+            binding.layoutAddText.rvFont.gone()
         }
 
         val fontList = getFontsFromAssets()

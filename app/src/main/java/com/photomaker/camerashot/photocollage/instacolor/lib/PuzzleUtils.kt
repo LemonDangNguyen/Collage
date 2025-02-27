@@ -1,4 +1,4 @@
-package com.example.selectpic.ddat
+package com.photomaker.camerashot.photocollage.instacolor.lib
 
 import com.hypersoft.pzlayout.interfaces.PuzzleLayout
 import com.hypersoft.pzlayout.layouts.slant.SlantLayoutHelper

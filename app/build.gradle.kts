@@ -99,7 +99,7 @@ dependencies {
     implementation(libs.sdp.android)
     implementation(libs.ssp.android)
 
-
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
     implementation ("com.airbnb.android:lottie:6.0.0")
 
     // CameraX dependencies
@@ -137,22 +137,6 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
 
-
-
-
-    implementation("com.facebook.android:facebook-android-sdk:18.0.0")
-    implementation("com.google.ads.mediation:facebook:6.18.0.0")
-    implementation("com.facebook.infer.annotation:infer-annotation:0.18.0")
-    implementation("com.google.guava:guava:27.0.1-android")
-
-    implementation ("com.google.ads.mediation:vungle:7.0.0.1")
-    implementation ("com.google.ads.mediation:ironsource:7.5.2.0")
-    implementation ("com.google.ads.mediation:applovin:11.11.3.0")
-    implementation ("com.google.ads.mediation:mintegral:16.5.41.0")
-    implementation ("com.google.ads.mediation:pangle:5.5.0.7.0")
-    implementation  ("com.unity3d.ads:unity-ads:4.9.1")
-    implementation  ("com.google.ads.mediation:unity:4.9.1.0")
-
     implementation ("com.karumi:dexter:6.2.3")
 
     // shimmer
@@ -176,7 +160,7 @@ dependencies {
 
     // ads
     implementation("com.google.android.gms:play-services-ads:23.2.0")
-    implementation("com.github.devvtn.vtn_ads_libs:ads:1.9.8") // update lên phiên bản mới nhất
+    implementation("com.github.devvtn.vtn_ads_libs:ads:2.0.8")
 
     implementation("com.facebook.android:facebook-android-sdk:17.0.0")
     implementation("com.google.ads.mediation:facebook:6.18.0.0")

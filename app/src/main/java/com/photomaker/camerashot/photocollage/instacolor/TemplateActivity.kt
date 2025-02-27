@@ -23,10 +23,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.Adapter.IconAdapter
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.Adapter.IconCategoryAdapter
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerIcon
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.view.StickerIconView
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.adapter.IconAdapter
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.adapter.IconCategoryAdapter
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerIcon
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.view.StickerIconView
 import com.photomaker.camerashot.photocollage.instacolor.base.BaseActivity
 import com.photomaker.camerashot.photocollage.instacolor.color.ColorAdapter
 import com.photomaker.camerashot.photocollage.instacolor.color.ColorItem
@@ -37,7 +37,6 @@ import com.photomaker.camerashot.photocollage.instacolor.ratio.adapter.FontAdapt
 import com.photomaker.camerashot.photocollage.instacolor.saveImage.SaveFromEditImage
 import com.photomaker.camerashot.photocollage.instacolor.view_template.TemplateModel
 import com.photomaker.camerashot.photocollage.instacolor.view_template.TemplateViewModel
-import com.photomaker.camerashot.photocollage.instacolor.view_template.ViewTemplateAdapter
 import com.photomaker.camerashot.photocollage.instacolor.extensions.showToast
 import com.photomaker.camerashot.photocollage.instacolor.extensions.visible
 import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
@@ -48,10 +47,11 @@ import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.callback.NativeCallback
 import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
-import com.photomaker.camerashot.photocollage.instacolor.R
 import com.photomaker.camerashot.photocollage.instacolor.databinding.ActivityTemplateBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.DialogSaveBeforeClosingBinding
+import com.photomaker.camerashot.photocollage.instacolor.extensions.invisible
+import com.photomaker.camerashot.photocollage.instacolor.extensions.setOnUnDoubleClickListener
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -60,23 +60,20 @@ import java.io.OutputStream
 
 class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateBinding::inflate), OnColorClickListener {
 
-    private lateinit var viewTemplateAdapter: ViewTemplateAdapter
     private val templateViewModel: TemplateViewModel by viewModels()
+
     private var selectedPathIndex: Int = -1
-    private lateinit var categoryAdapter: IconCategoryAdapter
-    private lateinit var iconAdapter: IconAdapter
-    private lateinit var fontAdapter: FontAdapter
-    private lateinit var colorAdapter: ColorAdapter
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            saveFlParentAsImage()
-        } else {
-            Toast.makeText(this, "Permission denied. Cannot save image.", Toast.LENGTH_SHORT).show()
-        }
-    }
+
+    private var categoryAdapter: IconCategoryAdapter? = null
+    private var iconAdapter: IconAdapter? = null
+
     private val stickerData = mutableMapOf<String, List<String>>()
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) saveFlParentAsImage()
+        else Toast.makeText(this, "Permission denied. Cannot save image.", Toast.LENGTH_SHORT).show()
+    }
+
     private val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -85,13 +82,13 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                     val selectedBitmap = BitmapFactory.decodeFile(it)
                     if (selectedPathIndex != -1) {
                         templateViewModel.setSelectedImage(selectedBitmap)
-                        viewTemplateAdapter.setSelectedImage(selectedBitmap, selectedPathIndex)
+                        binding.viewTemplate.setSelectedImage(selectedBitmap, selectedPathIndex)
                     }
                 }
             }
         }
 
-    val colors = listOf(
+    private val colors = listOf(
         ColorItem("#F6F6F6"), ColorItem("#00BD4C"), ColorItem("#A4A4A4"),
         ColorItem("#805638"), ColorItem("#D0D0D0"), ColorItem("#0A0A0A"),
         ColorItem("#00C7AF"), ColorItem("#FF2768"), ColorItem("#AD28FF"),
@@ -99,8 +96,6 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         ColorItem("#BA85FE"), ColorItem("#933EFF"), ColorItem("#350077"),
         ColorItem("#E8F403"), ColorItem("#F403D4")
     )
-
-
 
     override fun setUp() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -110,63 +105,31 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         })
         AdsConfig.loadInterSave(this@TemplateActivity)
         loadBanner()
-        viewTemplateAdapter = binding.viewTemplate
+
         val imageId = intent.getIntExtra("imageId", -1)
         if (imageId != -1) {
             templateViewModel.loadTemplates()
             lifecycleScope.launch {
-                val template = templateViewModel.getTemplateById(imageId)
-                template?.let {
+                templateViewModel.getTemplateById(imageId)?.let {
                     setupTemplate(it)
                 }
             }
         }
-        binding.btnBack.setOnClickListener {
-            onBackPressed()
+        binding.btnBack.setOnUnDoubleClickListener { onBackPressedDispatcher.onBackPressed() }
+
+        binding.btnChangeImage.setOnUnDoubleClickListener {
+            if (selectedPathIndex != -1) openSelectImage(selectedPathIndex)
+            else showToast(getString(R.string.select_image_to_change), Gravity.CENTER)
         }
 
-        binding.btnChangeImage.setOnClickListener {
-            if (selectedPathIndex != -1) {
-                openSelectImage(selectedPathIndex)
-            } else {
-                showToast(getString(R.string.select_image_to_change), Gravity.CENTER)
-            }
-        }
+        addSticker()
+        addText()
 
-        initview()
-
-        binding.btnSave.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        saveFlParentAsImage()
-                    }
-
-                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
-                        Toast.makeText(
-                            this,
-                            "Permission needed to save images.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-
-                    else -> {
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-                }
-            } else {
-                saveFlParentAsImage()
-            }
-        }
+        binding.btnSave.setOnUnDoubleClickListener { actionSave() }
     }
 
     private fun saveFlParentAsImage() {
-        val bitmap = getBitmapFromView(binding.flParent)
-        saveBitmapToGallery(bitmap, onDone = {
+        saveBitmapToGallery(getBitmapFromView(binding.flParent), onDone = {
             if (it != "") {
                 val intent = Intent(this, SaveFromEditImage::class.java)
                 intent.putExtra("image_path", it)
@@ -175,7 +138,6 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
             } else showToast("Failed to save image.", Gravity.CENTER)
         })
     }
-
 
     private fun getBitmapFromView(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
@@ -186,7 +148,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
 
     private fun saveBitmapToGallery(bitmap: Bitmap, onDone: (String) -> Unit) {
         val filename = "IMG_${System.currentTimeMillis()}.png"
-        var fos: OutputStream? = null
+        var fos: OutputStream?
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val resolver = contentResolver
@@ -232,19 +194,16 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
     }
 
     private fun setupTemplate(template: TemplateModel) {
-        viewTemplateAdapter.setBackgroundDrawable(template.backgroundImageResId)
+        binding.viewTemplate.setBackgroundDrawable(template.backgroundImageResId)
         template.stringPaths.forEachIndexed { index, path ->
-            viewTemplateAdapter.setPath(index, path)
+            binding.viewTemplate.setPath(index, path)
         }
 
-
-        viewTemplateAdapter.setOnPathClickListener { pathIndex ->
+        binding.viewTemplate.setOnPathClickListener { pathIndex ->
             selectedPathIndex = pathIndex
-            if (viewTemplateAdapter.isPathEmpty(pathIndex)) {
-                openSelectImage(pathIndex)
-            }
+            if (binding.viewTemplate.isPathEmpty(pathIndex)) openSelectImage(pathIndex)
         }
-        viewTemplateAdapter.setOnBitmapClickListener { bitmapIndex ->
+        binding.viewTemplate.setOnBitmapClickListener { bitmapIndex ->
             selectedPathIndex = bitmapIndex
         }
     }
@@ -255,24 +214,20 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         }
         selectImageLauncher.launch(intent)
     }
-    private fun initview() {
-        addSticker()
-        addText()
-    }
 
     private fun addSticker() {
         loadStickerData()
-        binding.btnSticker.setOnClickListener {
-            binding.barStickers.root.visibility = View.VISIBLE
-            binding.lnBottomBar.visibility = View.INVISIBLE
+        binding.btnSticker.setOnUnDoubleClickListener {
+            binding.barStickers.root.visible()
+            binding.lnBottomBar.invisible()
         }
-        binding.barStickers.icClose.setOnClickListener {
-            binding.barStickers.root.visibility = View.GONE
-            binding.lnBottomBar.visibility = View.VISIBLE
+        binding.barStickers.icClose.setOnUnDoubleClickListener {
+            binding.barStickers.root.gone()
+            binding.lnBottomBar.visible()
         }
-        binding.barStickers.btnDoneSticker.setOnClickListener {
-            binding.barStickers.root.visibility = View.GONE
-            binding.lnBottomBar.visibility = View.VISIBLE
+        binding.barStickers.btnDoneSticker.setOnUnDoubleClickListener {
+            binding.barStickers.root.gone()
+            binding.lnBottomBar.visible()
         }
 
         categoryAdapter = IconCategoryAdapter(stickerData) { category ->
@@ -284,7 +239,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         }
 
         iconAdapter = IconAdapter(emptyList())
-        iconAdapter.onStickerClick = { stickerPath ->
+        iconAdapter?.onStickerClick = { stickerPath ->
             val inputStream = assets.open(stickerPath)
             val bitmap = BitmapFactory.decodeStream(inputStream)
 
@@ -309,18 +264,16 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         if (stickerData.isNotEmpty()) {
             val firstCategory = stickerData.keys.first()
             updateStickers(firstCategory)
-            categoryAdapter.setSelectedCategory(firstCategory)
+            categoryAdapter?.setSelectedCategory(firstCategory)
         }
     }
 
-
     private fun loadStickerData() {
-        val assetManager = assets
         val stickerFolder = "sticker"
-        val folders = assetManager.list(stickerFolder) ?: emptyArray()
+        val folders = assets.list(stickerFolder) ?: emptyArray()
 
         for (folder in folders) {
-            val filePaths = assetManager.list("$stickerFolder/$folder")?.filter {
+            val filePaths = assets.list("$stickerFolder/$folder")?.filter {
                 it.endsWith(".webp")
             }?.map {
                 "$stickerFolder/$folder/$it"
@@ -331,61 +284,50 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
 
     private fun updateStickers(category: String) {
         val stickers = stickerData[category] ?: emptyList()
-        iconAdapter.updateData(stickers)
+        iconAdapter?.updateData(stickers)
     }
 
     private fun colortextsticker() {
-        colorAdapter = ColorAdapter(colors, this)
         binding.layoutAddText.rvTextColor.apply {
-            layoutManager =
-                LinearLayoutManager(this@TemplateActivity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = colorAdapter
+            layoutManager = LinearLayoutManager(this@TemplateActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = ColorAdapter(colors, this@TemplateActivity)
         }
     }
     private fun addText() {
-
-
-        binding.btnText.setOnClickListener {
-
+        binding.btnText.setOnUnDoubleClickListener {
             showToast(getString(R.string.commingsoon), Gravity.CENTER)
-//            binding.layoutAddText.root.visibility = View.VISIBLE
-//            binding.lnBottomBar.visibility = View.GONE
         }
 
-        binding.layoutAddText.ivClose.setOnClickListener {
-            binding.layoutAddText.root.visibility = View.GONE
-            binding.lnBottomBar.visibility = View.VISIBLE
-
+        binding.layoutAddText.ivClose.setOnUnDoubleClickListener {
+            binding.layoutAddText.root.gone()
+            binding.lnBottomBar.visible()
         }
-        binding.layoutAddText.ivDone.setOnClickListener {
-            binding.layoutAddText.root.visibility = View.GONE
-            binding.lnBottomBar.visibility = View.VISIBLE
-
+        binding.layoutAddText.ivDone.setOnUnDoubleClickListener {
+            binding.layoutAddText.root.gone()
+            binding.lnBottomBar.visible()
         }
 
-        binding.layoutAddText.tvFont.setOnClickListener {
+        binding.layoutAddText.tvFont.setOnUnDoubleClickListener {
             updateTextViewStyle2(binding.layoutAddText.tvFont)
-            binding.layoutAddText.llColor.visibility = View.GONE
-            binding.layoutAddText.rvTextColor.visibility = View.GONE
-            binding.layoutAddText.rvFont.visibility = View.VISIBLE
+            binding.layoutAddText.llColor.gone()
+            binding.layoutAddText.rvTextColor.gone()
+            binding.layoutAddText.rvFont.visible()
         }
 
-        binding.layoutAddText.tvColor.setOnClickListener {
+        binding.layoutAddText.tvColor.setOnUnDoubleClickListener {
             colortextsticker()
             updateTextViewStyle2(binding.layoutAddText.tvColor)
-            binding.layoutAddText.llColor.visibility = View.VISIBLE
-            binding.layoutAddText.rvTextColor.visibility = View.VISIBLE
-            binding.layoutAddText.rvFont.visibility = View.GONE
+            binding.layoutAddText.llColor.visible()
+            binding.layoutAddText.rvTextColor.visible()
+            binding.layoutAddText.rvFont.gone()
         }
 
-        val fontList = getFontsFromAssets()
         binding.layoutAddText.rvFont.layoutManager = GridLayoutManager(this, 2)
-        fontAdapter = FontAdapter(fontList, this) { fontName ->
+        binding.layoutAddText.rvFont.adapter = FontAdapter(getFontsFromAssets(), this) { fontName ->
             Toast.makeText(this, "Selected font: $fontName", Toast.LENGTH_SHORT).show()
         }
-        binding.layoutAddText.rvFont.adapter = fontAdapter
 
-        binding.layoutAddText.tvText.setOnClickListener {
+        binding.layoutAddText.tvText.setOnUnDoubleClickListener {
             binding.layoutAddText.tvText.setTextColor(ContextCompat.getColor(this, R.color.white))
             binding.layoutAddText.tvText.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimary)
             binding.layoutAddText.tvLabel.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
@@ -393,7 +335,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
             binding.layoutAddText.tvBorder.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
             binding.layoutAddText.tvBorder.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
         }
-        binding.layoutAddText.tvLabel.setOnClickListener {
+        binding.layoutAddText.tvLabel.setOnUnDoubleClickListener {
             binding.layoutAddText.tvLabel.setTextColor(ContextCompat.getColor(this, R.color.white))
             binding.layoutAddText.tvLabel.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimary)
             binding.layoutAddText.tvText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
@@ -401,7 +343,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
             binding.layoutAddText.tvBorder.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
             binding.layoutAddText.tvBorder.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
         }
-        binding.layoutAddText.tvBorder.setOnClickListener {
+        binding.layoutAddText.tvBorder.setOnUnDoubleClickListener {
             binding.layoutAddText.tvBorder.setTextColor(ContextCompat.getColor(this, R.color.white))
             binding.layoutAddText.tvBorder.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimary)
 
@@ -422,16 +364,8 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
             ContextCompat.getColorStateList(this, R.color.bg_border_tab)
     }
     private fun resetTextViewStyles2() {
-        binding.layoutAddText.tvColor.setTextColor(
-            ContextCompat.getColor(
-                this,
-                R.color.black
-            )
-        )
-        binding.layoutAddText.tvColor.backgroundTintList = ContextCompat.getColorStateList(
-            this,
-            android.R.color.transparent
-        )
+        binding.layoutAddText.tvColor.setTextColor(ContextCompat.getColor(this, R.color.black))
+        binding.layoutAddText.tvColor.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
         binding.layoutAddText.tvFont.setTextColor(ContextCompat.getColor(this, R.color.black))
         binding.layoutAddText.tvFont.backgroundTintList =
             ContextCompat.getColorStateList(this, android.R.color.transparent)
@@ -447,9 +381,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
         val fontList = mutableListOf<String>()
         try {
             val fonts = assets.list("font")
-            if (fonts != null) {
-                fontList.addAll(fonts)
-            }
+            if (fonts != null) fontList.addAll(fonts)
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -457,15 +389,33 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
     }
 
     override fun onColorClick(color: ColorItem) {
-        val colorInt = Color.parseColor(color.colorHex)
-        Toast.makeText(this, "Selected color: $colorInt", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Selected color: ${Color.parseColor(color.colorHex)}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun actionSave() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            when {
+                checkPer(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) -> saveFlParentAsImage()
+
+                shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                    Toast.makeText(
+                        this,
+                        "Permission needed to save images.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
+
+                else -> requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        } else saveFlParentAsImage()
     }
 
     private fun loadBanner() {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
-            && AdsConfig.is_load_banner_all) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_banner_all) {
+            binding.banner.visible()
             val config = BannerPlugin.Config()
-            config.defaultRefreshRateSec = cbFetchInterval /*cbFetchInterval lấy theo remote*/
+            config.defaultRefreshRateSec = cbFetchInterval
             config.defaultCBFetchIntervalSec = cbFetchInterval
             config.defaultAdUnitId = getString(R.string.banner_all)
             config.defaultBannerType = BannerPlugin.BannerType.Adaptive
@@ -475,49 +425,24 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
 
 
     private fun showDialogBackSave() {
-
         val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this@TemplateActivity, R.style.SheetDialog).create()
-        dialog.setUpDialog(bindingDialog.root, true)
+        dialog.setUpDialog(bindingDialog.root, false)
+
         binding.banner.gone()
-        dialog.setCancelable(false)
         bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
-        showNativedialog(bindingDialog)
-        bindingDialog.btnExit.setOnClickListener {
+
+        showNativeDialog(bindingDialog)
+
+        bindingDialog.btnExit.setOnUnDoubleClickListener {
             dialog.dismiss()
             showInterBack()
         }
-        bindingDialog.btnStay.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        saveFlParentAsImage()
-                    }
+        bindingDialog.btnStay.setOnUnDoubleClickListener { actionSave() }
 
-                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
-                        Toast.makeText(
-                            this,
-                            "Permission needed to save images.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-
-                    else -> {
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-                }
-            } else {
-                saveFlParentAsImage()
-            }
-        }
-        dialog.setOnDismissListener {
-            binding.banner.visible()
-        }
+        dialog.setOnDismissListener { binding.banner.visible() }
     }
+
     private fun showInterBack() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()
@@ -536,12 +461,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                     AdsConfig.loadInterBack(this@TemplateActivity)
                 }
             })
-        } else {
-//            val intent = Intent(this, MainActivity::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-//            startActivity(intent)
-            finish()
-        }
+        } else finish()
     }
 
     private fun showInterSave(intent: Intent) {
@@ -562,20 +482,20 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                     AdsConfig.loadInterSave(this@TemplateActivity)
                 }
             })
-        } else {
-            startActivity(intent)
-        }
+        } else startActivity(intent)
     }
-    private fun showNativedialog(bindingDialog: DialogSaveBeforeClosingBinding) {
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()&& AdsConfig.isLoadFullAds()&&AdsConfig.is_load_native_save) {
+
+    private fun showNativeDialog(bindingDialog: DialogSaveBeforeClosingBinding) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_native_save) {
             bindingDialog.layoutNative.visible()
             AdsConfig.nativeAll?.let {
-                pushViewAdsdialog(bindingDialog, it)
+                pushViewAdsDialog(bindingDialog, it)
             } ?: run {
                 Admob.getInstance().loadNativeAd(this, getString(R.string.native_all),
                     object : NativeCallback() {
                         override fun onNativeAdLoaded(nativeAd: NativeAd) {
-                            pushViewAdsdialog(bindingDialog, nativeAd)
+                            pushViewAdsDialog(bindingDialog, nativeAd)
                         }
 
                         override fun onAdFailedToLoad() {
@@ -586,7 +506,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
             }
         } else  bindingDialog.layoutNative.gone()
     }
-    private fun pushViewAdsdialog(bindingDialog: DialogSaveBeforeClosingBinding, nativeAd: NativeAd) {
+    private fun pushViewAdsDialog(bindingDialog: DialogSaveBeforeClosingBinding, nativeAd: NativeAd) {
         val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
 
         if (!AdsConfig.isLoadFullAds())

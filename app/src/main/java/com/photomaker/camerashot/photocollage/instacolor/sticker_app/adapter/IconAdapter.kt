@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.Adapter
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.adapter
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater

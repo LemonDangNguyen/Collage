@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.model
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.model
 import android.graphics.Bitmap
 data class StickerPhoto(
     override val x: Float,

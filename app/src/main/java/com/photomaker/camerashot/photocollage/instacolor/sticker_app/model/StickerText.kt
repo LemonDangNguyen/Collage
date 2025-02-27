@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.model
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.model
 data class StickerText(
     override val x: Float,
     override val y: Float,

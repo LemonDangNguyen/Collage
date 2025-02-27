@@ -1,9 +1,12 @@
 package com.photomaker.camerashot.photocollage.instacolor.base
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
@@ -41,6 +44,29 @@ abstract class BaseFragment<B: ViewBinding>(val bindingFactory: (LayoutInflater)
 
     override fun startIntent(nameActivity: String, isFinish: Boolean) {
         baseActivity?.get()?.startIntent(nameActivity, isFinish)
+    }
+
+    override fun startIntent(intent: Intent, isFinish: Boolean) {
+        baseActivity?.get()?.startActivity(intent, null)
+        if (isFinish) baseActivity?.get()?.finish()
+    }
+
+    override fun startIntentForResult(
+        startForResult: ActivityResultLauncher<Intent>,
+        nameActivity: String,
+        isFinish: Boolean
+    ) {
+        baseActivity?.get()?.startIntentForResult(startForResult, nameActivity, isFinish)
+        if (isFinish) baseActivity?.get()?.finish()
+    }
+
+    override fun startIntentForResult(
+        startForResult: ActivityResultLauncher<Intent>,
+        intent: Intent,
+        isFinish: Boolean
+    ) {
+        baseActivity?.get()?.startIntentForResult(startForResult, intent, isFinish)
+        if (isFinish) baseActivity?.get()?.finish()
     }
 
     override fun showLoading() {

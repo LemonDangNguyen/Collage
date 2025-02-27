@@ -1,10 +1,14 @@
 package com.photomaker.camerashot.photocollage.instacolor
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.photomaker.camerashot.photocollage.instacolor.base.BaseActivity
 import com.photomaker.camerashot.photocollage.instacolor.extensions.invisible
 import com.photomaker.camerashot.photocollage.instacolor.extensions.visible
@@ -12,6 +16,11 @@ import com.photomaker.camerashot.photocollage.instacolor.language.LanguageActivi
 import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.nlbn.ads.banner.BannerPlugin
 import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.util.Admob
@@ -41,7 +50,36 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     override fun isHideNavigation(): Boolean = true
 
     private var interCallback: AdCallback? = null
-    private var dataUninstall = ""
+
+    private val notificationPer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+    else arrayOf("")
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            Dexter.withContext(this)
+                .withPermissions(Manifest.permission.POST_NOTIFICATIONS)
+                .withListener(object : MultiplePermissionsListener {
+                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                        val isPermissionGranted = report.areAllPermissionsGranted()
+                        val permissionStatus = if (isPermissionGranted) "allow" else "not_allow"
+
+                        val bundle = Bundle().apply {
+                            putString("permission_notification", permissionStatus)
+                        }
+                        FirebaseAnalytics.getInstance(this@SplashActivity)
+                            .logEvent("permission_notification", bundle)
+                    }
+
+                    override fun onPermissionRationaleShouldBeShown(
+                        p0: MutableList<PermissionRequest>,
+                        p1: PermissionToken
+                    ) {
+                        p1.continuePermissionRequest()
+                    }
+
+                }).check()
+    }
 
     override fun setUp() {
         if (DataLocalManager.getLanguage(CURRENT_LANGUAGE) == null) {
@@ -51,6 +89,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             )
         }
 
+        if (!checkPer(notificationPer)) requestNotificationPermission()
         if (haveNetworkConnection()) {
             CoroutineScope(Dispatchers.IO).launch {
                 val remote = async { loadRemoteConfig() }
@@ -67,24 +106,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
                         if (!consentHelper.canLoadAndShowAds()) consentHelper.reset()
 
                         consentHelper.obtainConsentAndShow(this@SplashActivity) {
-                            if (dataUninstall == IS_UNINSTALL)
-                                loadBanner(getString(R.string.banner_splash_uninstall), false)
-                            else loadBanner(getString(R.string.banner_all), true)
+                            loadBanner(getString(R.string.banner_all))
 
-                            if (dataUninstall == IS_UNINSTALL) AdsConfig.loadNativeKeepUser(this@SplashActivity)
-                            else {
-                                //load trước native language
-                                AdsConfig.loadNativeLanguage(this@SplashActivity)
-                                AdsConfig.loadNativeLanguageSelect(this@SplashActivity)
-                            }
+                            //load trước native language
+                            AdsConfig.loadNativeLanguage(this@SplashActivity)
+                            AdsConfig.loadNativeLanguageSelect(this@SplashActivity)
 
-                            if (dataUninstall == IS_UNINSTALL) {
-                                if (AdsConfig.isLoadFullAds() /* thêm điều kiện remote nữa*/) {
-                                    Admob.getInstance().loadSplashInterAds2(this@SplashActivity, getString(
-                                        R.string.inter_splash_uninstall), AdsConfig.getDelayShowInterSplash(), interCallback)
-                                } else startActivity()
-                            } else Admob.getInstance().loadSplashInterAds2(this@SplashActivity, getString(
-                                R.string.inter_splash), AdsConfig.getDelayShowInterSplash(), interCallback)
+                            Admob.getInstance().loadSplashInterAds2(this@SplashActivity, getString(R.string.inter_splash), AdsConfig.getDelayShowInterSplash(), interCallback)
                         }
                     }
             }
@@ -107,7 +135,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
                 setConfigSettingsAsync(configSetting)
             }
 
-            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults) /*file này lấy trên firebase*/
+            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
 
             remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -153,11 +181,11 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
         startIntent(Intent(this, LanguageActivity::class.java), true)
     }
 
-    private fun loadBanner(strId: String, isRemote: Boolean) {
-        if (haveNetworkConnection() && AdsConfig.isLoadFullAds() && isRemote&& AdsConfig.is_load_banner_all ) {
+    private fun loadBanner(strId: String) {
+        if (haveNetworkConnection() && AdsConfig.isLoadFullAds() && AdsConfig.is_load_banner_all) {
             binding.rlBanner.visible()
             val config = BannerPlugin.Config()
-            val cbFetchInterval = AdsConfig.cbFetchInterval /*cbFetchInterval lấy theo remote*/
+            val cbFetchInterval = AdsConfig.cbFetchInterval
             config.defaultRefreshRateSec = cbFetchInterval
             config.defaultCBFetchIntervalSec = cbFetchInterval
             config.defaultAdUnitId = strId

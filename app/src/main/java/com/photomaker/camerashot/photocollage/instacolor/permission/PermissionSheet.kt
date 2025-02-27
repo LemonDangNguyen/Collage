@@ -22,6 +22,7 @@ import com.photomaker.camerashot.photocollage.instacolor.extensions.showToast
 import com.photomaker.camerashot.photocollage.instacolor.extensions.visible
 import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -43,6 +44,7 @@ import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
 class PermissionSheet @Inject constructor(@ActivityContext private val context: Context): BottomSheetDialog(context, R.style.SheetDialog) {
+
     private var binding = BottomSheetDialogPermissionBinding.inflate(LayoutInflater.from(context))
 
     var isDone: ICallBackCheck? = null
@@ -53,14 +55,18 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
         arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
     else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
 
-
     init {
         setContentView(binding.root)
         setCancelable(true)
 
         binding.root.layoutParams.width = (NMHApp.w * 100).toInt()
 
-
+//show full size dialog bottom sheet
+        behavior.apply {
+            state = BottomSheetBehavior.STATE_EXPANDED
+            skipCollapsed = true
+            peekHeight = 0
+        }
 
         initView()
         evenClick()
@@ -218,7 +224,6 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
             }).check()
     }
 
-    fun checkPerDialog(): Boolean = context.checkAllPerGrand()
     fun loadNative() {
         try {
             if (AdsConfig.haveNetworkConnection(context) && AdsConfig.is_load_native_popup_permission
@@ -260,7 +265,6 @@ class PermissionSheet @Inject constructor(@ActivityContext private val context: 
             adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
         else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
 
-        binding.rlNative.visible()
         binding.frNativeAds.removeAllViews()
         binding.frNativeAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)

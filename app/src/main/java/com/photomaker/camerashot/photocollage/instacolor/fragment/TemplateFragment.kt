@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.photomaker.camerashot.photocollage.instacolor.Setting
@@ -33,17 +35,16 @@ import com.nmh.base_lib.callback.ICallBackItem
 import com.photomaker.camerashot.photocollage.instacolor.MainActivity
 import com.photomaker.camerashot.photocollage.instacolor.NMHApp
 import com.photomaker.camerashot.photocollage.instacolor.R
+import com.photomaker.camerashot.photocollage.instacolor.base.BaseFragment
 import com.photomaker.camerashot.photocollage.instacolor.databinding.FragmentTemplateBinding
+import com.photomaker.camerashot.photocollage.instacolor.extensions.checkPer
 import com.photomaker.camerashot.photocollage.instacolor.image_template.ImageTemplateModel
 import com.photomaker.camerashot.photocollage.instacolor.permission.PermissionSheet
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class TemplateFragment : Fragment() {
-
-    override fun onResume() {
-        super.onResume()
-        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
-        bottomSheet?.checkPer()
-    }
+@AndroidEntryPoint
+class TemplateFragment : BaseFragment<FragmentTemplateBinding>(FragmentTemplateBinding::inflate) {
 
     companion object {
         fun newInstance(): TemplateFragment {
@@ -54,36 +55,45 @@ class TemplateFragment : Fragment() {
             return fragment
         }
     }
-    private  var bottomSheet: PermissionSheet? =null
-    private var _binding: FragmentTemplateBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var imageTemplateAdapter: ImageTemplateAdapter
-    private lateinit var imageTemplateViewModel: ImageTemplateViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentTemplateBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    @Inject lateinit var bottomSheet: PermissionSheet
+    @Inject lateinit var imageTemplateAdapter: ImageTemplateAdapter
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        imageTemplateAdapter = ImageTemplateAdapter(activity ?: return)
-        imageTemplateViewModel = ViewModelProvider(this).get(ImageTemplateViewModel::class.java)
+    private val imageTemplateViewModel: ImageTemplateViewModel by activityViewModels()
+
+    private val storagePer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+    else arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+    override fun setUp() {
+        AdsConfig.loadInterItemTemplate(requireActivity())
+
+        bottomSheet.apply {
+            isDone = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                }
+            }
+            isDismiss = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    imageTemplateAdapter.setShowAds(true)
+                }
+            }
+        }
 
         imageTemplateViewModel.imageList.observe(viewLifecycleOwner) { imageList ->
             imageTemplateAdapter.setItemList(imageList)
         }
-        AdsConfig.loadInterItemTemplate(requireActivity())
 
         imageTemplateAdapter.onItemClickListener = { imageTemplateModel ->
-            if (hasStoragePermissions()) {
+            if (requireContext().checkPer(storagePer)) {
                 val intent = Intent(requireContext(), TemplateActivity::class.java)
                 intent.putExtra("imageId", imageTemplateModel.id)
                 showInterHomeTemplate(intent)
             } else {
-                showPermissionBottomSheetForTemplate(imageTemplateModel)
+                if (!bottomSheet.isShowing) {
+                    imageTemplateAdapter.setShowAds(false)
+                    bottomSheet.showDialog()
+                }
             }
         }
         imageTemplateAdapter.callbackDimensional = object : ICallBackDimensional {
@@ -119,67 +129,21 @@ class TemplateFragment : Fragment() {
             startActivity(Intent(requireContext(), Setting::class.java))
         }
     }
-    private fun hasStoragePermissions(): Boolean {
-        val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-        } else {
-            arrayOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-        }
-        return storagePermissions.all {
-            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-    private fun showPermissionBottomSheetForTemplate(imageTemplateModel: ImageTemplateModel) {
-        hideAds2()
-        bottomSheet = PermissionSheet(requireContext()).apply {
-            isDone = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (status) {
-                        val intent = Intent(requireContext(), TemplateActivity::class.java)
-                        intent.putExtra("imageId", imageTemplateModel.id)
-                       // showInterHomeTemplate(intent)
-                        cancel()  // Đảm bảo BottomSheet được ẩn
-                    } else {
-                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (haveNetworkConnection(requireActivity())
-                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home
-                    )
-                    showAds2()
-                }
-            }
 
-        }
-        bottomSheet?.showDialog()
-    }
+    override fun onResume() {
+        super.onResume()
+        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
 
+        if (!bottomSheet.checkPer()) bottomSheet.loadNative()
+    }
 
     private fun setupRecyclerView() {
-        val gridLayoutManager = GridLayoutManager(requireContext(), 2)
-        gridLayoutManager.orientation = GridLayoutManager.VERTICAL
-        binding.rvTemplate.layoutManager = gridLayoutManager
+        binding.rvTemplate.layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         binding.rvTemplate.adapter = imageTemplateAdapter
-        val spaceDecoration = SpaceItemDecoration(15)
-        binding.rvTemplate.addItemDecoration(spaceDecoration)
+        binding.rvTemplate.addItemDecoration(SpaceItemDecoration(15))
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 
     private fun showInterHomeTemplate(intent: Intent) {
-        val context = activity ?: return
         if (haveNetworkConnection(requireActivity()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()
             && AdsConfig.inter_item_template != null && AdsConfig.checkTimeShowInter()
             && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_item_template) {
@@ -193,63 +157,13 @@ class TemplateFragment : Fragment() {
                     super.onAdClosedByUser()
                     AdsConfig.inter_item_template = null
                     AdsConfig.lastTimeShowInter = System.currentTimeMillis()
-                    AdsConfig.loadInterItemTemplate(context)
+                    AdsConfig.loadInterItemTemplate(requireActivity())
                 }
             })
-        } else {
-            startActivity(intent)
-        }
+        } else startActivity(intent)
     }
 
-    fun hideAds2() {
-        val updatedList = mutableListOf<Any>()
-        for (item in imageTemplateAdapter.getItemList()) {
-            if (item !is AdsModel) {
-                updatedList.add(item)
-            }
-        }
-        imageTemplateAdapter.setItemList(updatedList)
+    fun setShowAds(isShow: Boolean) {
+        imageTemplateAdapter.setShowAds(isShow)
     }
-
-    fun showAds2() {
-        val updatedList = mutableListOf<Any>()
-        for (item in imageTemplateAdapter.getItemList()) {
-            updatedList.add(item)
-        }
-
-        var pos = -4
-        var isCheck = false
-        while (pos < updatedList.size) {
-            pos += if (!isCheck) 5 else if (AdsConfig.is_load_native_item_template3) 5 else 4
-            if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
-                updatedList.add(pos, AdsModel(
-                    pos, null,
-                    NMHApp.ctx.getString(R.string.native_item_template1),
-                    false, AdsConfig.is_load_native_item_template1
-                ))
-            }
-
-            pos += if (AdsConfig.is_load_native_item_template1) 5 else 4
-            if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
-                updatedList.add(pos, AdsModel(
-                    pos, null,
-                    NMHApp.ctx.getString(R.string.native_item_template2),
-                    false, AdsConfig.is_load_native_item_template2
-                ))
-            }
-
-            pos += if (AdsConfig.is_load_native_item_template2) 5 else 4
-            if (updatedList.size >= pos + 1 && AdsConfig.isLoadFullAds()) {
-                updatedList.add(pos, AdsModel(
-                    pos, null,
-                    NMHApp.ctx.getString(R.string.native_item_template3),
-                    false, AdsConfig.is_load_native_item_template3
-                ))
-            }
-
-            isCheck = true
-        }
-        imageTemplateAdapter.setItemList(updatedList)
-    }
-
 }

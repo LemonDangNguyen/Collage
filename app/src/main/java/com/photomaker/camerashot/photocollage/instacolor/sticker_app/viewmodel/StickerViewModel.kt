@@ -1,16 +1,16 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.viewmodel
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.viewmodel
 
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.ActionType
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.Sticker
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerAction
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerHistoryModel
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerIcon
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerPhoto
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerText
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.ActionType
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.Sticker
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerAction
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerHistoryModel
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerIcon
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerPhoto
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerText
 
 class StickerViewModel : ViewModel() {
 

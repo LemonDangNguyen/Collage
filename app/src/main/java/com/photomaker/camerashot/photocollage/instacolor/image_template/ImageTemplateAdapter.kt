@@ -17,8 +17,10 @@ import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBo
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotAdapterNomediaBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.ItemAdsBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.ItemTemplateBinding
+import dagger.hilt.android.qualifiers.ActivityContext
+import javax.inject.Inject
 
-class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ImageTemplateAdapter @Inject constructor(@ActivityContext private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val ITEM_TYPE_IMAGE = 0
@@ -29,6 +31,8 @@ class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<
 
     var onItemClickListener: ((ImageTemplateModel) -> Unit)? = null
     var callbackDimensional: ICallBackDimensional? = null
+
+    private var isShowAds = true
 
     fun setItemList(newItemList: MutableList<Any>) {
         itemList = newItemList
@@ -51,10 +55,10 @@ class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<
 
         fun bind(position: Int) {
             val item = itemList[position] as AdsModel
-            if (!item.keyRemote) binding.rlNative.gone()
+
+            if (!item.keyRemote || !isShowAds) binding.rlNative.gone()
             else {
                 binding.rlNative.visible()
-                binding.nativeAds
                 if (!item.isLoaded) {
                     callbackDimensional?.callBackItem(item, object : ICallBackItem {
                         override fun callBack(ob: Any?, position: Int) {
@@ -116,8 +120,9 @@ class ImageTemplateAdapter(private val context: Context) : RecyclerView.Adapter<
     override fun getItemCount(): Int {
         return itemList.size
     }
-    fun getItemList(): List<Any> {
-        return itemList
-    }
 
+    fun setShowAds(isShow: Boolean) {
+        this.isShowAds = isShow
+        notifyDataSetChanged()
+    }
 }

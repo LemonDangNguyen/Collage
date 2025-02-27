@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.model
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.model
 
 open class Sticker(
     open val x: Float,           // Tọa độ X

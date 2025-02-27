@@ -6,13 +6,19 @@ import androidx.lifecycle.ViewModel
 import com.photomaker.camerashot.photocollage.instacolor.NMHApp
 import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
 import com.photomaker.camerashot.photocollage.instacolor.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ImageTemplateViewModel : ViewModel() {
+@HiltViewModel
+class ImageTemplateViewModel @Inject constructor() : ViewModel() {
+
     private val _imageList = MutableLiveData<MutableList<Any>>()
     val imageList: LiveData<MutableList<Any>> get() = _imageList
+
     init {
         loadImages()
     }
+
     private fun loadImages() {
         val imageResIds = mutableListOf<Any>()
         imageResIds.add(ImageTemplateModel(1, R.drawable.templatee01))

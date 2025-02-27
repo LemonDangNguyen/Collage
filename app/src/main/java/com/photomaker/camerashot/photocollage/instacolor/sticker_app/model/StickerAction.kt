@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.model
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.model
 data class StickerAction(
     val sticker: Sticker,              // Thay đổi từ View sang Sticker
     val position: Pair<Float, Float>, // Vị trí của sticker

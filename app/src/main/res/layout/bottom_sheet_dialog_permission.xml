@@ -44,41 +44,35 @@
         app:layout_constraintTop_toTopOf="@id/ivExit" />
 
 
-    <LinearLayout
-        android:id="@+id/scroll"
+    <TextView
+        android:id="@+id/tvCamera"
         android:layout_width="wrap_content"
-        android:padding="@dimen/_15sdp"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="@dimen/_34sdp"
+        android:layout_marginTop="@dimen/_13sdp"
+        android:fontFamily="@font/notosans_regular"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:text="@string/step_2"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintEnd_toStartOf="@id/tvStorage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivExit">
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <TextView
-            android:id="@+id/tvCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_34sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:fontFamily="@font/notosans_regular"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/_8sdp"
-            android:text="@string/step_2"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_11ssp" />
-
-        <TextView
-            android:id="@+id/tvStorage"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_34sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:fontFamily="@font/notosans_regular"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/_8sdp"
-            android:text="@string/step_4"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_11ssp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvStorage"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_34sdp"
+        android:fontFamily="@font/notosans_regular"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:text="@string/step_4"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintBottom_toBottomOf="@id/tvCamera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvCamera"
+        app:layout_constraintTop_toTopOf="@id/tvCamera" />
 
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -90,14 +84,14 @@
         app:layout_constraintDimensionRatio="170:120"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll" />
+        app:layout_constraintTop_toBottomOf="@id/tvCamera" />
 
     <TextView
         android:id="@+id/tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:fontFamily="@font/notosans_regular"
         android:gravity="center"
         android:text="@string/des_permission"
@@ -121,8 +115,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/_16sdp"
-            android:text="@string/you_can_select"
             android:fontFamily="@font/notosans_regular"
+            android:text="@string/you_can_select"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -139,8 +133,8 @@
         android:id="@+id/rl_native"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginHorizontal="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         app:layout_constraintTop_toBottomOf="@id/rl">
 
         <FrameLayout

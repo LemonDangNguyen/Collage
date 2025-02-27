@@ -3,6 +3,8 @@ package com.photomaker.camerashot.photocollage.instacolor.onboarding
 
 import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.LoadAdError
 import com.photomaker.camerashot.photocollage.instacolor.MainActivity
 import com.photomaker.camerashot.photocollage.instacolor.base.BaseActivity
 import com.photomaker.camerashot.photocollage.instacolor.extensions.gone
@@ -49,9 +51,9 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
             binding.frNativeAds.removeAllViews()
             binding.frNativeAds.addView(vLoad.root)
 
-            //màn per chỉ chạy vào lần đầu cài app nên check điều kiện này khi load trước native màn per
             if (DataLocalManager.getBoolean(FIRST_INSTALL, true))
                 AdsConfig.loadNativePermission(this@OnBoardingActivity)
+            else AdsConfig.loadNativeHome(this@OnBoardingActivity)
         }
 
         binding.tvAction.setOnUnDoubleClickListener {
@@ -83,9 +85,8 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                             binding.tvAction.text = getString(R.string.next)
                             binding.tvTitle.text = getString(R.string.title_onboarding_1)
 
-                            if (AdsConfig.is_load_native_intro1) {
-                                loadNative(0)
-                            } else {
+                            if (AdsConfig.is_load_native_intro1) loadNative(0)
+                            else {
                                 binding.layoutNative.gone()
                                 binding.vTrans.visible()
                             }
@@ -111,9 +112,8 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
                             binding.tvAction.text = getString(R.string.next)
                             binding.tvTitle.text = getString(R.string.title_onboarding_3)
 
-                            if (AdsConfig.is_load_native_intro3) {
-                                loadNative(2)
-                            } else {
+                            if (AdsConfig.is_load_native_intro3) loadNative(2)
+                            else {
                                 binding.layoutNative.gone()
                                 binding.vTrans.visible()
                             }
@@ -146,6 +146,16 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
             val callback = object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
+                    startActivity()
+                }
+
+                override fun onAdFailedToShow(p0: AdError?) {
+                    super.onAdFailedToShow(p0)
+                    startActivity()
+                }
+
+                override fun onAdFailedToLoad(p0: LoadAdError?) {
+                    super.onAdFailedToLoad(p0)
                     startActivity()
                 }
             }
@@ -191,8 +201,6 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>(ActivityOnBoa
         if (!AdsConfig.isLoadFullAds()) adView = AdsNativeBotBinding.inflate(layoutInflater)
         else adView = AdsNativeTopFullAdsBinding.inflate(layoutInflater)
 
-        binding.layoutNative.visible()
-        binding.vTrans.gone()
         binding.frNativeAds.removeAllViews()
         binding.frNativeAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root as NativeAdView)

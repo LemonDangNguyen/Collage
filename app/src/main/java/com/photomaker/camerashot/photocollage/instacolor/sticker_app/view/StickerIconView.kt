@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.view
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.view
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,7 +8,7 @@ import android.view.MotionEvent
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerIcon
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerIcon
 
 class StickerIconView @JvmOverloads constructor(
     context: Context,

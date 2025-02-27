@@ -46,9 +46,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     private val repositoryMediaImages by lazy { RepositoryMediaImages(mediaStoreMediaImages) }
     private val useCaseMediaImageDetail by lazy { UseCaseMediaImageDetail(repositoryMediaImages) }
     private val viewModelMediaImageDetail by viewModels<ViewModelMediaImageDetail> {
-        ViewModelMediaImageDetailProvider(
-            useCaseMediaImageDetail
-        )
+        ViewModelMediaImageDetailProvider(useCaseMediaImageDetail)
     }
     private val itemClick: ((Uri) -> Unit) = { viewModelMediaImageDetail.imageClick(it) }
     private val adapterEnhanceGalleryDetail by lazy { AdapterMediaImageDetail(itemClick) }

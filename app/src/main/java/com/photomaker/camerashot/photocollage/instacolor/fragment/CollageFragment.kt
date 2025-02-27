@@ -1,31 +1,11 @@
 package com.photomaker.camerashot.photocollage.instacolor.fragment
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearSmoothScroller
-import com.photomaker.camerashot.photocollage.instacolor.ActivitySelectImageEdit
-import com.photomaker.camerashot.photocollage.instacolor.ImageInMainAdapter
-import com.photomaker.camerashot.photocollage.instacolor.MainActivity
-import com.photomaker.camerashot.photocollage.instacolor.SelectActivity
-import com.photomaker.camerashot.photocollage.instacolor.Setting
-import com.photomaker.camerashot.photocollage.instacolor.TemplateActivity
-import com.photomaker.camerashot.photocollage.instacolor.extensions.gone
-import com.photomaker.camerashot.photocollage.instacolor.extensions.setOnUnDoubleClickListener
-import com.photomaker.camerashot.photocollage.instacolor.extensions.visible
-import com.photomaker.camerashot.photocollage.instacolor.permission.PermissionSheet
-import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
-import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig.haveNetworkConnection
 import com.google.android.gms.ads.nativead.NativeAd
 import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.callback.NativeCallback
@@ -33,15 +13,30 @@ import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.AppOpenManager
 import com.nlbn.ads.util.ConsentHelper
 import com.nmh.base_lib.callback.ICallBackCheck
+import com.photomaker.camerashot.photocollage.instacolor.ActivitySelectImageEdit
+import com.photomaker.camerashot.photocollage.instacolor.ImageInMainAdapter
+import com.photomaker.camerashot.photocollage.instacolor.MainActivity
 import com.photomaker.camerashot.photocollage.instacolor.R
+import com.photomaker.camerashot.photocollage.instacolor.SelectActivity
+import com.photomaker.camerashot.photocollage.instacolor.Setting
+import com.photomaker.camerashot.photocollage.instacolor.TemplateActivity
+import com.photomaker.camerashot.photocollage.instacolor.base.BaseFragment
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.FragmentCollageBinding
 import com.photomaker.camerashot.photocollage.instacolor.extensions.checkAllPerGrand
-import com.photomaker.camerashot.photocollage.instacolor.extensions.checkPer
+import com.photomaker.camerashot.photocollage.instacolor.extensions.gone
+import com.photomaker.camerashot.photocollage.instacolor.extensions.setOnUnDoubleClickListener
+import com.photomaker.camerashot.photocollage.instacolor.extensions.visible
+import com.photomaker.camerashot.photocollage.instacolor.permission.PermissionSheet
+import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
+import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig.haveNetworkConnection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CollageFragment : Fragment() {
+@AndroidEntryPoint
+class CollageFragment : BaseFragment<FragmentCollageBinding>(FragmentCollageBinding::inflate) {
 
     companion object {
         fun newInstance(): CollageFragment {
@@ -53,10 +48,8 @@ class CollageFragment : Fragment() {
         }
     }
 
-    private  var bottomSheet: PermissionSheet? =null
+    @Inject lateinit var bottomSheet: PermissionSheet
 
-
-    private val binding by lazy { FragmentCollageBinding.inflate(layoutInflater) }
     private val imageList = listOf(
         R.drawable.bg_in_main_01,
         R.drawable.bg_in_main_02,
@@ -67,36 +60,51 @@ class CollageFragment : Fragment() {
     )
     private var targetActivity: Class<*>? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun setUp() {
+        showNative()
 
-        binding.btnSetting.setOnUnDoubleClickListener {
-            showInterHome(Setting::class.java.name)
+        bottomSheet.apply {
+            isDone = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+
+                }
+            }
+            isDismiss = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (haveNetworkConnection(requireActivity()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+                        && AdsConfig.isLoadFullAds() && AdsConfig.is_load_native_home)
+                        binding.rlNative.visible()
+                }
+            }
         }
 
+        binding.viewPager.adapter = ImageInMainAdapter(imageList)
+        binding.dotsIndicator.attachTo(binding.viewPager)
+
+        autoScrollViewPager()
+        evenClick()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
+
+        if (!bottomSheet.checkPer()) bottomSheet.loadNative()
+    }
+
+    private fun evenClick() {
+        binding.btnSetting.setOnUnDoubleClickListener {
+            showInterHomeTemplate(Setting::class.java.name, -1)
+        }
         binding.btnPhotoCollage.setOnUnDoubleClickListener {
             targetActivity = SelectActivity::class.java
             checkAndRequestPermissionsForHome(targetActivity?.name)
         }
-
         binding.btnEditImage.setOnUnDoubleClickListener {
             targetActivity = ActivitySelectImageEdit::class.java
             checkAndRequestPermissionsForHome(targetActivity?.name)
         }
 
-        setupViewPager()
-        autoScrollViewPager()
-        showNative()
-        setuptemplate()
-    }
-    override fun onResume() {
-        super.onResume()
-        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
-        bottomSheet?.checkPer()
-    }
-
-
-    private fun setuptemplate() {
         binding.image1.setOnUnDoubleClickListener {
             checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 27)
         }
@@ -118,58 +126,8 @@ class CollageFragment : Fragment() {
     }
 
     private fun checkAndRequestPermissionsForHomeTemplate(className: String, imageId: Int) {
-        if (requireContext().checkAllPerGrand()) {
-            showInterHomeTemplate(className, imageId)
-        } else {
-            showPermissionBottomSheetForHomeTemplate(className, imageId)
-        }
-    }
-
-
-    private fun showPermissionBottomSheetForHomeTemplate(className: String, imageId: Int) {
-        binding.rlNative.gone()
-        bottomSheet = PermissionSheet(requireContext()).apply {
-            isDone = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (status) {
-
-                       // showInterHomeTemplate(className, imageId)
-                        cancel()
-                    } else {
-                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
-                    }
-                    if (haveNetworkConnection(requireActivity())
-                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home
-                    ) binding.rlNative.visible()
-                }
-            }
-            isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (haveNetworkConnection(requireActivity())
-                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home
-                    ) binding.rlNative.visible()
-                }
-            }
-        }
-        bottomSheet?.showDialog()
-    }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return binding.root
-    }
-
-    private fun setupViewPager() {
-        val adapter = ImageInMainAdapter(imageList)
-        binding.viewPager.adapter = adapter
-        binding.dotsIndicator.setViewPager2(binding.viewPager)
+        if (requireContext().checkAllPerGrand()) showInterHomeTemplate(className, imageId)
+        else if (!bottomSheet.isShowing) bottomSheet.showDialog()
     }
 
     private var isForwardScroll = true
@@ -184,16 +142,12 @@ class CollageFragment : Fragment() {
                     if (currentItem == imageList.size - 1) {
                         isForwardScroll = false
                         currentItem - 1
-                    } else {
-                        currentItem + 1
-                    }
+                    } else currentItem + 1
                 } else {
                     if (currentItem == 0) {
                         isForwardScroll = true
                         currentItem + 1
-                    } else {
-                        currentItem - 1
-                    }
+                    } else currentItem - 1
                 }
 
                 smoothScrollToItem(nextItem)
@@ -213,17 +167,10 @@ class CollageFragment : Fragment() {
         recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
     }
 
-
     private fun showInterHomeTemplate(className: String, imageId: Int) {
-
-        if (haveNetworkConnection(requireContext())
-            && ConsentHelper.getInstance(requireContext()).canRequestAds()
-            && AdsConfig.interHome != null
-            && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds()
-            &&AdsConfig.is_load_inter_home) {
-
-            Admob.getInstance().showInterAds(requireContext(), AdsConfig.interHome, object : AdCallback() {
+        if (haveNetworkConnection(requireContext()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+            && AdsConfig.interHome != null && AdsConfig.checkTimeShowInter() && AdsConfig.isLoadFullAds() && AdsConfig.is_load_inter_home) {
+            Admob.getInstance().showInterAds(requireActivity(), AdsConfig.interHome, object : AdCallback() {
                 override fun onNextAction() {
                     super.onNextAction()
                     navigateToTemplateActivity(className, imageId)
@@ -233,96 +180,33 @@ class CollageFragment : Fragment() {
                     super.onAdClosedByUser()
                     AdsConfig.interHome = null
                     AdsConfig.lastTimeShowInter = System.currentTimeMillis()
-                    AdsConfig.loadInterHome(requireContext())
+                    AdsConfig.loadInterHome(requireActivity())
                 }
             })
-        } else {
-            navigateToTemplateActivity(className, imageId)
-        }
+        } else navigateToTemplateActivity(className, imageId)
     }
 
     private fun navigateToTemplateActivity(className: String, imageId: Int) {
         val intent = Intent(requireContext(), Class.forName(className))
-        intent.putExtra("imageId", imageId)
+        if (imageId != -1) intent.putExtra("imageId", imageId)
+
         startActivity(intent)
     }
 
-    private fun showInterHome(className: String) {
-
-        if (haveNetworkConnection(requireContext())
-            && ConsentHelper.getInstance(requireContext()).canRequestAds()
-            && AdsConfig.interHome != null
-            && AdsConfig.checkTimeShowInter()
-            && AdsConfig.isLoadFullAds()
-            && AdsConfig.is_load_inter_home){
-            Admob.getInstance().showInterAds(requireContext(), AdsConfig.interHome, object : AdCallback() {
-                override fun onNextAction() {
-                    super.onNextAction()
-                    startActivity(className)
-                }
-
-                override fun onAdClosedByUser() {
-                    super.onAdClosedByUser()
-                    AdsConfig.interHome = null
-                    AdsConfig.lastTimeShowInter = System.currentTimeMillis()
-                    AdsConfig.loadInterHome(requireContext())
-                }
-            })
-        } else startActivity(className)
-    }
-    private fun startActivity(className: String) {
-        startActivity(Intent(requireContext(), Class.forName(className)))
-    }
     private fun checkAndRequestPermissionsForHome(className: String?) {
-        if (requireContext().checkAllPerGrand()) {
-            showInterHome(className.orEmpty())
-        } else {
-            showPermissionBottomSheetForHome(className.orEmpty())
-        }
+        if (requireContext().checkAllPerGrand())
+            showInterHomeTemplate(className.orEmpty(), -1)
+        else if (!bottomSheet.checkPer()) bottomSheet.loadNative()
     }
-    private fun showPermissionBottomSheetForHome(className: String) {
-        binding.rlNative.gone()
-        bottomSheet = PermissionSheet(requireContext()).apply {
-            isDone = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (status) {
 
-                        //showInterHome(className)
-                        cancel()
-                    } else {
-                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
-                    }
-                    if (haveNetworkConnection(requireActivity())
-                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home)
-                        binding.rlNative.visible()
-                }
-            }
-            isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (haveNetworkConnection(requireActivity())
-                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home
-                    )
-                        binding.rlNative.visible()
-                }
-            }
-        }
-        bottomSheet?.showDialog()
-    }
     private fun showNative() {
-        if (haveNetworkConnection(requireActivity())
-            && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-            && AdsConfig.isLoadFullAds()
-            && AdsConfig.is_load_native_home)
-        {
+        if (haveNetworkConnection(requireActivity()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_native_home) {
             binding.rlNative.visible()
-            AdsConfig.nativeAll?.let {
+            AdsConfig.nativeHome?.let {
                 pushViewAds(it)
             } ?: run {
-                Admob.getInstance().loadNativeAd(requireActivity(), getString(R.string.native_all),
+                Admob.getInstance().loadNativeAd(requireActivity(), getString(R.string.native_home),
                     object : NativeCallback() {
                         override fun onNativeAdLoaded(nativeAd: NativeAd) {
                             pushViewAds(nativeAd)
@@ -338,40 +222,22 @@ class CollageFragment : Fragment() {
     }
     private fun pushViewAds(nativeAd: NativeAd) {
         val adView = AdsNativeBotHorizontalMediaLeftBinding.inflate(layoutInflater)
-        if (!AdsConfig.isLoadFullAds())
-            adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
+        if (!AdsConfig.isLoadFullAds()) adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
         else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
+
         binding.frNativeAds.removeAllViews()
         binding.frNativeAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
     }
 
-    fun hideAds(){
+    fun hideAds() {
         binding.rlNative.gone()
     }
+
     fun showAds(){
-
-        if (haveNetworkConnection(requireActivity())
-            && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-            && AdsConfig.isLoadFullAds()
-            && AdsConfig.is_load_native_home)
-        {
+        if (haveNetworkConnection(requireActivity()) && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+            && AdsConfig.isLoadFullAds() && AdsConfig.is_load_native_home) {
             binding.rlNative.visible()
-            AdsConfig.nativeAll?.let {
-                pushViewAds(it)
-            } ?: run {
-                Admob.getInstance().loadNativeAd(requireActivity(), getString(R.string.native_all),
-                    object : NativeCallback() {
-                        override fun onNativeAdLoaded(nativeAd: NativeAd) {
-                            pushViewAds(nativeAd)
-                        }
-
-                        override fun onAdFailedToLoad() {
-                            binding.frNativeAds.removeAllViews()
-                        }
-                    }
-                )
-            }
         } else binding.rlNative.gone()
     }
 }

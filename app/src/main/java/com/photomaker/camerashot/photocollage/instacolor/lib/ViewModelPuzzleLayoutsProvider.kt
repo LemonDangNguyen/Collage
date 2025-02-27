@@ -2,7 +2,8 @@ package com.hypersoft.puzzlelayouts.app.features.layouts.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.selectpic.ddat.UseCasePuzzleLayouts
+import com.photomaker.camerashot.photocollage.instacolor.lib.UseCasePuzzleLayouts
+import com.photomaker.camerashot.photocollage.instacolor.lib.ViewModelPuzzleLayouts
 
 class ViewModelPuzzleLayoutsProvider(private val useCasePuzzleLayouts: UseCasePuzzleLayouts) : ViewModelProvider.Factory {
 

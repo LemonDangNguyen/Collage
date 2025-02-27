@@ -38,6 +38,8 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
     private var countCamera = 0
 
     override fun setUp() {
+        AdsConfig.loadNativeHome(this@PermissionActivity)
+
         setUpLayout()
         evenClick()
     }
@@ -48,9 +50,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
         val storagePer = checkPer(storagePer)
         val cameraPer = checkPer(arrayOf(Manifest.permission.CAMERA))
 
-        if (storagePer || cameraPer)
-            binding.tvGo.text = getString(R.string.str_continue)
-        else binding.tvGo.text = getString(R.string.skip)
+        if (storagePer || cameraPer) binding.tvGo.text = getString(R.string.str_continue) else binding.tvGo.text = getString(R.string.skip)
         binding.scCamera.setCheck(cameraPer)
         binding.scStorage.setCheck(storagePer)
     }
@@ -81,7 +81,6 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
                     binding.layoutNative.gone()
                     checkPermission.launch(storagePer)
                 }
-            //    else binding.layoutNative.visible()
             }
         }
 
@@ -128,10 +127,9 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
             else binding.layoutNative.gone()
         } else binding.layoutNative.gone()
     }
+
     private fun loadNative(strId: String) {
-        if(haveNetworkConnection() && AdsConfig.isLoadFullAds()
-            && ConsentHelper.getInstance(this).canRequestAds()
-            ) {
+        if(haveNetworkConnection() && AdsConfig.isLoadFullAds() && ConsentHelper.getInstance(this).canRequestAds()) {
             binding.layoutNative.visible()
             AdsConfig.nativePermission?.let {
                 pushViewNative(it)
@@ -153,7 +151,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>(ActivityPermi
 
     private fun pushViewNative(nativeAd: NativeAd) {
         val adView = AdsNativeTopFullAdsBinding.inflate(layoutInflater)
-        binding.layoutNative.visible()
+
         binding.frNativeAds.removeAllViews()
         binding.frNativeAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)

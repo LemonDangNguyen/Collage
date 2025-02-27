@@ -1,4 +1,4 @@
-package com.photomaker.camerashot.photocollage.instacolor.StickerApp.view
+package com.photomaker.camerashot.photocollage.instacolor.sticker_app.view
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -6,7 +6,7 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import com.photomaker.camerashot.photocollage.instacolor.StickerApp.model.StickerText
+import com.photomaker.camerashot.photocollage.instacolor.sticker_app.model.StickerText
 import com.photomaker.camerashot.photocollage.instacolor.R
 
 class StickerTextView @JvmOverloads constructor(

@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:dotsClickable="false"
-        app:dotsColor="@color/color_DFDFDF"
+        app:dotsColor="@color/color_F1F1F1"
         app:dotsSize="@dimen/_8sdp"
         app:dotsSpacing="@dimen/_4sdp"
         app:layout_constraintBottom_toTopOf="@+id/tvAction"
@@ -40,7 +40,7 @@
         android:textColor="@color/main_color"
         android:textSize="@dimen/_15ssp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/layout_native"
+        app:layout_constraintBottom_toTopOf="@+id/vTrans"
         app:layout_constraintEnd_toEndOf="@id/indicator"
         app:layout_constraintStart_toStartOf="@id/indicator" />
 
@@ -49,13 +49,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
-        android:fontFamily="@font/notosans_regular"
+        android:fontFamily="@font/notosans_bold"
         android:gravity="center"
         android:maxLines="2"
         android:text="@string/title_onboarding_3"
         android:textColor="@color/black"
         android:textSize="@dimen/_15ssp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/indicator"
         app:layout_constraintEnd_toEndOf="@+id/indicator"
         app:layout_constraintStart_toStartOf="@+id/indicator" />

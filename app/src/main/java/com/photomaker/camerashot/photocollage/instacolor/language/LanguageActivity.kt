@@ -152,7 +152,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
             adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
         else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
 
-        binding.layoutNative.visible()
         binding.frAds.removeAllViews()
         binding.frAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
@@ -181,7 +180,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
 
     private fun showNativeLanguageSelect() {
         binding.ivTick.visible()
-        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()  && AdsConfig.is_load_native_language_select) {
+        if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds() && AdsConfig.is_load_native_language_select) {
             binding.layoutNative.visible()
             AdsConfig.nativeLanguageSelect?.let {
                 pushViewAds(it)
@@ -206,7 +205,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageAcyivityBinding>(ActivityL
         if (!AdsConfig.isLoadFullAds()) adView = AdsNativeBotBinding.inflate(layoutInflater)
         else adView = AdsNativeTopFullAdsBinding.inflate(layoutInflater)
 
-        binding.layoutNative.visible()
         binding.frAds.removeAllViews()
         binding.frAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root as NativeAdView)

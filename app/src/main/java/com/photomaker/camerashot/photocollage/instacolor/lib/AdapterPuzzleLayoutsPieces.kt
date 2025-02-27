@@ -18,37 +18,19 @@ class AdapterPuzzleLayoutsPieces(
     private var selectedPosition: Int = RecyclerView.NO_POSITION
     private var tempSelectedPosition: Int = RecyclerView.NO_POSITION
     private var previousSelectedPosition: Int = RecyclerView.NO_POSITION
+
     fun setPuzzleLayouts(newPuzzleLayouts: List<PuzzleLayout>) {
         this.puzzleLayouts = newPuzzleLayouts
         notifyDataSetChanged()
     }
     override fun getItemCount(): Int = puzzleLayouts.size
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-
-        val binding = ItemPuzzleLayoutsPieceBinding.inflate(layoutInflater, parent, false)
-        return CustomViewHolder(binding)
+        return CustomViewHolder(ItemPuzzleLayoutsPieceBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
+
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        val currentItem = puzzleLayouts[position]
-        bindViews(holder, currentItem)
-
-
-        holder.binding.puzzle.apply {
-            setSelectedLineColor(Color.parseColor("#ff287a"))
-            when (position) {
-                selectedPosition -> setLineColor(Color.parseColor("#3B83FC"))
-                else -> setLineColor(Color.DKGRAY)
-
-            }
-            setPiecePadding(4.0F)
-        }
-
-        holder.binding.root.setOnClickListener {
-            tempSelectedPosition = position
-            confirmSelection()
-            notifyDataSetChanged()
-        }
+        holder.onBind()
     }
 
     fun confirmSelection() {
@@ -74,14 +56,33 @@ class AdapterPuzzleLayoutsPieces(
         notifyDataSetChanged()
     }
 
-    private fun bindViews(holder: CustomViewHolder, currentItem: PuzzleLayout) {
-        holder.binding.puzzle.needDrawLine = true
-        holder.binding.puzzle.needDrawOuterLine = true
-        holder.binding.puzzle.isTouchEnable = false
-        holder.binding.puzzle.setPuzzleLayout(currentItem)
-    }
+    inner class CustomViewHolder(val binding: ItemPuzzleLayoutsPieceBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    inner class CustomViewHolder(val binding: ItemPuzzleLayoutsPieceBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        fun onBind() {
+            val currentItem = puzzleLayouts[adapterPosition]
+
+            binding.puzzle.apply {
+                needDrawLine = true
+                needDrawOuterLine = true
+                isTouchEnable = false
+                setPuzzleLayout(currentItem)
+            }
+
+            binding.puzzle.apply {
+                setSelectedLineColor(Color.parseColor("#ff287a"))
+                when (adapterPosition) {
+                    selectedPosition -> setLineColor(Color.parseColor("#3B83FC"))
+                    else -> setLineColor(Color.DKGRAY)
+                }
+                setPiecePadding(4.0F)
+            }
+
+            binding.root.setOnClickListener {
+                tempSelectedPosition = adapterPosition
+                confirmSelection()
+                notifyDataSetChanged()
+            }
+        }
+    }
 }
 

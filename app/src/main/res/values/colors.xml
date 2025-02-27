@@ -14,11 +14,13 @@
 
     <color name="main_color">#2F80ED</color>
     <color name="color_DFDFDF">#DFDFDF</color>
+    <color name="color_F1F1F1">#F1F1F1</color>
     <color name="color_059DDF">#059DDF</color>
     <color name="color_0AD6F2">#0AD6F2</color>
     <color name="color_787F87">#787F87</color>
     <color name="color_353B41">#353B41</color>
     <color name="color_828282">#828282</color>
+    <color name="color_78838B">#78838B</color>
     <color name="trans">#00000000</color>
 
 
@@ -55,12 +57,12 @@
     <dimen name="height_full_ads">300dip</dimen>
     <dimen name="height_native_ads">320dip</dimen>
     <dimen name="height_native_small_ads">130dip</dimen>
-    <item name="advertiser_textView" type="id"/>
-    <item name="body_text_view" type="id"/>
-    <item name="cta_button" type="id"/>
-    <item name="icon_image_view" type="id"/>
-    <item name="media_view_container" type="id"/>
-    <item name="title_text_view" type="id"/>
+    <item name="advertiser_textView" type="id" />
+    <item name="body_text_view" type="id" />
+    <item name="cta_button" type="id" />
+    <item name="icon_image_view" type="id" />
+    <item name="media_view_container" type="id" />
+    <item name="title_text_view" type="id" />
     <string name="ads_test_banner">ca-app-pub-3940256099942544/6300978111</string>
     <string name="ads_test_inter">ca-app-pub-3940256099942544/1033173712</string>
     <string name="ads_test_native">ca-app-pub-3940256099942544/2247696110</string>
@@ -68,12 +70,15 @@
     <string name="ads_test_reward">ca-app-pub-3940256099942544/5224354917</string>
     <string name="loading_ads">Loading Ads…</string>
     <string name="well_comeback">Welcome back</string>
-    <style name="AdsAppTheme" parent="Theme.AppCompat.Light"/>
+
+    <style name="AdsAppTheme" parent="Theme.AppCompat.Light" />
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.Ads" parent="@style/AdsAppTheme">
         <item name="android:textSize">11.0sp</item>
         <item name="android:textColor">#ffffff</item>
@@ -89,9 +94,11 @@
         <item name="android:minHeight">15.0px</item>
         <item name="android:text">Ad</item>
     </style>
+
     <style name="NoTitleDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
     </style>
+
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">#BDC3CC</item>
         <item name="colorControlActivated">@color/rate</item>
