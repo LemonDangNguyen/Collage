@@ -56,6 +56,8 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     private var albumName: String? = null
 
     override fun setUp() {
+        binding.selectedImagesRecyclerView.itemAnimator = null
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 showInterBack()
@@ -121,11 +123,14 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
     private fun setUpListener() {
         binding.clearImgList.setOnUnDoubleClickListener {
             selectedImages.clear()
-            selectedImagesAdapter.notifyDataSetChanged()
+            selectedImagesAdapter.updateData(selectedImages)
+            binding.selectedImagesRecyclerView.adapter = null
+            binding.selectedImagesRecyclerView.adapter = selectedImagesAdapter
             updateSelectedCount()
             imageAdapter.updateSelection(selectedImages)
         }
-// next
+
+
         binding.nextSelect.setOnUnDoubleClickListener {
             if (selectedImages.size >= 3) {
                 if (loadingdialog == null) loadingdialog = DialogLoading(this@SelectActivity)

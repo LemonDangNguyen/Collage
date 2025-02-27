@@ -297,6 +297,7 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     }
 
     private fun layoutToolFunc() {
+
         binding.layoutLayout.ivDone.setOnClickListener {
             currentColorMode = ColorMode.BACKGROUND
             adapterPuzzleLayoutsPieces.confirmSelection()
@@ -363,6 +364,14 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
             binding.layoutLayout.layoutBorder.visibility = View.VISIBLE
             corner()
             padding()
+
+            binding.layoutLayout.ivRefresh.setOnClickListener {
+                currentColorMode = ColorMode.BACKGROUND
+                adapterPuzzleLayoutsPieces.discardSelection()
+                binding.layoutLayout.root.visibility = View.GONE
+                binding.layoutParentTool.root.visibility = View.VISIBLE
+                binding.linearLayout.visibility = View.VISIBLE
+            }
         }
         binding.layoutLayout.llBorderColor.setOnClickListener {
 
@@ -1345,16 +1354,7 @@ override fun onPieceClick() {
                     }
                 }
             } else {
-                val bitmap = getBitmapFromView(binding.flParent)
-                saveBitmapToGallery(bitmap, onDone = {
-                    if (it != "") {
-                        val intent = Intent(this, SaveFromEditImage::class.java)
-                        intent.putExtra("image_path", it)
-                        showInterSave(intent)
-                    } else {
-                        showToast("Failed to save image.", Gravity.CENTER)
-                    }
-                })
+                saveFlParentAsImage()
             }
         }
     }

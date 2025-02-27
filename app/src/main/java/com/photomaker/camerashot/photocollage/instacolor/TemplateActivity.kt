@@ -511,16 +511,7 @@ class TemplateActivity : BaseActivity<ActivityTemplateBinding>(ActivityTemplateB
                     }
                 }
             } else {
-                val bitmap = getBitmapFromView(binding.flParent)
-                saveBitmapToGallery(bitmap, onDone = {
-                    if (it != "") {
-                        val intent = Intent(this, SaveFromEditImage::class.java)
-                        intent.putExtra("image_path", it)
-                        showInterSave(intent)
-                    } else {
-                        showToast("Failed to save image.", Gravity.CENTER)
-                    }
-                })
+                saveFlParentAsImage()
             }
         }
         dialog.setOnDismissListener {

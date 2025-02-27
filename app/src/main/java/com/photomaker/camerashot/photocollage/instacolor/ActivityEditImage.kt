@@ -174,7 +174,58 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
         }
 
     }
+    private fun showDialogBackSave() {
 
+        val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
+        val dialog = AlertDialog.Builder(this@ActivityEditImage, R.style.SheetDialog).create()
+        dialog.setUpDialog(bindingDialog.root, true)
+        binding.banner.gone()
+        dialog.setCancelable(false)
+        bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
+        showNativedialog(bindingDialog)
+
+        bindingDialog.btnExit.setOnClickListener {
+            dialog.dismiss()
+            showInterBack()
+        }
+        bindingDialog.btnStay.setOnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        saveFlParentAsImage()
+                    }
+
+                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
+                        Toast.makeText(
+                            this,
+                            "Permission needed to save images.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            } else {
+                saveFlParentAsImage()
+//                val bitmap = getBitmapFromView(binding.flParent)
+//                saveBitmapToGallery(bitmap, onDone = {
+//                    if (it != "") {
+//                        val intent = Intent(this, SaveFromEditImage::class.java)
+//                        intent.putExtra("image_path", it)
+//                        showInterSave(intent)
+//                    } else {
+//                        showToast("Failed to save image.", Gravity.CENTER)
+//                    }
+//                })
+            }
+        }
+    }
     private fun saveFlParentAsImage() {
         val bitmap = getBitmapFromView(binding.flParent)
         saveBitmapToGallery(bitmap, onDone = {
@@ -958,57 +1009,7 @@ class ActivityEditImage : BaseActivity<ActivityEditImageBinding>(ActivityEditIma
     }
 
 
-    private fun showDialogBackSave() {
 
-        val bindingDialog = DialogSaveBeforeClosingBinding.inflate(layoutInflater)
-        val dialog = AlertDialog.Builder(this@ActivityEditImage, R.style.SheetDialog).create()
-        dialog.setUpDialog(bindingDialog.root, true)
-        binding.banner.gone()
-        dialog.setCancelable(false)
-        bindingDialog.root.layoutParams.width = (93.33f * w).toInt()
-        showNativedialog(bindingDialog)
-
-        bindingDialog.btnExit.setOnClickListener {
-            dialog.dismiss()
-            showInterBack()
-        }
-        bindingDialog.btnStay.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        saveFlParentAsImage()
-                    }
-
-                    shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) -> {
-                        Toast.makeText(
-                            this,
-                            "Permission needed to save images.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-
-                    else -> {
-                        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-                }
-            } else {
-                val bitmap = getBitmapFromView(binding.flParent)
-                saveBitmapToGallery(bitmap, onDone = {
-                    if (it != "") {
-                        val intent = Intent(this, SaveFromEditImage::class.java)
-                        intent.putExtra("image_path", it)
-                        showInterSave(intent)
-                    } else {
-                        showToast("Failed to save image.", Gravity.CENTER)
-                    }
-                })
-            }
-        }
-    }
     private fun showInterBack() {
         if (haveNetworkConnection() && ConsentHelper.getInstance(this).canRequestAds()
             && AdsConfig.interBack != null && AdsConfig.checkTimeShowInter()

@@ -72,8 +72,6 @@ class SelectedImagesAdapter(
         selectedImages = newSelectedImages.toMutableList()
         notifyDataSetChanged()
     }
-
-    // Hàm chuyển file path thành Uri với điều kiện kiểm tra phiên bản Android
     private fun getImageUriFromFilePath(filePath: String): Uri {
         val file = File(filePath)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
