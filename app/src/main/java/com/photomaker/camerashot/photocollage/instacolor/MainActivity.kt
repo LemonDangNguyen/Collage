@@ -113,9 +113,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onResume() {
         super.onResume()
         AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
-        if (::bottomSheet.isInitialized) {
-            bottomSheet.checkPer()
-        }
+//        if (::bottomSheet.isInitialized) {
+//            bottomSheet.checkPer()
+//        }
     }
 
 

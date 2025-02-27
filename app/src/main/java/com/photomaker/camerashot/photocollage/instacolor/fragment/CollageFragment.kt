@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearSmoothScroller
+import com.google.android.gms.ads.LoadAdError
 import com.photomaker.camerashot.photocollage.instacolor.ActivitySelectImageEdit
 import com.photomaker.camerashot.photocollage.instacolor.ImageInMainAdapter
 import com.photomaker.camerashot.photocollage.instacolor.MainActivity
@@ -67,8 +68,44 @@ class CollageFragment : Fragment() {
     )
     private var targetActivity: Class<*>? = null
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return binding.root
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        bottomSheet = PermissionSheet(requireContext()).apply {
+            isDone = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (status) {
+
+                        //showInterHome(className)
+                        cancel()
+                    } else {
+                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
+                    }
+                    if (haveNetworkConnection(requireActivity())
+                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+                        && AdsConfig.isLoadFullAds()
+                        && AdsConfig.is_load_native_home)
+                        binding.rlNative.visible()
+                }
+            }
+            isDismiss = object : ICallBackCheck {
+                override fun check(status: Boolean) {
+                    if (haveNetworkConnection(requireActivity())
+                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
+                        && AdsConfig.isLoadFullAds()
+                        && AdsConfig.is_load_native_home
+                    )
+                        binding.rlNative.visible()
+                }
+            }
+        }
 
         binding.btnSetting.setOnUnDoubleClickListener {
             showInterHome(Setting::class.java.name)
@@ -98,30 +135,64 @@ class CollageFragment : Fragment() {
 
     private fun setuptemplate() {
         binding.image1.setOnUnDoubleClickListener {
-            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 27)
+
+            if (requireContext().checkAllPerGrand()){
+                showInterHomeTemplate(TemplateActivity::class.java.name, 27)
+            } else {
+                bottomSheet?.showDialog()
+            }
+
+//            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 27)
         }
         binding.image2.setOnUnDoubleClickListener {
-            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 25)
+
+            if (requireContext().checkAllPerGrand()){
+                showInterHomeTemplate(TemplateActivity::class.java.name, 25)
+            } else {
+                bottomSheet?.showDialog()
+            }
+
+//            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 25)
         }
         binding.image3.setOnUnDoubleClickListener {
-            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 29)
+
+            if (requireContext().checkAllPerGrand()){
+                showInterHomeTemplate(TemplateActivity::class.java.name, 29)
+            } else {
+                bottomSheet?.showDialog()
+            }
+
+//            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 29)
         }
         binding.image4.setOnUnDoubleClickListener {
-            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 17)
+
+            if (requireContext().checkAllPerGrand()){
+                showInterHomeTemplate(TemplateActivity::class.java.name, 17)
+            } else {
+                bottomSheet?.showDialog()
+            }
+
+//            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 17)
         }
         binding.image5.setOnUnDoubleClickListener {
-            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 16)
+
+            if (requireContext().checkAllPerGrand()){
+                showInterHomeTemplate(TemplateActivity::class.java.name, 16)
+            } else {
+                bottomSheet?.showDialog()
+            }
+
+//            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 16)
         }
         binding.image6.setOnUnDoubleClickListener {
-            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 20)
-        }
-    }
 
-    private fun checkAndRequestPermissionsForHomeTemplate(className: String, imageId: Int) {
-        if (requireContext().checkAllPerGrand()) {
-            showInterHomeTemplate(className, imageId)
-        } else {
-            showPermissionBottomSheetForHomeTemplate(className, imageId)
+            if (requireContext().checkAllPerGrand()){
+                showInterHomeTemplate(TemplateActivity::class.java.name, 20)
+            } else {
+                bottomSheet?.showDialog()
+            }
+
+//            checkAndRequestPermissionsForHomeTemplate(TemplateActivity::class.java.name, 20)
         }
     }
 
@@ -159,12 +230,7 @@ class CollageFragment : Fragment() {
     }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return binding.root
-    }
+
 
     private fun setupViewPager() {
         val adapter = ImageInMainAdapter(imageList)
@@ -282,34 +348,7 @@ class CollageFragment : Fragment() {
     }
     private fun showPermissionBottomSheetForHome(className: String) {
         binding.rlNative.gone()
-        bottomSheet = PermissionSheet(requireContext()).apply {
-            isDone = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (status) {
 
-                        //showInterHome(className)
-                        cancel()
-                    } else {
-                        Toast.makeText(requireContext(), "Permissions denied", Toast.LENGTH_SHORT).show()
-                    }
-                    if (haveNetworkConnection(requireActivity())
-                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home)
-                        binding.rlNative.visible()
-                }
-            }
-            isDismiss = object : ICallBackCheck {
-                override fun check(status: Boolean) {
-                    if (haveNetworkConnection(requireActivity())
-                        && ConsentHelper.getInstance(requireActivity()).canRequestAds()
-                        && AdsConfig.isLoadFullAds()
-                        && AdsConfig.is_load_native_home
-                    )
-                        binding.rlNative.visible()
-                }
-            }
-        }
         bottomSheet?.showDialog()
     }
     private fun showNative() {
