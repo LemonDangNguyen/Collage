@@ -19,9 +19,9 @@ import java.io.IOException
 
 object ActionUtils {
 
-    private const val AUTHORITY = "com.fakecall.videocall.fakevideo.prankcall"
-    private const val GMAIL = "abdallahshure99@gmail.com"
-    private const val POLICY = "https://shureestudio.netlify.app/policy"
+    private const val AUTHORITY = "com.photomaker.camerashot.photocollage.instacolor"
+    private const val GMAIL = "pca736615@gmail.com"
+    private const val POLICY = "https://doubleeightstudio.netlify.app/policy"
     private const val HOW_TO_USE = ""
     private const val ID_DEV = ""
     private const val LINK_FACE = "https://www.facebook.com/"

@@ -196,7 +196,7 @@ class CollageFragment : BaseFragment<FragmentCollageBinding>(FragmentCollageBind
     private fun checkAndRequestPermissionsForHome(className: String?) {
         if (requireContext().checkAllPerGrand())
             showInterHomeTemplate(className.orEmpty(), -1)
-        else if (!bottomSheet.checkPer()) bottomSheet.loadNative()
+        else if (!bottomSheet.isShowing) bottomSheet.showDialog()
     }
 
     private fun showNative() {

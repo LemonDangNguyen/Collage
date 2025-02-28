@@ -32,9 +32,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
-    @Inject
-    lateinit var bottomSheet: PermissionSheet
-
     private val collageFragment : CollageFragment by lazy { CollageFragment.newInstance() }
     private val templateFragment : TemplateFragment by lazy { TemplateFragment.newInstance() }
 
@@ -82,9 +79,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onResume() {
         super.onResume()
         AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity::class.java)
-        if (::bottomSheet.isInitialized) {
-            bottomSheet.checkPer()
-        }
     }
 
     private fun loadBanner() {
