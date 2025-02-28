@@ -130,7 +130,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
 
 
         binding.nextSelect.setOnUnDoubleClickListener {
-            if (selectedImages.size >= 3) {
+            if (selectedImages.size >= 2) {
                 if (loadingdialog == null) loadingdialog = DialogLoading(this@SelectActivity)
                 loadingdialog?.let {
                     if (!isFinishing && !isDestroyed) {
@@ -157,7 +157,7 @@ class SelectActivity : BaseActivity<ActivitySelectBinding>(ActivitySelectBinding
                 }
 
             } else {
-                showToast(getString(R.string.select_at_least_3_images), Gravity.CENTER)
+                showToast(getString(R.string.select_at_least_2_images), Gravity.CENTER)
             }
 
         }

@@ -147,7 +147,7 @@
     <string name="don_t_save">Jangan Simpan</string>
     <string name="commingsoon">Akan Datang</string>
     <string name="image_count">Gambar</string>
-    <string name="select_at_least_3_images">Silakan pilih setidaknya 3 gambar</string>
+    <string name="select_at_least_2_images">Silakan pilih setidaknya 2 gambar</string>
     <string name="capture_no">Tidak ada gambar yang diambil</string>
     <string name="maximunpic">Gambar maksimal</string>
     <string name="take_only_pic">Anda hanya dapat mengambil 1 foto</string>

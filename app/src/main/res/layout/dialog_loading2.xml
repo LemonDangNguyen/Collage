@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/boder_dialog"
-    android:paddingBottom="@dimen/_16sdp"
-    android:paddingEnd="@dimen/_16sdp">
+    android:paddingBottom="@dimen/_16sdp">
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"

@@ -147,7 +147,7 @@
     <string name="don_t_save">সংরক্ষণ করবেন না</string>
     <string name="commingsoon">শীঘ্রই আসছে</string>
     <string name="image_count">ছবি</string>
-    <string name="select_at_least_3_images">অন্তত ৩টি ছবি নির্বাচন করুন</string>
+    <string name="select_at_least_2_images">অন্তত ৩টি ছবি নির্বাচন করুন</string>
     <string name="capture_no">কোনো ছবি ধারণ করা হয়নি</string>
     <string name="maximunpic">সর্বাধিক ছবি</string>
     <string name="take_only_pic">আপনি শুধু ১টি ছবি তুলতে পারেন</string>

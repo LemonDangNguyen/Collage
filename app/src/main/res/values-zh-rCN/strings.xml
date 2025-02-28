@@ -147,7 +147,7 @@
     <string name="don_t_save">不保存</string>
     <string name="commingsoon">即将推出</string>
     <string name="image_count">图片</string>
-    <string name="select_at_least_3_images">请选择至少3张图片</string>
+    <string name="select_at_least_2_images">请选择至少2张图片</string>
     <string name="capture_no">没有捕捉到图片</string>
     <string name="maximunpic">最大图片</string>
     <string name="take_only_pic">您只能拍摄1张照片</string>

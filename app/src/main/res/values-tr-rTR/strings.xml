@@ -147,7 +147,7 @@
     <string name="don_t_save">Kaydetme</string>
     <string name="commingsoon">Yakında</string>
     <string name="image_count">Resimler</string>
-    <string name="select_at_least_3_images">Lütfen en az 3 resim seçin</string>
+    <string name="select_at_least_2_images">Lütfen en az 2 resim seçin</string>
     <string name="capture_no">Resim alınmadı</string>
     <string name="maximunpic">Maksimum resim</string>
     <string name="take_only_pic">Sadece 1 fotoğraf çekebilirsiniz</string>

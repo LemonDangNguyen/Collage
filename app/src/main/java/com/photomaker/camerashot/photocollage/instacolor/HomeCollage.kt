@@ -100,8 +100,10 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollageBinding::inflate), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener,
-    OnColorClickListener, FilterListener, OnColorClickListener2 {
+class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollageBinding::inflate), PuzzleView.OnPieceClick, PuzzleView.OnPieceSelectedListener, OnColorClickListener, FilterListener, OnColorClickListener2 {
+
+    private var areaCount = 0
+    private var themPuzzle = 0
 
     private val mediaStoreMediaImages by lazy { MediaStoreMediaImages(contentResolver) }
     private val useCaseMediaImageDetail by lazy {
@@ -721,9 +723,11 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
         binding.layoutLayout.rcvListPuzzleLayouts.adapter = adapterPuzzleLayoutsPieces
     }
 
-    private val itemClick: ((PuzzleLayout, theme: Int) -> Unit) = { _, theme ->
-        viewModelPuzzleLayouts.getPuzzleLayout(1, mList.size, theme)
-
+    private val itemClick: ((PuzzleLayout, theme: Int) -> Unit) = { puzzleLayout, theme ->
+//        viewModelPuzzleLayouts.getPuzzleLayout(1, mList.size, theme)
+        themPuzzle = theme
+        areaCount = puzzleLayout.areaCount
+        viewModelPuzzleLayouts.layoutClick(puzzleLayout)
     }
 
     private fun initObservers() {
@@ -736,6 +740,9 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
                 checkImageSizeAndSetLayouts(it)
             }
         }
+        viewModelPuzzleLayouts.isSlantLiveData.observe(this) {
+            viewModelPuzzleLayouts.getPuzzleLayout(if (it) 0 else 1, areaCount, themPuzzle)
+        }
         viewModelPuzzleLayouts.puzzleLayoutLiveData.observe(this) { list ->
             initView(list)
         }
@@ -745,35 +752,41 @@ class HomeCollage : BaseActivity<ActivityHomeCollageBinding>(ActivityHomeCollage
     }
 
     @SuppressLint("Recycle")
-    private fun initView(list: PuzzleLayout) = binding.puzzleView.apply {
-        val context: Context = this.context
-//        val ta = context.obtainStyledAttributes(
-//            null,
-//            com.hypersoft.pzlayout.R.styleable.PuzzleView
-//        )
-        setPuzzleLayout(list)
-        isTouchEnable = true
-        selectedLineColor = ContextCompat.getColor(context, R.color.black)
-        setHandleBarColor(ContextCompat.getColor(context, R.color.black))
-        setAnimateDuration(700)
-        piecePadding = 10f
-        setOnPieceClickListener(this@HomeCollage)
-        setOnPieceSelectedListener(this@HomeCollage)
-        post { loadPhotoFromRes(list) }
+    private fun initView(list: PuzzleLayout) {
+        binding.puzzleView.apply {
+            setPuzzleLayout(list)
+
+            isTouchEnable = true
+            selectedLineColor = ContextCompat.getColor(this@HomeCollage, R.color.black)
+            setHandleBarColor(ContextCompat.getColor(this@HomeCollage, R.color.black))
+            setAnimateDuration(700)
+            piecePadding = 10f
+            setOnPieceClickListener(this@HomeCollage)
+            setOnPieceSelectedListener(this@HomeCollage)
+            post { loadPhotoFromRes(list) }
+        }
     }
 
     private fun loadPhotoFromRes(list: PuzzleLayout) {
-        val count = minOf(mList.size, list.areaCount)
+//        val count = minOf(mList.size, list.areaCount)
         val pieces = mutableListOf<Bitmap>()
 
+        val count = if (mList.size > list.areaCount) list.areaCount else mList.size
         for (i in 0 until count) {
             val target: CustomTarget<Bitmap> = object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(bitmap: Bitmap, transition: Transition<in Bitmap?>?) {
+//                    pieces.add(bitmap)
+//                    if (pieces.size == count) {
+//                        val remainingPieces =
+//                            if (mList.size < list.areaCount) List(list.areaCount) { pieces[it % count] } else pieces
+//                        binding.puzzleView.addPieces(remainingPieces)
+//                    }
+
                     pieces.add(bitmap)
                     if (pieces.size == count) {
-                        val remainingPieces =
-                            if (mList.size < list.areaCount) List(list.areaCount) { pieces[it % count] } else pieces
-                        binding.puzzleView.addPieces(remainingPieces)
+                        if (mList.size < list.areaCount)
+                            for (q in 0 until list.areaCount) binding.puzzleView.addPiece(pieces[i % count])
+                        else binding.puzzleView.addPieces(pieces)
                     }
                 }
 

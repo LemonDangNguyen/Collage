@@ -146,7 +146,7 @@
     <string name="don_t_save">Don’t Save</string>
     <string name="commingsoon">Coming Soon</string>
     <string name="image_count">Images</string>
-    <string name="select_at_least_3_images">Please select at least 3 images</string>
+    <string name="select_at_least_2_images">Please select at least 2 images</string>
     <string name="capture_no">No images captured</string>
     <string name="maximunpic">Maximum pictures</string>
     <string name="take_only_pic">You can only take 1 photo</string>

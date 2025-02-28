@@ -146,7 +146,7 @@
     <string name="don_t_save">सहेजें नहीं</string>
     <string name="commingsoon">जल्द आ रहा है</string>
     <string name="image_count">छवियां</string>
-    <string name="select_at_least_3_images">कृपया कम से कम 3 छवियां चुनें</string>
+    <string name="select_at_least_2_images">कृपया कम से कम 2 छवियां चुनें</string>
     <string name="capture_no">कोई छवि कैप्चर नहीं की गई</string>
     <string name="maximunpic">अधिकतम चित्र</string>
     <string name="take_only_pic">आप केवल 1 फोटो ले सकते हैं</string>

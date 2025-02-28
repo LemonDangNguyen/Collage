@@ -147,7 +147,7 @@
     <string name="don_t_save">保存しない</string>
     <string name="commingsoon">近日公開</string>
     <string name="image_count">画像</string>
-    <string name="select_at_least_3_images">少なくとも3つの画像を選択してください</string>
+    <string name="select_at_least_2_images">少なくとも2つの画像を選択してください</string>
     <string name="capture_no">画像が撮影されていません</string>
     <string name="maximunpic">最大画像</string>
     <string name="take_only_pic">1枚の写真しか撮れません</string>

@@ -149,7 +149,7 @@
     <string name="don_t_save">عدم الحفظ</string>
     <string name="commingsoon">قريبًا</string>
     <string name="image_count">صور</string>
-    <string name="select_at_least_3_images">الرجاء تحديد 3 صور على الأقل</string>
+    <string name="select_at_least_2_images">الرجاء تحديد 2 صور على الأقل</string>
     <string name="capture_no">لم يتم التقاط أي صور</string>
     <string name="maximunpic">الحد الأقصى للصور</string>
     <string name="take_only_pic">يمكنك التقاط صورة واحدة فقط</string>

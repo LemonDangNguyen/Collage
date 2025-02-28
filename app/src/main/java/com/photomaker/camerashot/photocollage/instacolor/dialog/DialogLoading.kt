@@ -1,13 +1,7 @@
 package com.photomaker.camerashot.photocollage.instacolor.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-
-import com.photomaker.camerashot.photocollage.instacolor.extensions.gone
-import com.photomaker.camerashot.photocollage.instacolor.extensions.visible
-import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
 import com.google.android.gms.ads.nativead.NativeAd
 import com.nlbn.ads.callback.AdCallback
 import com.nlbn.ads.callback.NativeCallback
@@ -15,32 +9,25 @@ import com.nlbn.ads.util.Admob
 import com.nlbn.ads.util.ConsentHelper
 import com.photomaker.camerashot.photocollage.instacolor.NMHApp
 import com.photomaker.camerashot.photocollage.instacolor.R
+import com.photomaker.camerashot.photocollage.instacolor.base.BaseDialog
 import com.photomaker.camerashot.photocollage.instacolor.databinding.AdsNativeBotHorizontalMediaLeftBinding
 import com.photomaker.camerashot.photocollage.instacolor.databinding.DialogLoading2Binding
+import com.photomaker.camerashot.photocollage.instacolor.extensions.gone
+import com.photomaker.camerashot.photocollage.instacolor.extensions.visible
+import com.photomaker.camerashot.photocollage.instacolor.utils.AdsConfig
 
+class DialogLoading(context: Context) : BaseDialog<DialogLoading2Binding>(DialogLoading2Binding::inflate, context) {
 
-class DialogLoading(context: Context) : Dialog(context) {
-
-    private var binding: DialogLoading2Binding =
-        DialogLoading2Binding.inflate(LayoutInflater.from(context))
     var interCallback: AdCallback? = null
     private var nativeAds: NativeAd? = null
 
     init {
-        setContentView(binding.root)
         setCancelable(false)
-        binding.root.layoutParams.width = (NMHApp.w * 100).toInt()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         loadNative()
-        val window = window
-        window?.setLayout(
-            (NMHApp.w * 100).toInt(),
-            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        window?.setGravity(android.view.Gravity.CENTER)
     }
 
     fun loadNative() {
@@ -50,7 +37,7 @@ class DialogLoading(context: Context) : Dialog(context) {
                 && AdsConfig.isLoadFullAds()
                 && AdsConfig.is_load_native_loading
             ) {
-                binding.layoutNative.visible()
+                mBinding.layoutNative.visible()
                 nativeAds?.let {
                     pushViewAds(it)
                 } ?: run {
@@ -65,7 +52,7 @@ class DialogLoading(context: Context) : Dialog(context) {
                             }
 
                             override fun onAdFailedToLoad() {
-                                binding.frAds.removeAllViews()
+                                mBinding.frAds.removeAllViews()
                                 interCallback?.onNextAction()
                             }
 
@@ -77,11 +64,11 @@ class DialogLoading(context: Context) : Dialog(context) {
                     )
                 }
             } else {
-                binding.layoutNative.gone()
+                mBinding.layoutNative.gone()
                 interCallback?.onNextAction()
             }
         } catch (e: Exception) {
-            binding.layoutNative.gone()
+            mBinding.layoutNative.gone()
             e.printStackTrace()
         }
     }
@@ -93,9 +80,8 @@ class DialogLoading(context: Context) : Dialog(context) {
             adView.adUnitContent.setBackgroundResource(R.drawable.bg_native_no_stroke)
         else adView.adUnitContent.setBackgroundResource(R.drawable.bg_native)
 
-        binding.layoutNative.visible()
-        binding.frAds.removeAllViews()
-        binding.frAds.addView(adView.root)
+        mBinding.frAds.removeAllViews()
+        mBinding.frAds.addView(adView.root)
         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView.root)
     }
 }

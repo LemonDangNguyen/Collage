@@ -29,7 +29,7 @@ class ViewModelPuzzleLayouts(private val useCasePuzzleLayouts: UseCasePuzzleLayo
         getAllLayouts()
     }
 
-    private fun getAllLayouts() = viewModelScope.launch(Dispatchers.IO) {
+    fun getAllLayouts() = viewModelScope.launch(Dispatchers.IO) {
         useCasePuzzleLayouts.getAllAllPuzzleLayouts().let { list ->
             if (list.size > 5) {
                 delay(500)
