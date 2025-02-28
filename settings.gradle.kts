@@ -29,3 +29,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Collage Image"
 include(":app")
+include(":puzzlelayout")

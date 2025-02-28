@@ -76,6 +76,8 @@ android {
 
 
 dependencies {
+    implementation(project(":puzzlelayout"))
+
     // Core dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
@@ -86,7 +88,7 @@ dependencies {
     // Image loading and editing
     implementation("com.github.bumptech.glide:glide:4.13.2")
     annotationProcessor("com.github.bumptech.glide:compiler:4.13.2")
-    implementation(libs.puzzlelayout)
+//    implementation(libs.puzzlelayout)
 
     // Material design
     implementation("com.google.android.material:material:1.12.0")
